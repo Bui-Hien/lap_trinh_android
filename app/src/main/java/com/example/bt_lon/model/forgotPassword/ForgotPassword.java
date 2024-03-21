@@ -1,8 +1,8 @@
-package com.example.bt_lon.forgotPassword;
+package com.example.bt_lon.model.forgotPassword;
 
 
-import com.example.bt_lon.question.Question;
-import com.example.bt_lon.user.User;
+import com.example.bt_lon.model.question.Question;
+import com.example.bt_lon.model.user.model.User;
 
 public class ForgotPassword {
     private int forgot_password_id;

@@ -1,7 +1,7 @@
-package com.example.bt_lon.product;
+package com.example.bt_lon.model.product;
 
 
-import com.example.bt_lon.category.Category;
+import com.example.bt_lon.model.category.Category;
 
 public class Product {
     private int product_id;

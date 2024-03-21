@@ -1,4 +1,4 @@
-package com.example.bt_lon.question;
+package com.example.bt_lon.model.question;
 
 public class Question
 {

@@ -1,4 +1,4 @@
-package com.example.bt_lon.category;
+package com.example.bt_lon.model.category;
 
 public class Category {
     private int category_id;

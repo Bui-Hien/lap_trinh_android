@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">bt_lon</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="setting">Fragment Setting</string>
+    <string name="profile">Fragment Profile</string>
+    <string name="home">Fragment Home</string>
 </resources>
