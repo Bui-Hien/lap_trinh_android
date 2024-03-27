@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.bt_lon.databinding.ActivityMainBinding;
 import com.example.bt_lon.fragment.HomeFragment;
@@ -19,23 +21,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        replaceFragment(new HomeFragment());
+        setContentView(R.layout.activity_forgot_password);
+        // Trong Activity hoặc Fragment của bạn
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.home);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.home) {
-                replaceFragment(new HomeFragment());
-            } else if (item.getItemId() == R.id.setting) {
-                replaceFragment(new SettingsFragment());
-            } else if (item.getItemId() == R.id.profile) {
-                replaceFragment(new ProfileFragment());
-            }
-
-            return true;
-        });
+//        super.onCreate(savedInstanceState);
+//        binding = ActivityMainBinding.inflate(getLayoutInflater());
+//        setContentView(binding.getRoot());
+//        replaceFragment(new HomeFragment());
+//
+//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+//        bottomNavigationView.setSelectedItemId(R.id.home);
+//        bottomNavigationView.setOnItemSelectedListener(item -> {
+//            if (item.getItemId() == R.id.home){
+//                replaceFragment(new SettingsFragment());
+//            } else if (item.getItemId() == R.id.setting) {
+//                replaceFragment(new SettingsFragment());
+//            } else if (item.getItemId() == R.id.profile) {
+//                replaceFragment(new ProfileFragment());
+//            }
+//
+//            return true;
+//        });
     }
 
     private void replaceFragment(Fragment fragment) {

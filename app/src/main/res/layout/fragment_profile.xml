@@ -5,19 +5,20 @@
     android:id="@+id/frameLayoutsss"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
+    tools:context=".fragment.ProfileFragment">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCancel"
+        app:layout_constraintTop_toTopOf="@+id/bntCancel"
+        android:background="#BA2727"
         app:srcCompat="@drawable/logo_miton"
         tools:src="@tools:sample/avatars" />
 
@@ -38,12 +39,10 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="@+id/tvDone"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnDone"
+        app:layout_constraintStart_toStartOf="@+id/bntCancel"
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <EditText
@@ -53,7 +52,7 @@
             android:ems="10"
             android:hint="First Name"
             android:inputType="text"
-            android:text="H" />
+            android:text="" />
 
         <EditText
             android:id="@+id/edtLastName"
@@ -62,7 +61,7 @@
             android:ems="10"
             android:hint="Last Name"
             android:inputType="text"
-            android:text="Bùi Xuân" />
+            android:text="" />
 
     </LinearLayout>
 
@@ -95,11 +94,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Female" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
     </RadioGroup>
 
     <LinearLayout
@@ -107,26 +101,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="@+id/radioGroup"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup">
 
-        <TextView
-            android:id="@+id/tvBirth"
-            android:layout_width="116dp"
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Birthday" />
+            android:maxWidth="80dp"
+            android:minWidth="80dp"
+            android:text="Change Birth Day" />
 
         <EditText
             android:id="@+id/edtBirthday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:ems="10"
-            android:text="15/03/2003"
-            android:inputType="date" />
+            android:ems="1"
+            android:inputType="date"
+            android:text="15/03/2003" />
 
     </LinearLayout>
 
@@ -140,11 +135,13 @@
         app:layout_constraintStart_toStartOf="@+id/linearLayout2"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-        <TextView
-            android:id="@+id/tvPhoneNumber"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/bntChangePhoneNumber"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:maxWidth="80dp"
+            android:minWidth="80dp"
             android:text="Change Number" />
 
         <EditText
@@ -153,28 +150,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:autoSizeMinTextSize="20dp"
-            android:ems="10"
             android:inputType="text"
-            android:text="0763433779" />
+            android:text="0763433779"
+            tools:ignore="TextFields" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvCancel"
+    <Button
+        android:id="@+id/bntCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="28dp"
         android:layout_marginTop="32dp"
         android:text="Cancel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvDone"
+    <Button
+        android:id="@+id/btnDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="Done"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tvCancel"
+        app:layout_constraintBaseline_toBaselineOf="@+id/bntCancel"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

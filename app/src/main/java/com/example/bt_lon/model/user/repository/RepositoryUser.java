@@ -19,6 +19,6 @@ public class RepositoryUser {
         } catch (ParseException e) {
             e.printStackTrace(); // Handle the exception appropriately
         }
-        user = new User(1, "Hien", "Xuan Hien", "12345", true, birthDate, "Ha Noi", "0763433779");
+        user = new User(1, "Bui", "Xuan Hien", "12345", true, birthDate, "Ha Noi", "07634337791", null);
     }
 }

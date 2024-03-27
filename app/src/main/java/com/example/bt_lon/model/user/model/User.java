@@ -1,5 +1,7 @@
 package com.example.bt_lon.model.user.model;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
 
 public class User {
@@ -11,11 +13,11 @@ public class User {
     private Date year_of_birth;
     private String address;
     private String phone_number;
-
+    private Bitmap profileImage;
     public User() {
     }
 
-    public User(int user_id, String firstname, String lastname, String password, boolean sex, Date year_of_birth, String address, String phone_number) {
+    public User(int user_id, String firstname, String lastname, String password, boolean sex, Date year_of_birth, String address, String phone_number, Bitmap profileImage) {
         this.user_id = user_id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -24,6 +26,7 @@ public class User {
         this.year_of_birth = year_of_birth;
         this.address = address;
         this.phone_number = phone_number;
+        this.profileImage = profileImage;
     }
 
     public int getUser_id() {
@@ -88,5 +91,13 @@ public class User {
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
+    }
+
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Bitmap profileImage) {
+        this.profileImage = profileImage;
     }
 }

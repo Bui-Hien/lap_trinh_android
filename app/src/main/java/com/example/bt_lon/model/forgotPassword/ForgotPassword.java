@@ -6,17 +6,17 @@ import com.example.bt_lon.model.user.model.User;
 
 public class ForgotPassword {
     private int forgot_password_id;
-    private User user;
-    private Question question;
+    private int user_id;
+    private int question_id;
     private String answer;
 
     public ForgotPassword() {
     }
 
-    public ForgotPassword(int forgot_password_id, User user, Question question, String answer) {
+    public ForgotPassword(int forgot_password_id, int user_id, int question_id, String answer) {
         this.forgot_password_id = forgot_password_id;
-        this.user = user;
-        this.question = question;
+        this.user_id = user_id;
+        this.question_id = question_id;
         this.answer = answer;
     }
 
@@ -28,20 +28,20 @@ public class ForgotPassword {
         this.forgot_password_id = forgot_password_id;
     }
 
-    public User getUser() {
-        return user;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
-    public Question getQuestion() {
-        return question;
+    public int getQuestion_id() {
+        return question_id;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestion_id(int question_id) {
+        this.question_id = question_id;
     }
 
     public String getAnswer() {

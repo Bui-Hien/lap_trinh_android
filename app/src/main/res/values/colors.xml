@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="background_logout">#FFFFFFFF</color>
+    <color name="corlor_name_product">#21213e</color>
 </resources>
