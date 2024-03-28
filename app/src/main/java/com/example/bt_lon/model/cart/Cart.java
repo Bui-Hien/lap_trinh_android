@@ -1,9 +1,6 @@
 package com.example.bt_lon.model.cart;
 
 
-import com.example.bt_lon.model.product.Product;
-import com.example.bt_lon.model.user.model.User;
-
 public class Cart {
     private int cart_id;
     private int user_id;
