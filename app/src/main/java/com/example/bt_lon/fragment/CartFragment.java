@@ -1,16 +1,27 @@
 package com.example.bt_lon.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.bt_lon.R;
+import com.example.bt_lon.adapter.CartAdapter;
+import com.example.bt_lon.model.cart.Cart;
+import com.example.bt_lon.model.product.Product;
+import com.example.bt_lon.model.user.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,28 +30,14 @@ import com.example.bt_lon.R;
  */
 public class CartFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     public CartFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CartFragment newInstance(String param1, String param2) {
         CartFragment fragment = new CartFragment();
         Bundle args = new Bundle();
@@ -63,12 +60,34 @@ public class CartFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialize the cartList
+        List<Cart> cartList = new ArrayList<>();
+
+        // Load profile image and product image
+        Bitmap productImage = BitmapFactory.decodeResource(getResources(), R.drawable.logo_miton);
+
+        // Create a User object
+        User user = new User(1, "hienbui", productImage);
+
+        // Populate the cartList with Cart objects
+        for (int i = 0; i < 10; i++) {
+            Product product = new Product("productName "+i,"description"+ i, 100000, productImage);
+            Cart cart = new Cart(i, user, product, false, 1);
+            cartList.add(cart);
+        }
+
+        RecyclerView recyclerView;
+        recyclerView = view.findViewById(R.id.recyclerViewCart); // Make sure to find RecyclerView in the view hierarchy of the fragment
+        CartAdapter myAdapter = new CartAdapter(requireContext(), cartList); // Pass context and cartList
+        recyclerView.setAdapter(myAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 1)); // Use requireContext() to get the context
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cart, container, false);
     }
 }

@@ -1,0 +1,20 @@
+<!-- border_image.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Background color of the border -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Border color and width -->
+    <stroke
+        android:width="2dp"
+        android:color="#e5e5e5" /> <!-- You can define your own color in colors.xml -->
+
+    <!-- Padding inside the border (optional) -->
+    <padding
+        android:left="4dp"
+        android:right="4dp"
+        android:top="4dp"
+        android:bottom="4dp" />
+
+</shape>

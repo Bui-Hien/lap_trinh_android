@@ -1,22 +1,24 @@
 package com.example.bt_lon.model.purchaseorder;
 
+import com.example.bt_lon.model.product.Product;
+
 import java.util.Date;
 
 public class PurchaseOrder {
     private int purchase_order_id;
-    private int product_id;
+    private Product product;
     private int quantity;
-    private Date purchase_time;
+    private Date purchase_date;
     private double cost;
 
     public PurchaseOrder() {
     }
 
-    public PurchaseOrder(int purchase_order_id, int product_id, int quantity, Date purchase_time, double cost) {
+    public PurchaseOrder(int purchase_order_id, Product product, int quantity, Date purchase_date, double cost) {
         this.purchase_order_id = purchase_order_id;
-        this.product_id = product_id;
+        this.product = product;
         this.quantity = quantity;
-        this.purchase_time = purchase_time;
+        this.purchase_date = purchase_date;
         this.cost = cost;
     }
 
@@ -28,12 +30,12 @@ public class PurchaseOrder {
         this.purchase_order_id = purchase_order_id;
     }
 
-    public int getProduct_id() {
-        return product_id;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
+    public void setProduct_id(Product product) {
+        this.product = product;
     }
 
     public int getQuantity() {
@@ -44,12 +46,12 @@ public class PurchaseOrder {
         this.quantity = quantity;
     }
 
-    public Date getPurchase_time() {
-        return purchase_time;
+    public Date getPurchase_date() {
+        return purchase_date;
     }
 
-    public void setPurchase_time(Date purchase_time) {
-        this.purchase_time = purchase_time;
+    public void setPurchase_date(Date purchase_date) {
+        this.purchase_date = purchase_date;
     }
 
     public double getCost() {

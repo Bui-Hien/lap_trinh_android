@@ -26,7 +26,7 @@ public class DatabaseConnector  extends SQLiteOpenHelper{
                     " password TEXT," +
                     " sex INTEGER, " + //1 is true, 0 is false
                     "year_of_birth TEXT," +
-                    " address TEXT, " +
+                    "address TEXT, " +
                     "phone_number TEXT, " +
                     "profileImage BLOB);";
 
@@ -55,9 +55,8 @@ public class DatabaseConnector  extends SQLiteOpenHelper{
                     " category_id INTEGER, " +
                     "product_name TEXT, " +
                     "description TEXT," +
-                    " price REAL," +
-                    " link_img INTEGER," +
-                    " imageBitmap BLOB, " +
+                    "price REAL," +
+                    "image_product BLOB, " +
                     "FOREIGN KEY(category_id) REFERENCES Categories(category_id));";
 
     private static final String createTableCarts =

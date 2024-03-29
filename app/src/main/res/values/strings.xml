@@ -1,11 +1,6 @@
 <resources>
-    <string name="app_name">bt_lon</string>
+    <string name="app_name">Bai_tap_lon_android</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="setting">Fragment Setting</string>
-    <string name="profile">Fragment Profile</string>
-    <string name="home">Fragment Home</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="change_number">Change Number</string>
     <string name="mua_lai">Mua lại</string>
+    <string name="back_honme">Back Honme</string>
 </resources>

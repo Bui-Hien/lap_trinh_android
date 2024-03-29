@@ -16,7 +16,11 @@ public class User {
     private Bitmap profileImage;
     public User() {
     }
-
+    public User(int user_id, String username,Bitmap profileImage) {
+        this.user_id = user_id;
+        this.username = username;
+        this.profileImage = profileImage;
+    }
     public User(int user_id, String full_name, String username, String password, boolean sex, Date year_of_birth, String address, String phone_number, Bitmap profileImage) {
         this.user_id = user_id;
         this.full_name = full_name;

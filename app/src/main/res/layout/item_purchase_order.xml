@@ -58,7 +58,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imgViewCart"
+                android:id="@+id/imgViewPurchase"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -79,7 +79,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvCarName"
+                android:id="@+id/tvPurchaseName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -93,17 +93,17 @@
                 tools:ignore="MissingConstraints" />
 
             <TextView
-                android:id="@+id/tvPurchaseSoLuong"
+                android:id="@+id/tvPurchaseQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="x35"
                 android:textColor="@color/corlor_name_product"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvCarName" />
+                app:layout_constraintTop_toBottomOf="@+id/tvPurchaseName" />
 
             <TextView
-                android:id="@+id/tvPurchaseOne"
+                android:id="@+id/tvPurchasePriceProduct"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -112,7 +112,7 @@
                 android:text="đ 349.000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvPurchaseSoLuong" />
+                app:layout_constraintTop_toBottomOf="@+id/tvPurchaseQuantity" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -138,11 +138,11 @@
             android:textColor="@color/corlor_name_product"
             android:text="Thành tiền"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvPurchaseMany"
+            app:layout_constraintEnd_toStartOf="@+id/tvPurchaseCostTotal"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvPurchaseMany"
+            android:id="@+id/tvPurchaseCostTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -155,7 +155,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvPurchaseSoluong2"
+            android:id="@+id/tvPurchaseQuantity2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="35"
@@ -170,13 +170,13 @@
             android:layout_marginStart="4dp"
             android:text="sản phẩm"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tvPurchaseSoluong2"
+            app:layout_constraintStart_toEndOf="@+id/tvPurchaseQuantity2"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/btnPurchaseMuaLai"
+        android:id="@+id/btnRepurchase"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginTop="8dp"

@@ -7,24 +7,28 @@ import com.example.bt_lon.model.category.Category;
 
 public class Product {
     private int product_id;
-    private int category_id;
+    private Category category;
     private String product_name;
     private String description;
     private double price;
-    private String link_img;
-    private Bitmap imageBitmap;
+    private Bitmap image_product;
 
     public Product() {
     }
+    public Product( String product_name,String description, double price, Bitmap image_product) {
 
-    public Product(int product_id, int category_id, String product_name, String description, double price, String link_img, Bitmap imageBitmap) {
-        this.product_id = product_id;
-        this.category_id = category_id;
         this.product_name = product_name;
         this.description = description;
         this.price = price;
-        this.link_img = link_img;
-        this.imageBitmap = imageBitmap;
+        this.image_product = image_product;
+    }
+    public Product(int product_id, Category category, String product_name, String description, double price, Bitmap image_product) {
+        this.product_id = product_id;
+        this.category = category;
+        this.product_name = product_name;
+        this.description = description;
+        this.price = price;
+        this.image_product = image_product;
     }
 
     public int getProduct_id() {
@@ -35,12 +39,12 @@ public class Product {
         this.product_id = product_id;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getProduct_name() {
@@ -67,19 +71,11 @@ public class Product {
         this.price = price;
     }
 
-    public String getLink_img() {
-        return link_img;
+    public Bitmap getImage_product() {
+        return image_product;
     }
 
-    public void setLink_img(String link_img) {
-        this.link_img = link_img;
-    }
-
-    public Bitmap getImageBitmap() {
-        return imageBitmap;
-    }
-
-    public void setImageBitmap(Bitmap imageBitmap) {
-        this.imageBitmap = imageBitmap;
+    public void setImageBitmap(Bitmap image_product) {
+        this.image_product = image_product;
     }
 }
