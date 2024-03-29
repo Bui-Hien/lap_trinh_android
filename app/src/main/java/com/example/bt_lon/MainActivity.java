@@ -12,7 +12,6 @@ import com.example.bt_lon.activity.CartActivity;
 import com.example.bt_lon.databinding.ActivityMainBinding;
 import com.example.bt_lon.fragment.AccountFragment;
 import com.example.bt_lon.fragment.HomeFragment;
-import com.example.bt_lon.fragment.CartFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.cart) {
                 Intent intent = new Intent(this, CartActivity.class);
                 startActivity(intent);
-            }
-            else if (item.getItemId() == R.id.account) {
+            } else if (item.getItemId() == R.id.account) {
                 replaceFragment(new AccountFragment());
             }
 

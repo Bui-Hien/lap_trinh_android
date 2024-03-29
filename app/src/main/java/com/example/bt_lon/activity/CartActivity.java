@@ -1,15 +1,17 @@
 package com.example.bt_lon.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
+
+import java.text.DecimalFormat;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,62 +29,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
+    private List<Cart> cartList;
+    private RecyclerView recyclerView;
+    private CartAdapter cartAdapter;
+    private TextView tvCartTotalCost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        // Initialize the cartList
-        List<Cart> cartList = new ArrayList<>();
+        tvCartTotalCost = findViewById(R.id.tvCartTotalCost);
+        recyclerView = findViewById(R.id.recyclerViewCart);
 
-        // Load profile image and product image
-        Bitmap productImage = BitmapFactory.decodeResource(getResources(), R.drawable.logo_miton);
-
-        // Create a User object
-        User user = new User(1, "hienbui", productImage);
-
-        // Populate the cartList with Cart objects
-        for (int i = 0; i < 10; i++) {
-            Product product = new Product("productName " + i, "description" + i, 100000, productImage);
-            Cart cart = new Cart(i, user, product,false, i);
-            cartList.add(cart);
-        }
-
-        // Find RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewCart);
-
-        // Create and set adapter
-        CartAdapter myAdapter = new CartAdapter(this, cartList);
-        recyclerView.setAdapter(myAdapter);
-
-        // Set layout manager
+        cartList = InsertData();
+        cartAdapter = new CartAdapter(this, cartList);
+        recyclerView.setAdapter(cartAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
-        // Find and set Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         CheckBox checkBoxAllCart = findViewById(R.id.checkBoxAllCart);
-        checkBoxAllCart.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("NotifyDataSetChanged")
+        checkBoxAllCart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
-            public void onClick(View v) {
-                // Kiểm tra trạng thái của CheckBox
-                boolean isChecked = checkBoxAllCart.isChecked();
-
-                // Kiểm tra xem CheckBox đã được chọn hay không
-                // Nếu CheckBox đã được chọn, kiểm tra tất cả các CheckBox của mỗi item
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    Toast.makeText(CartActivity.this, "CheckBox đã được chọn", Toast.LENGTH_SHORT).show();
                     for (Cart cart : cartList) {
-                        cart.setChecked(true); // Đặt trạng thái đã chọn cho item cart
+                        cart.setChecked(true);
                     }
-                    // Cập nhật RecyclerView sau khi thiết lập trạng thái đã chọn cho tất cả các item
-                    myAdapter.notifyDataSetChanged();
+                    tvCartTotalCost.setText("đ" + TotalCost(cartList));
                 } else {
-                    // CheckBox chưa được chọn
                     Toast.makeText(CartActivity.this, "CheckBox chưa được chọn", Toast.LENGTH_SHORT).show();
+                    for (Cart cart : cartList) {
+                        cart.setChecked(false);
+                    }
+                    tvCartTotalCost.setText("đ0");
                 }
+                cartAdapter.notifyDataSetChanged();
             }
         });
 
@@ -105,4 +91,40 @@ public class CartActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    public List<Cart> InsertData() {
+        List<Cart> cartList = new ArrayList<>();
+
+        // Load profile image and product image
+        Bitmap productImage = BitmapFactory.decodeResource(getResources(), R.drawable.logo_miton);
+
+        // Create a User object
+        User user = new User(1, "hienbui", productImage);
+
+        // Populate the cartList with Cart objects
+        for (int i = 0; i < 10; i++) {
+            Product product = new Product("productName " + i, "description" + i, 100000, productImage);
+            Cart cart = new Cart(i, user, product, false, i);
+            cartList.add(cart);
+        }
+        return cartList;
+    }
+
+
+    // Các phương thức và thuộc tính khác của lớp
+
+    public String TotalCost(List<Cart> cartList) {
+        double totalCost = 0;
+        for (Cart cart : cartList) {
+            if (cart.isChecked()) {
+                totalCost += cart.getQuantity() * cart.getProduct().getPrice();
+            }
+        }
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
+        return decimalFormat.format(totalCost).replace(",", ".");
+    }
+
 }
