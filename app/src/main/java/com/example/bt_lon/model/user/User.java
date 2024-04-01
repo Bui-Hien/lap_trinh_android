@@ -21,7 +21,16 @@ public class User {
         this.username = username;
         this.profileImage = profileImage;
     }
-    public User(int user_id, String full_name, String username, String password, boolean sex, Date year_of_birth, String address, String phone_number, Bitmap profileImage) {
+    public User(int user_id, String full_name, String username, boolean sex, Date year_of_birth, String address, String phone_number, Bitmap profileImage) {
+        this.user_id = user_id;
+        this.full_name = full_name;
+        this.username = username;
+        this.sex = sex;
+        this.year_of_birth = year_of_birth;
+        this.address = address;
+        this.phone_number = phone_number;
+        this.profileImage = profileImage;
+    }public User(int user_id, String full_name, String username, String password, boolean sex, Date year_of_birth, String address, String phone_number, Bitmap profileImage) {
         this.user_id = user_id;
         this.full_name = full_name;
         this.username = username;
@@ -65,7 +74,7 @@ public class User {
         this.password = password;
     }
 
-    public boolean isSex() {
+    public boolean isMale() {
         return sex;
     }
 

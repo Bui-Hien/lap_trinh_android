@@ -1,9 +1,8 @@
 package com.example.bt_lon.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,17 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bt_lon.R;
+import com.example.bt_lon.activity.CartActivity;
 import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.product.Product;
 
@@ -34,7 +35,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         this.mContext = context;
         this.cartList = cartList;
     }
-
 
     @NonNull
     @Override
@@ -50,8 +50,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         Product product = cart.getProduct();
 
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
-        Drawable btnBackground = new ColorDrawable(Color.parseColor("#e8e8e8"));
-        // Setting up views
+
         holder.imgViewCart.setImageBitmap(product.getImage_product());
         holder.tvCartNameProduct.setText(product.getProduct_name());
         holder.tvCartDescriptionProduct.setText(product.getDescription());
@@ -59,59 +58,87 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.tvCartQualityProduct.setText(String.valueOf(cart.getQuantity()));
         holder.checkBoxCart.setChecked(cart.isChecked());
 
-        // CheckBox click listener
+        if (position == cartList.size() - 1) {
+            GridLayoutManager.LayoutParams layoutParams = (GridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+            layoutParams.bottomMargin = 0;
+            holder.itemView.setLayoutParams(layoutParams);
+
+        }
+
+
         holder.checkBoxCart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 cart.setChecked(isChecked);
-                Toast.makeText(mContext, "Đã được check " + (isChecked ? "true" : "false"), Toast.LENGTH_LONG).show();
+                ((CartActivity) mContext).updateText();
             }
         });
-
-        // Plus button click listener
         holder.btnCartPlusProduct.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
                 //giả sử tổng số lượng tất cả sản phầm là 10 sản phầm
+                holder.btnCartMinusProduct.setBackgroundResource(R.drawable.btncongtru);
 
                 if (cart.getQuantity() < 10) {
-                    holder.btnCartMinusProduct.setBackgroundDrawable(btnBackground);
                     int quantity = cart.getQuantity() + 1;
                     cart.setQuantity(quantity);
                     holder.tvCartQualityProduct.setText(String.valueOf(quantity));
-                    Toast.makeText(mContext, "Đã tăng số lượng sản phẩm.", Toast.LENGTH_LONG).show();
-                } else {
-                    holder.btnCartPlusProduct.setBackgroundColor(Color.parseColor("#cdcdcd"));
+                    ((CartActivity) mContext).updateText();
                 }
-
+                if (cart.getQuantity() == 10)
+                    holder.btnCartPlusProduct.setBackgroundColor(Color.parseColor("#e8e8e8"));
             }
         });
+        Dialog dialog;
+        Button btnDiaLogCancel, btnDialogDelete;
 
-        // Minus button click listener
-        holder.btnCartMinusProduct.setOnClickListener(new View.OnClickListener() {
+        dialog = new Dialog(mContext);
+        dialog.setContentView(R.layout.custom_dialog_delete_product_cart);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+
+        btnDiaLogCancel = dialog.findViewById(R.id.btnCancelDeleteProductCart);
+        btnDialogDelete = dialog.findViewById(R.id.btnOklDeleteProductCart);
+        btnDiaLogCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.tvCartQualityProduct.setText("1");
+                cart.setQuantity(1);
+                dialog.dismiss();
+            }
+        });
+        btnDialogDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cartList.remove(holder.getAdapterPosition());
+                ((CartActivity) mContext).updateText();
+                notifyItemRemoved(holder.getAdapterPosition());
+                dialog.dismiss();
+            }
+        });
+        holder.btnCartMinusProduct.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                holder.btnCartPlusProduct.setBackgroundResource(R.drawable.btncongtru);
                 if (cart.getQuantity() >= 1) {
-                    holder.btnCartPlusProduct.setBackground(btnBackground);
-                    int quantity = cart.getQuantity() -1;
+                    int quantity = cart.getQuantity() - 1;
                     cart.setQuantity(quantity);
                     holder.tvCartQualityProduct.setText(String.valueOf(quantity));
-                    Toast.makeText(mContext, "Đã giảm số lượng sản phẩm.", Toast.LENGTH_LONG).show();
-                } else {
-                    cartList.remove(cart.getCart_id());
+                    if (cart.getQuantity() < 1) {
+                        dialog.show();
+                    }
                 }
             }
         });
-
     }
-
 
     @Override
     public int getItemCount() {
         return cartList.size();
     }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public CheckBox checkBoxCart;
@@ -122,6 +149,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         public TextView tvCartQualityProduct;
         public Button btnCartMinusProduct;
         public Button btnCartPlusProduct;
+        public ConstraintLayout linearLayoutCart;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -133,6 +161,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             this.tvCartQualityProduct = (TextView) itemView.findViewById(R.id.tvCartQualityProduct);
             this.btnCartMinusProduct = (Button) itemView.findViewById(R.id.btnCartMinusProduct);
             this.btnCartPlusProduct = (Button) itemView.findViewById(R.id.btnCartPlusProduct);
+            this.linearLayoutCart = (ConstraintLayout) itemView.findViewById(R.id.linearLayoutCart);
         }
     }
 }

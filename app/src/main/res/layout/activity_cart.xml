@@ -7,32 +7,57 @@
     android:layout_height="match_parent"
     tools:context=".activity.CartActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbarlayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout6"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:background="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:ignore="MissingConstraints"
+        android:elevation="8dp"
+        tools:layout_editor_absoluteY="0dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvCartLogo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#986f6f"
-            app:menu="@menu/cart_back_nav_menu" />
+            android:text="Giỏ hàng"
+            android:textColor="#212121"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <ImageView
+            android:id="@+id/imageBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="16dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:src="@drawable/baseline_keyboard_backspace_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#ee4d2d" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCart"
+        android:background="#efefef"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbarlayout"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -41,15 +66,19 @@
         android:id="@+id/constraintLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#986f6f"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:elevation="8dp"
+        android:background="#ffffff"
         app:layout_constraintStart_toStartOf="parent">
 
         <CheckBox
             android:id="@+id/checkBoxAllCart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:button="@drawable/checkbox_custom"
             android:text="Tất cả"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +110,12 @@
             android:id="@+id/btnCartBuyAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="Mua hàng"
+            android:textColor="@color/white"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:background="@drawable/button_origan_background"
             app:layout_constraintBottom_toBottomOf="@+id/checkBoxAllCart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/checkBoxAllCart" />

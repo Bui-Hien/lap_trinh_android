@@ -1,23 +1,22 @@
 package com.example.bt_lon.activity;
 
 import android.annotation.SuppressLint;
-
-import java.text.DecimalFormat;
-
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.bt_lon.R;
 import com.example.bt_lon.adapter.CartAdapter;
@@ -25,44 +24,79 @@ import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.product.Product;
 import com.example.bt_lon.model.user.User;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
+
     private List<Cart> cartList;
-    private RecyclerView recyclerView;
     private CartAdapter cartAdapter;
     private TextView tvCartTotalCost;
-
+    private TextView tvCartLogo;
+    private Button btnCartBuyAll;
+    Button btnOkNoneProductCart;
+    @SuppressLint({"SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
         tvCartTotalCost = findViewById(R.id.tvCartTotalCost);
-        recyclerView = findViewById(R.id.recyclerViewCart);
-
+        tvCartLogo = findViewById(R.id.tvCartLogo);
+        btnCartBuyAll = findViewById(R.id.btnCartBuyAll);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewCart);
+        ImageView imageBack = findViewById(R.id.imageBack);
+        CheckBox checkBoxAllCart = findViewById(R.id.checkBoxAllCart);
         cartList = InsertData();
         cartAdapter = new CartAdapter(this, cartList);
         recyclerView.setAdapter(cartAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        tvCartLogo.setText("Giỏ hàng (" + cartList.size() + ")");
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Dialog dialog;
+        dialog = new Dialog(CartActivity.this);
+        dialog.setContentView(R.layout.warning_dialog);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+        btnOkNoneProductCart=dialog.findViewById(R.id.btnWarningDialog);
+        btnOkNoneProductCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnCartBuyAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TotalBuyedAll(cartList) == 0) {
+                    dialog.show();
+                } else {
+                    //lưu vào sql
+                    //chuyển sang màn đã mua
+                    Intent intent = new Intent(CartActivity.this, PurchaseOrderActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
 
-        CheckBox checkBoxAllCart = findViewById(R.id.checkBoxAllCart);
+        imageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         checkBoxAllCart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Toast.makeText(CartActivity.this, "CheckBox đã được chọn", Toast.LENGTH_SHORT).show();
                     for (Cart cart : cartList) {
                         cart.setChecked(true);
                     }
                     tvCartTotalCost.setText("đ" + TotalCost(cartList));
                 } else {
-                    Toast.makeText(CartActivity.this, "CheckBox chưa được chọn", Toast.LENGTH_SHORT).show();
                     for (Cart cart : cartList) {
                         cart.setChecked(false);
                     }
@@ -71,48 +105,20 @@ public class CartActivity extends AppCompatActivity {
                 cartAdapter.notifyDataSetChanged();
             }
         });
-
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.cart_back_nav_menu, menu);
-        return true;
-
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.backHome) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     public List<Cart> InsertData() {
         List<Cart> cartList = new ArrayList<>();
-
-        // Load profile image and product image
         Bitmap productImage = BitmapFactory.decodeResource(getResources(), R.drawable.logo_miton);
-
-        // Create a User object
         User user = new User(1, "hienbui", productImage);
 
-        // Populate the cartList with Cart objects
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             Product product = new Product("productName " + i, "description" + i, 100000, productImage);
             Cart cart = new Cart(i, user, product, false, i);
             cartList.add(cart);
         }
         return cartList;
     }
-
-
-    // Các phương thức và thuộc tính khác của lớp
 
     public String TotalCost(List<Cart> cartList) {
         double totalCost = 0;
@@ -121,10 +127,24 @@ public class CartActivity extends AppCompatActivity {
                 totalCost += cart.getQuantity() * cart.getProduct().getPrice();
             }
         }
-
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
-
         return decimalFormat.format(totalCost).replace(",", ".");
     }
 
+    public int TotalBuyedAll(List<Cart> cartList) {
+        int totalCost = 0;
+        for (Cart cart : cartList) {
+            if (cart.isChecked()) {
+                totalCost += 1;
+            }
+        }
+        return totalCost;
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void updateText() {
+        tvCartTotalCost.setText("đ" + TotalCost(cartList));
+        tvCartLogo.setText("Giỏ hàng (" + cartList.size() + ")");
+        btnCartBuyAll.setText("Mua hàng (" + TotalBuyedAll(cartList) + ")");
+    }
 }

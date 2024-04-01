@@ -1,6 +1,8 @@
 package com.example.bt_lon.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +12,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bt_lon.R;
+import com.example.bt_lon.activity.CartActivity;
+import com.example.bt_lon.activity.PurchaseOrderActivity;
 import com.example.bt_lon.model.purchaseorder.PurchaseOrder;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class PurchaseOrderAdapter extends RecyclerView.Adapter<PurchaseOrderAdapter.ViewHolder> {
@@ -36,21 +42,31 @@ public class PurchaseOrderAdapter extends RecyclerView.Adapter<PurchaseOrderAdap
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PurchaseOrder purchaseOrder = purchaseOrderList.get(position);
 
-        holder.tvPurchaseDate.setText(String.valueOf(purchaseOrder.getPurchase_date()));
+        // Định dạng ngày tháng
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        holder.tvPurchaseDate.setText(String.valueOf(formatter.format(purchaseOrder.getPurchase_date())));
         holder.imgViewPurchase.setImageBitmap(purchaseOrder.getProduct().getImage_product());
         holder.tvPurchaseName.setText(String.valueOf(purchaseOrder.getProduct().getProduct_name()));
-        holder.tvPurchaseQuantity.setText(String.valueOf(purchaseOrder.getQuantity()));
+        holder.tvPurchaseQuantity.setText("x" + purchaseOrder.getQuantity());
         holder.tvPurchaseCostOne.setText(String.valueOf(purchaseOrder.getProduct().getPrice()));
         holder.tvPurchaseQuantity2.setText(String.valueOf(purchaseOrder.getQuantity()));
         holder.tvPurchaseCostTotal.setText(String.valueOf(purchaseOrder.getCost()));
+        if (position == purchaseOrderList.size() - 1) {
+            GridLayoutManager.LayoutParams layoutParams = (GridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+            layoutParams.bottomMargin = 0;
+            holder.itemView.setLayoutParams(layoutParams);
+
+        }
         holder.btnRepurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Đã mua lại sản phẩm.", Toast.LENGTH_LONG).show();
+                ((PurchaseOrderActivity) mContext).Repurchase(purchaseOrder);
             }
         });
     }

@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_marginBottom="10dp"
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ngày mua:"
-            android:textColor="@color/corlor_name_product"
+            android:textColor="@color/color_name_product"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="12/03/2024"
-            android:textColor="@color/corlor_name_product"
+            android:textColor="@color/color_name_product"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView7"
             app:layout_constraintTop_toTopOf="parent"
@@ -66,6 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
+                android:background="@drawable/border_image"
                 app:srcCompat="@drawable/ic_launcher_background" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -85,7 +88,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Củ xác 65w Baseus Gan 3 5  ProCủ xác 65w Baseus Gan 3 5  Pro ..."
-                android:textColor="@color/corlor_name_product"
+                android:textColor="@color/color_name_product"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="x35"
-                android:textColor="@color/corlor_name_product"
+                android:textColor="@color/color_name_product"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvPurchaseName" />
 
@@ -108,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:textColor="#ee4d2d"
+                android:textColor="@color/color_primary"
                 android:text="đ 349.000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -123,11 +126,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/constraintLayout4"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/constraintLayout4"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
-        android:background="@drawable/border_top_bottom">
+        android:background="@drawable/border_top_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
 
         <TextView
             android:id="@+id/textView3"
@@ -135,8 +137,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:textColor="@color/corlor_name_product"
             android:text="Thành tiền"
+            android:textColor="@color/color_name_product"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvPurchaseCostTotal"
             app:layout_constraintTop_toTopOf="parent" />
@@ -146,10 +148,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:text="500.000"
-            android:textColor="#ee4d2d"
+            android:textColor="@color/color_primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -158,6 +161,7 @@
             android:id="@+id/tvPurchaseQuantity2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="35"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -181,12 +185,13 @@
         android:layout_height="35dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/shape_white_text_yellow_background"
+        android:background="@color/color_primary"
         android:text="@string/mua_lai"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

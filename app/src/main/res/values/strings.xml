@@ -2,6 +2,9 @@
     <string name="app_name">Bai_tap_lon_android</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="mua_lai">Mua lại</string>
-    <string name="back_honme">Back Honme</string>
+    <string name="back_home">Back Honme</string>
     <string name="cost_0">đ 0</string>
+    <string name="home">Home</string>
+    <string name="cart">Cart</string>
+    <string name="account">Account</string>
 </resources>
