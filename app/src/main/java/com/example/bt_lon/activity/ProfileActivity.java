@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,13 +109,13 @@ public class ProfileActivity extends AppCompatActivity {
             imgEditAccount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    choseImage();
+                    chooseImage();
                 }
             });
             btnChaneImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    choseImage();
+                    chooseImage();
                 }
             });
             ediBirthDay.setOnClickListener(new View.OnClickListener() {
@@ -199,16 +201,22 @@ public class ProfileActivity extends AppCompatActivity {
         setupUI();
     }
 
-    private void choseImage() {
+    private void chooseImage() {
         try {
-            Intent intent = new Intent();
+            Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
+            String[] mimeTypes = {"image/bmp", "image/jpeg", "image/png"};
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
-
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    // Phương thức kiểm tra định dạng ảnh hợp lệ
+    private boolean isValidImageType(String mimeType) {
+        return mimeType != null && mimeType.startsWith("image/");
     }
 
     @Override
@@ -217,21 +225,41 @@ public class ProfileActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
                 Uri imagePath = data.getData();
+
+                // Kiểm tra định dạng của hình ảnh
+                String mimeType = getContentResolver().getType(imagePath);
+                if (!isValidImageType(mimeType)) {
+                    // Thông báo ảnh không hợp lệ
+                    Toast.makeText(getApplicationContext(), "Định dạng ảnh không hỗ trợ. Vui lòng chọn ảnh khác.", Toast.LENGTH_LONG).show();
+                    return; // Kết thúc phương thức nếu hình ảnh không hợp lệ
+                }
+
+                // Kiểm tra kích thước của hình ảnh
+                int imageSizeInBytes = getImageSizeInBytes(imagePath);
+                if (imageSizeInBytes > 5* 1024 * 1024) { // Kiểm tra kích thước ảnh có lớn hơn 5MB (5 * 1024 * 1024 bytes) không
+                    // Thông báo ảnh quá lớn
+                    Toast.makeText(getApplicationContext(), "Kích thước ảnh vượt quá 5MB. Vui lòng chọn ảnh khác.", Toast.LENGTH_LONG).show();
+                    return; // Kết thúc phương thức nếu kích thước ảnh vượt quá 5MB
+                }
+
                 Bitmap imageToStore = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
 
+                // Tiếp tục xử lý hình ảnh
                 user.setProfileImage(getBitmapFromBlob(bitmapToByteArray(imageToStore, 150, 100)));
-                ImageView old, imgnew;
-
-                old = findViewById(R.id.imgold);
-                imgnew = findViewById(R.id.imgnew);
-
-                old.setImageBitmap(imageToStore);
-                imgnew.setImageBitmap(getBitmapFromBlob(bitmapToByteArray(imageToStore, 150, 100)));
-
             }
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    // Phương thức kiểm tra kích thước của hình ảnh
+    private int getImageSizeInBytes(Uri imagePath) {
+        Cursor cursor = getContentResolver().query(imagePath, null, null, null, null);
+        int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+        cursor.moveToFirst();
+        int imageSizeInBytes = cursor.getInt(sizeIndex);
+        cursor.close();
+        return imageSizeInBytes;
     }
 
     public byte[] bitmapToByteArray(Bitmap bitmap, int targetSizeDP, int quality) {

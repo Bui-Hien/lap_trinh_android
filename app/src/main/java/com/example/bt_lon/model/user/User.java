@@ -34,6 +34,10 @@ public class User {
         this.username = username;
     }
 
+    public User(String username) {
+        this.username = username;
+    }
+
     public User(int user_id, String username, Bitmap profileImage) {
         this.user_id = user_id;
         this.username = username;

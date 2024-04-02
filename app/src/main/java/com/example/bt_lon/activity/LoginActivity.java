@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -15,11 +17,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bt_lon.R;
+import com.example.bt_lon.model.forgotPassword.ForgotPassword;
+import com.example.bt_lon.model.question.Question;
 import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
 import java.util.Date;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,23 +33,21 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        ImageView imageBack = findViewById(R.id.imageBack);
         Button button5 = findViewById(R.id.button5);
         Button button = findViewById(R.id.button);
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatabaseConnector databaseConnector = new DatabaseConnector(LoginActivity.this);
-//                Bitmap profileImage = BitmapFactory.decodeResource(getResources(), R.drawable.cargo);
-//                User user = new User(1, "Bui Xuan Hien", "buixuanhien5", "12345", true, new Date(), "Ha Noi", "0763433779", profileImage);
-//               databaseConnector.storeUser(user);
-
-
-
-                User user = databaseConnector.getUser("buixuanhien5", "12345");
-                RepositoryUser.createNewAccount(user.getUser_id(), user.getFull_name(), user.getUsername(), user.isMale(), user.getYear_of_birth(), user.getAddress(), user.getPhone_number(), user.getProfileImage());
-
-
+                if (databaseConnector.getUser("buixuanhien5", "1234567") != null) {
+                    User user = databaseConnector.getUser("buixuanhien5", "1234567");
                     finish();
+                    RepositoryUser.createNewAccount(user.getUser_id(), user.getFull_name(), user.getUsername(), user.isMale(), user.getYear_of_birth(), user.getAddress(), user.getPhone_number(), user.getProfileImage());
+                } else {
+                    Toast.makeText(LoginActivity.this, "Sai tài khoản hoặc mật khẩu.", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         button.setOnClickListener(new View.OnClickListener() {
@@ -55,5 +58,35 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+        imageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
+
+//                Bitmap profileImage = BitmapFactory.decodeResource(getResources(), R.drawable.cargo);
+//                User user = new User(1, "Bui Xuan Hien", "buixuanhien5", "12345", true, new Date(), "Ha Noi", "0763433779", profileImage);
+//               databaseConnector.storeUser(user);
+//
+
+//                List<Question> questionList = databaseConnector.getAllQuestions();
+//                for (int i = 0; i < questionList.size(); i++) {
+//                    Log.d("questionList", "id: " + questionList.get(i).getQuestion_id() + "\tcâu hỏi: " + questionList.get(i).getQuestion());
+//
+//                }
+//                Question question = new Question(11, "hioe");
+//                databaseConnector.deleteQuestion(question);
+
+//                User user = new User(1, "hin");
+//                Question question1 = new Question(1, "1");
+//                Question question2 = new Question(2, "2");
+//                Question question3 = new Question(3, "3");
+//                ForgotPassword forgotPassword1 = new ForgotPassword(1, user, question1, "15/03/2003");
+//                ForgotPassword forgotPassword2 = new ForgotPassword(2, user, question2, "cho");
+//                ForgotPassword forgotPassword3 = new ForgotPassword(3, user, question3, "ngu");
+//                databaseConnector.storeForgotPassword(forgotPassword1);
+//                databaseConnector.storeForgotPassword(forgotPassword2);
+//                databaseConnector.storeForgotPassword(forgotPassword3);

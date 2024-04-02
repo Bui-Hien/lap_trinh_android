@@ -2,9 +2,11 @@ package com.example.bt_lon.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import com.example.bt_lon.model.forgotPassword.ForgotPassword;
 import com.example.bt_lon.model.question.Question;
 import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
+import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,8 +42,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         EditText edtAnswersSecond = findViewById(R.id.edtAnswersSecond);
         EditText edtAnswerThird = findViewById(R.id.edtAnswerThird);
         Button btnNextForgotPassword = findViewById(R.id.btnNextForgotPassword);
+        ImageView imageBack = findViewById(R.id.imageBack);
 
-        List<ForgotPassword> forgotPasswordList = initData();
+        List<ForgotPassword> forgotPasswordList = initData(new User("buixuanhien5"));
 
         tvForgotPasswordName.setText(forgotPasswordList.get(0).getUser().getUsername());
         tvQuestionSecurityOne.setText(forgotPasswordList.get(0).getQuestion().getQuestion());
@@ -70,31 +74,29 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                         // Start the new activity
                         startActivity(intent);
-                        finish();
                     }
                 }
             }
         });
+        imageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        if (getIntent().getBooleanExtra("finish_forgot_password", false)) {
+            Intent intent = new Intent(this, ForgotPasswordActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        }
     }
 
-    private List<ForgotPassword> initData() {
-        List<ForgotPassword> forgotPasswordList = new ArrayList<>(); // Initialize the list
+    private List<ForgotPassword> initData(User user) {
+        DatabaseConnector databaseConnector = new DatabaseConnector(ForgotPasswordActivity.this);
+        databaseConnector.checkUser(user);
 
-        Question newQuestion1 = new Question(1, "Bạn sinh vào ngày nào?");
-        Question newQuestion2 = new Question(2, "Bạn có con vật cưng nào?");
-        Question newQuestion3 = new Question(3, "Bạn thích môn thể thao nào nhất?");
+        return databaseConnector.getAllForgotPasswordsByUserId(databaseConnector.checkUser(user));
 
-        User user = new User(1, "buihien");
-
-        ForgotPassword forgotPassword1 = new ForgotPassword(1, user, newQuestion1, "15/03/2003");
-        ForgotPassword forgotPassword2 = new ForgotPassword(2, user, newQuestion2, "khong");
-        ForgotPassword forgotPassword3 = new ForgotPassword(3, user, newQuestion3, "ngu");
-
-        forgotPasswordList.add(forgotPassword1);
-        forgotPasswordList.add(forgotPassword2);
-        forgotPasswordList.add(forgotPassword3);
-
-        return forgotPasswordList;
     }
 
 }

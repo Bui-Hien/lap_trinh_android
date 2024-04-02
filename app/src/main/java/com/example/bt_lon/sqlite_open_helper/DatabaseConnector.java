@@ -11,12 +11,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.Toast;
 
+import com.example.bt_lon.model.forgotPassword.ForgotPassword;
+import com.example.bt_lon.model.question.Question;
 import com.example.bt_lon.model.user.User;
 
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class DatabaseConnector extends SQLiteOpenHelper {
@@ -95,15 +99,26 @@ public class DatabaseConnector extends SQLiteOpenHelper {
 
     }
 
-
-    public boolean checkUser(String userName) {
+    public User checkUser(User user) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT username FROM users WHERE username LIKE ?", new String[]{userName});
-        boolean exists = cursor.getCount() > 0;
+        Cursor cursor = db.rawQuery("SELECT user_id, username FROM users WHERE username LIKE ?", new String[]{user.getUsername()});
+
+        User userQuery = null;
+
+        if (cursor.moveToFirst()) {
+            // Nếu có dữ liệu trong Cursor, tạo một đối tượng User từ dữ liệu và trả về
+            int userId = cursor.getInt(0);
+            String username = cursor.getString(1);
+            // Khởi tạo đối tượng User từ dữ liệu
+            user = new User(userId, user.getUsername());
+        }
+
         cursor.close();
-        return exists;
+
+        return user; // Nếu user null, có nghĩa là không tìm thấy user với username đã cho.
     }
+
 
     public User getUser(String userName, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -142,7 +157,11 @@ public class DatabaseConnector extends SQLiteOpenHelper {
 
         cursor.close();
         db.close();
-        return user;
+        if (user != null) {
+            return user;
+        } else {
+            return null;
+        }
     }
 
     public int updateInForUser(User user) {
@@ -170,7 +189,7 @@ public class DatabaseConnector extends SQLiteOpenHelper {
 
     }
 
-    public int updatePasswordUser(User user) {
+    public int updatePasswordUser(User user, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -178,12 +197,160 @@ public class DatabaseConnector extends SQLiteOpenHelper {
         // You can add other columns to update here if needed
 
         // Update the row in the users table where the username matches the provided username
+        int rowsAffected = db.update("users", values, "username = ? and password = ?", new String[]{user.getUsername(), password});
+
+        // Return the number of rows affected
+        return rowsAffected;
+    }
+
+    public int updatePasswordUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("password", user.getPassword());
+
         int rowsAffected = db.update("users", values, "username = ?", new String[]{user.getUsername()});
 
         // Return the number of rows affected
         return rowsAffected;
     }
 
+
+    public boolean storeQuestion(Question question) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("question", question.getQuestion());
+
+        // Chèn dữ liệu vào bảng
+        long newRowId = db.insert("Questions", null, values);
+
+        // Kiểm tra xem việc chèn dữ liệu có thành công hay không
+        if (newRowId != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public List<Question> getAllQuestions() {
+        List<Question> questionList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {"question_id", "question"};
+        Cursor cursor = db.query("Questions", projection, null, null, null, null, null);
+
+        // Duyệt qua các hàng kết quả và tạo đối tượng Question cho mỗi hàng
+        if (cursor.moveToFirst()) {
+            do {
+                int questionId = cursor.getInt(0);
+                String questionText = cursor.getString(1);
+
+                // Tạo đối tượng Question và thêm vào danh sách
+                Question question = new Question(questionId, questionText);
+                questionList.add(question);
+            } while (cursor.moveToNext());
+        }
+
+        // Đóng con trỏ cursor khi đã sử dụng xong
+        cursor.close();
+
+        // Trả về danh sách các câu hỏi
+        return questionList;
+    }
+
+    public boolean deleteQuestion(Question question) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Xây dựng điều kiện WHERE để chỉ định câu hỏi cần xóa
+        String selection = "question_id = ?";
+        String[] selectionArgs = {String.valueOf(question.getQuestion_id())};
+
+        // Thực hiện truy vấn xóa
+        int deletedRows = db.delete("Questions", selection, selectionArgs);
+
+        // Kiểm tra xem có hàng nào đã bị xóa không
+        if (deletedRows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean storeForgotPassword(ForgotPassword forgotPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("forgot_password_id", forgotPassword.getForgot_password_id());
+        values.put("user_id", forgotPassword.getUser().getUser_id()); // Assuming user_id is stored in ForgotPassword table
+        values.put("question_id", forgotPassword.getQuestion().getQuestion_id());
+        values.put("answer", forgotPassword.getAnswer());
+
+        // Chèn dữ liệu vào bảng
+        long newRowId = db.insert("ForgotPassword", null, values);
+
+        // Kiểm tra xem việc chèn dữ liệu có thành công hay không
+        if (newRowId != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Question getQuestionById(int questionId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {"question_id", "question"};
+        String selection = "question_id = ?";
+        String[] selectionArgs = {String.valueOf(questionId)};
+        Cursor cursor = db.query("Questions", projection, selection, selectionArgs, null, null, null);
+
+        Question question = null;
+
+        // Kiểm tra xem Cursor có dữ liệu không
+        if (cursor.moveToFirst()) {
+            // Nếu có dữ liệu trong Cursor, tạo một đối tượng Question từ dữ liệu và trả về
+            String questionText = cursor.getString(1);
+            // Khởi tạo đối tượng Question từ dữ liệu
+            question = new Question(questionId, questionText);
+        }
+
+        cursor.close();
+
+        return question; // Nếu question null, có nghĩa là không tìm thấy câu hỏi với questionId đã cho.
+    }
+
+    public List<ForgotPassword> getAllForgotPasswordsByUserId(User user) {
+        List<ForgotPassword> forgotPasswordList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Câu lệnh SQL SELECT * để lấy tất cả các dữ liệu từ bảng ForgotPassword dựa trên user_id
+        String[] projection = {"forgot_password_id", "user_id", "question_id", "answer"};
+        String selection = "user_id = ?";
+        String[] selectionArgs = {String.valueOf(user.getUser_id())};
+        Cursor cursor = db.query("ForgotPassword", projection, selection, selectionArgs, null, null, null);
+
+        // Duyệt qua các hàng kết quả và tạo đối tượng ForgotPassword cho mỗi hàng
+        if (cursor.moveToFirst()) {
+            do {
+                int forgot_password_id = cursor.getInt(0);
+                int user_id = cursor.getInt(1);
+                int question_id = cursor.getInt(2);
+                String answer = cursor.getString(3);
+
+                // Tạo đối tượng Question và thêm vào danh sách
+                Question question = new Question(question_id, String.valueOf(getQuestionById(question_id).getQuestion())); // Làm thế nào để lấy câu hỏi từ questionId, tùy thuộc vào cách bạn đã lưu dữ liệu
+                ForgotPassword forgotPassword = new ForgotPassword(forgot_password_id, user, question, answer);
+                forgotPasswordList.add(forgotPassword);
+            } while (cursor.moveToNext());
+        }
+
+        // Đóng con trỏ cursor khi đã sử dụng xong
+        cursor.close();
+
+        // Trả về danh sách các đối tượng ForgotPassword
+        return forgotPasswordList;
+    }
 
     public Bitmap getBitmapFromBlob(byte[] blob) {
         if (blob == null) return null;
