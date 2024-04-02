@@ -23,21 +23,16 @@ import java.util.List;
 
 public class PurchaseOrderActivity extends AppCompatActivity {
 
-    private ImageView imageBackPurchase;
-    private ConstraintLayout layout1;
-    private ConstraintLayout layout2;
-    private List<PurchaseOrder> purchaseOrderList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase_order);
 
-        layout1 = findViewById(R.id.purchase_none_product);
-        layout2 = findViewById(R.id.purchase_product);
-        imageBackPurchase = findViewById(R.id.imageBackPurchase);
+        ConstraintLayout constraintLayout1 = findViewById(R.id.purchase_none_product);
+        ConstraintLayout constraintLayout2 = findViewById(R.id.purchase_product);
+        ImageView imageBackPurchase = findViewById(R.id.imageBackPurchase);
 
-        purchaseOrderList = new ArrayList<>();
+        List<PurchaseOrder> purchaseOrderList = new ArrayList<>();
 
 
         String productName = "Áo thun nam";
@@ -57,8 +52,8 @@ public class PurchaseOrderActivity extends AppCompatActivity {
         }
 
         if (!purchaseOrderList.isEmpty()) {
-            layout1.setVisibility(View.GONE);
-            layout2.setVisibility(View.VISIBLE);
+            constraintLayout1.setVisibility(View.GONE);
+            constraintLayout2.setVisibility(View.VISIBLE);
 
             RecyclerView recyclerView = findViewById(R.id.recyclerViewPurchase);
 
@@ -67,8 +62,8 @@ public class PurchaseOrderActivity extends AppCompatActivity {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         } else {
-            layout1.setVisibility(View.VISIBLE);
-            layout2.setVisibility(View.GONE);
+            constraintLayout1.setVisibility(View.VISIBLE);
+            constraintLayout2.setVisibility(View.GONE);
         }
 
         imageBackPurchase.setOnClickListener(new View.OnClickListener() {

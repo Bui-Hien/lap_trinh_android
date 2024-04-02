@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountFragment extends Fragment {
-
     private ImageView imageViewLogined;
     private ImageView imgPurchasedCart;
     private ImageView imageViewLogout;
@@ -51,7 +50,6 @@ public class AccountFragment extends Fragment {
     private Button btnSigup;
     private ConstraintLayout logined, noLogin, constrainLayoutNoPurchased;
     private RecyclerView recyclerViewPurchased;
-    private RecyclerView recyclerView;
     private Purchased purchasedAdapter;
     private List<PurchaseOrder> purchaseOrderList;
 
@@ -116,11 +114,11 @@ public class AccountFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-
             accountSetup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+                    intent.putExtra("previous", "change");
                     startActivity(intent);
                 }
             });
@@ -138,13 +136,14 @@ public class AccountFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+
             boolean d = true;
             if (d) {
                 initData();
                 purchaseOrderList = (purchaseOrderList == null) ? new ArrayList<>() : purchaseOrderList;
                 purchasedAdapter = (purchasedAdapter == null) ? new Purchased(purchaseOrderList, getContext()) : purchasedAdapter;
 
-                recyclerView = getView().findViewById(R.id.recyclerViewPurchased);
+                RecyclerView recyclerView = getView().findViewById(R.id.recyclerViewPurchased);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(purchasedAdapter);
@@ -212,17 +211,13 @@ public class AccountFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Toast.makeText(getContext(), "onCreateView", Toast.LENGTH_SHORT).show();
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
-    // Hàm này tạo dữ liệu mẫu cho RecyclerView
     private void initData() {
         purchaseOrderList = new ArrayList<>();
-
-        // Thêm mẫu dữ liệu
         for (int i = 0; i < 10; i++) {
-            purchaseOrderList.add(new PurchaseOrder(/* Thêm thông tin của sản phẩm */));
+            purchaseOrderList.add(new PurchaseOrder());
         }
     }
 }

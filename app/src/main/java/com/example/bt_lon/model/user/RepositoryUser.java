@@ -17,6 +17,19 @@ public class RepositoryUser {
         }
     }
 
+    // Method to create a new account
+    public static void createNewAccount(User user) {
+        if (account == null) {
+            account = user;
+        }
+    }
+
+    public static void createNewAccount(int user_id, String username) {
+        if (account == null) {
+            account = new User(user_id, username);
+        }
+    }
+
     public static void deleteAccount() {
         account = null;
     }

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.bt_lon.activity.CartActivity;
@@ -19,9 +18,9 @@ import com.example.bt_lon.fragment.AccountFragment;
 import com.example.bt_lon.fragment.HomeFragment;
 import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
+import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -35,8 +34,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+//        DatabaseConnector databaseConnector = new DatabaseConnector(this);
+//        Bitmap profileImage = BitmapFactory.decodeResource(getResources(), R.drawable.cargo);
+//        User user = new User(1, "Bui Xuan Hien", "buixuanhien", "12345", true, new Date(), "Ha Noi", "0763433779", profileImage);
+//
+//        databaseConnector.storeUser(user);
+//        Toast.makeText(MainActivity.this, databaseConnector.storeUser(user) ? "Co" : "Khong", Toast.LENGTH_SHORT).show();
+
+
+//        boolean isUser = databaseConnector.checkUser("buihien2");
+//        Toast.makeText(MainActivity.this, isUser ? "Co" : "Khong", Toast.LENGTH_SHORT).show();
+
+
+//        Bitmap profileImage = BitmapFactory.decodeResource(getResources(), R.drawable.cargo);
+//        User user = new User(1, "Bui Xuan Hien 1", "buihien1", "123455", true, new Date(), "Ha Noi", "0763433779", profileImage);
+//
+
+
         replaceFragment(new HomeFragment());
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        setUpUI();
         bottomNavigationView.setSelectedItemId(R.id.home);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
@@ -58,10 +76,9 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
-        setUpUI();
     }
 
-    private void setUpUI() {
+        private void setUpUI() {
         bottomNavigationView.setSelectedItemId(previousFragment == 1 ? R.id.home : R.id.account);
     }
 
@@ -69,9 +86,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setUpUI();
-        Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_LONG).show();
     }
-
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -79,5 +94,4 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-
 }

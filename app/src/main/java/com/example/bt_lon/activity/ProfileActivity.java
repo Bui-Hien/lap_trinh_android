@@ -3,13 +3,16 @@ package com.example.bt_lon.activity;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -28,7 +31,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.bt_lon.R;
 import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
+import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,9 +55,8 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText ediBirthDay;
     private EditText editPhoneAccount;
     private static final int PICK_IMAGE_REQUEST = 99;
-    private Uri imagePath;
-    private Bitmap imageToStore;
-    private ArrayAdapter<String> sexAdapter;
+    User userOld = RepositoryUser.getAccount();
+    User user = new User(userOld);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +73,16 @@ public class ProfileActivity extends AppCompatActivity {
         editPhoneAccount = findViewById(R.id.editPhoneAccount);
         btnChaneImage = findViewById(R.id.btnChaneImage);
         setupUI();
+
     }
 
     private void setupUI() {
-        User user = RepositoryUser.getAccount();
-
         if (user != null) {
             ArrayList<String> listSex = new ArrayList<>();
             listSex.add("Nam");
             listSex.add("Nữ");
 
-            sexAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listSex);
+            ArrayAdapter<String> sexAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listSex);
             sexAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerSex.setAdapter(sexAdapter);
 
@@ -99,9 +102,6 @@ public class ProfileActivity extends AppCompatActivity {
             editPhoneAccount.setText(user.getPhone_number());
             if (user.getProfileImage() != null) {
                 imgEditAccount.setImageBitmap(user.getProfileImage());
-            } else {
-                imgEditAccount.setScaleX(1.2F);
-                imgEditAccount.setScaleY(1.2F);
             }
 
             imgEditAccount.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +123,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
             btnDone.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View v) {
                     boolean isMale = spinnerSex.getSelectedItem() == "Nam";
@@ -158,22 +159,29 @@ public class ProfileActivity extends AppCompatActivity {
                     btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            editPhoneAccount.setText(user.getPhone_number());
+                            editPhoneAccount.setText(userOld.getPhone_number());
                             dialog.dismiss();
                         }
                     });
 
                     if (updatePhoneNumber(String.valueOf(editPhoneAccount.getText()))) {
                         user.setPhone_number(String.valueOf(editPhoneAccount.getText()));
+
+                        userOld.setUser_id(user.getUser_id());
+                        userOld.setFull_name(user.getFull_name());
+                        userOld.setSex(user.isMale());
+                        userOld.setYear_of_birth(user.getYear_of_birth());
+                        userOld.setAddress(user.getAddress());
+                        userOld.setPhone_number(user.getPhone_number());
+                        userOld.setProfileImage(user.getProfileImage());
+                        DatabaseConnector databaseConnector = new DatabaseConnector(ProfileActivity.this);
+                        databaseConnector.updateInForUser(userOld);
                         finish();
                     } else {
                         dialog.show();
                     }
                 }
             });
-        } else {
-            Toast.makeText(ProfileActivity.this, "Không có tài khoản được tìm thấy", Toast.LENGTH_SHORT).show();
-            finish();
         }
 
         bntCancel.setOnClickListener(new View.OnClickListener() {
@@ -208,16 +216,53 @@ public class ProfileActivity extends AppCompatActivity {
         try {
             super.onActivityResult(requestCode, resultCode, data);
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-                imagePath = data.getData();
-                imageToStore = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
+                Uri imagePath = data.getData();
+                Bitmap imageToStore = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
 
-                imgEditAccount.setImageBitmap(imageToStore);
+                user.setProfileImage(getBitmapFromBlob(bitmapToByteArray(imageToStore, 150, 100)));
+                ImageView old, imgnew;
+
+                old = findViewById(R.id.imgold);
+                imgnew = findViewById(R.id.imgnew);
+
+                old.setImageBitmap(imageToStore);
+                imgnew.setImageBitmap(getBitmapFromBlob(bitmapToByteArray(imageToStore, 150, 100)));
+
             }
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
+    public byte[] bitmapToByteArray(Bitmap bitmap, int targetSizeDP, int quality) {
+        try {
+            Bitmap resizedBitmap = resizeBitmap(bitmap, targetSizeDP);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (Exception e) {
+            Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        return new byte[0];
+    }
+
+    private Bitmap resizeBitmap(Bitmap bitmap, int targetSizeDP) {
+        Context context = ProfileActivity.this;
+        float density = context.getResources().getDisplayMetrics().density;
+        int targetSizePx = (int) (targetSizeDP * density);
+
+        float aspectRatio = (float) bitmap.getWidth() / bitmap.getHeight();
+        int targetWidth = Math.round(targetSizePx * aspectRatio);
+        int targetHeight = targetSizePx;
+
+        return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
+    }
+
+    public Bitmap getBitmapFromBlob(byte[] blob) {
+        if (blob == null) return null;
+
+        return BitmapFactory.decodeByteArray(blob, 0, blob.length);
+    }
 
     private void initDatePicker() {
         // Lấy ngày hiện tại từ ediBirthDay
@@ -270,22 +315,45 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private boolean updatePhoneNumber(String phoneNumberString) {
-        // Mẫu regex để phát hiện số điện thoại
         String regex = "\\b(?:\\+?\\d{1,3}[-.\\s]?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}\\b";
-//
-//        // Tạo Pattern object
         Pattern pattern = Pattern.compile(regex);
-//
-//        // Tạo Matcher object
         Matcher matcher = pattern.matcher(phoneNumberString);
-//
-//        // Kiểm tra nếu là số điện thoại và cập nhật vào user
         if (matcher.find()) {
-            String phoneNumber = matcher.group();
-            // Cập nhật số điện thoại vào user
+//            String phoneNumber = matcher.group();
             return true;
         }
         return false;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save the form data to the bundle
+        boolean isMale = spinnerSex.getSelectedItem() == "Nam";
+
+        user.setFull_name(String.valueOf(edtFullName.getText()));
+
+        user.setSex(isMale);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        try {
+            Date birth = sdf.parse(String.valueOf(ediBirthDay.getText()));
+            user.setYear_of_birth(birth);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        user.setPhone_number(String.valueOf(editPhoneAccount.getText()));
+
+        user.setAddress(String.valueOf(edtAddress.getText()));
+
+        Drawable drawable = imgEditAccount.getDrawable();
+        if (drawable != null) {
+            if (drawable instanceof BitmapDrawable) {
+                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                user.setProfileImage(bitmap);
+            }
+        }
+
+
+    }
 }

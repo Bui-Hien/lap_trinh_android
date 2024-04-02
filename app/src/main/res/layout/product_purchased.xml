@@ -13,11 +13,11 @@
         android:id="@+id/imgProductPurchased"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:scaleType="center"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/_31185777_1151612892504937_7782766820390842012_n" />
+        app:srcCompat="@drawable/girl" />
 
     <TextView
         android:id="@+id/tvNumberOfPurchases"

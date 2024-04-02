@@ -29,3 +29,13 @@ public class Question
         this.question = question;
     }
 }
+//        Câu hỏi: Bạn sinh vào ngày nào?
+//        Câu hỏi: Bạn có con vật cưng nào?
+//        Câu hỏi: Bạn thích môn thể thao nào nhất?
+//        Câu hỏi: Tên người bạn thân nhất của bạn là gì?
+//        Câu hỏi: Bạn đã từng đi du lịch đến đâu trong chuyến cuối cùng của mình?
+//        Câu hỏi: Trong gia đình bạn, bạn là người thứ mấy?
+//        Câu hỏi: Bạn tốt nghiệp từ trường đại học nào?
+//        Câu hỏi: Tên của người đồng nghiệp đầu tiên mà bạn làm việc cùng là gì?
+//        Câu hỏi: Bạn thường xem thể loại phim nào?
+//        Câu hỏi: Bạn đã từng tham gia sự kiện nào của cộng đồng gần đây nhất?

@@ -14,13 +14,32 @@ public class User {
     private String address;
     private String phone_number;
     private Bitmap profileImage;
+
     public User() {
     }
-    public User(int user_id, String username,Bitmap profileImage) {
+
+    public User(User user) {
+        this.user_id = user.user_id;
+        this.full_name = user.full_name;
+        this.username = user.username;
+        this.sex = user.sex;
+        this.year_of_birth = user.year_of_birth;
+        this.address = user.address;
+        this.phone_number = user.phone_number;
+        this.profileImage = user.profileImage;
+    }
+
+    public User(int user_id, String username) {
+        this.user_id = user_id;
+        this.username = username;
+    }
+
+    public User(int user_id, String username, Bitmap profileImage) {
         this.user_id = user_id;
         this.username = username;
         this.profileImage = profileImage;
     }
+
     public User(int user_id, String full_name, String username, boolean sex, Date year_of_birth, String address, String phone_number, Bitmap profileImage) {
         this.user_id = user_id;
         this.full_name = full_name;
@@ -30,7 +49,9 @@ public class User {
         this.address = address;
         this.phone_number = phone_number;
         this.profileImage = profileImage;
-    }public User(int user_id, String full_name, String username, String password, boolean sex, Date year_of_birth, String address, String phone_number, Bitmap profileImage) {
+    }
+
+    public User(int user_id, String full_name, String username, String password, boolean sex, Date year_of_birth, String address, String phone_number, Bitmap profileImage) {
         this.user_id = user_id;
         this.full_name = full_name;
         this.username = username;
