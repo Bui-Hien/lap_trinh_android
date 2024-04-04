@@ -15,6 +15,12 @@ public class Cart {
     public Cart() {
     }
 
+    public Cart(User user, Product product, int quantity) {
+        this.user = user;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
     public Cart(int cart_id, User user, Product product, boolean isChecked, int quantity) {
         this.cart_id = cart_id;
         this.user = user;

@@ -22,7 +22,10 @@ import com.example.bt_lon.R;
 import com.example.bt_lon.adapter.CartAdapter;
 import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.product.Product;
+import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
+import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
+import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class CartActivity extends AppCompatActivity {
     private TextView tvCartLogo;
     private Button btnCartBuyAll;
     Button btnOkNoneProductCart;
+
     @SuppressLint({"SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class CartActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.warning_dialog);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.setCancelable(false);
-        btnOkNoneProductCart=dialog.findViewById(R.id.btnWarningDialog);
+        btnOkNoneProductCart = dialog.findViewById(R.id.btnWarningDialog);
         btnOkNoneProductCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,16 +112,17 @@ public class CartActivity extends AppCompatActivity {
     }
 
     public List<Cart> InsertData() {
-        List<Cart> cartList = new ArrayList<>();
-        Bitmap productImage = BitmapFactory.decodeResource(getResources(), R.drawable.logo_miton);
-        User user = new User(1, "hienbui", productImage);
-
-        for (int i = 1; i < 10; i++) {
-            Product product = new Product("productName " + i, "description" + i, 100000, productImage);
-            Cart cart = new Cart(i, user, product, false, i);
-            cartList.add(cart);
-        }
-        return cartList;
+//        List<Cart> cartList = new ArrayList<>();
+//        Bitmap productImage = BitmapFactory.decodeResource(getResources(), R.drawable.logo_miton);
+//        User user = new User(1, "hienbui", productImage);
+//
+//        for (int i = 1; i < 10; i++) {
+//            Product product = new Product("productName " + i, "description" + i, 100000, productImage);
+//            Cart cart = new Cart(i, user, product, false, i);
+//            cartList.add(cart);
+//        }
+        CartDAO cartDAO = new CartDAO(CartActivity.this);
+        return cartDAO.getCartItemsByUserId(RepositoryUser.getAccount());
     }
 
     public String TotalCost(List<Cart> cartList) {

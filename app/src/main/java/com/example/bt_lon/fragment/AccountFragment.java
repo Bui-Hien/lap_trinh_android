@@ -137,8 +137,7 @@ public class AccountFragment extends Fragment {
                 }
             });
 
-            boolean d = true;
-            if (d) {
+            if (user.getUser_id() > 0) {
                 initData();
                 purchaseOrderList = (purchaseOrderList == null) ? new ArrayList<>() : purchaseOrderList;
                 purchasedAdapter = (purchasedAdapter == null) ? new Purchased(purchaseOrderList, getContext()) : purchasedAdapter;
@@ -158,6 +157,8 @@ public class AccountFragment extends Fragment {
             logined.setVisibility(View.GONE);
             noLogin.setVisibility(View.VISIBLE);
             bntLogOut.setVisibility(View.GONE);
+            constrainLayoutNoPurchased.setVisibility(View.VISIBLE);
+            recyclerViewPurchased.setVisibility(View.GONE);
             imageViewLogout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

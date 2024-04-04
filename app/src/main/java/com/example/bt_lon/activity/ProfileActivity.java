@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.bt_lon.R;
 import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
+import com.example.bt_lon.sqlite_open_helper.DAO.UserDAO;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
 import java.io.ByteArrayOutputStream;
@@ -176,8 +177,10 @@ public class ProfileActivity extends AppCompatActivity {
                         userOld.setAddress(user.getAddress());
                         userOld.setPhone_number(user.getPhone_number());
                         userOld.setProfileImage(user.getProfileImage());
+
                         DatabaseConnector databaseConnector = new DatabaseConnector(ProfileActivity.this);
-                        databaseConnector.updateInForUser(userOld);
+                        UserDAO userDAO = new UserDAO(ProfileActivity.this);
+                        userDAO.updateInForUser(userOld);
                         finish();
                     } else {
                         dialog.show();
@@ -236,16 +239,16 @@ public class ProfileActivity extends AppCompatActivity {
 
                 // Kiểm tra kích thước của hình ảnh
                 int imageSizeInBytes = getImageSizeInBytes(imagePath);
-                if (imageSizeInBytes > 5* 1024 * 1024) { // Kiểm tra kích thước ảnh có lớn hơn 5MB (5 * 1024 * 1024 bytes) không
+                if (imageSizeInBytes > 10 * 1024 * 1024) { // Kiểm tra kích thước ảnh có lớn hơn 5MB (5 * 1024 * 1024 bytes) không
                     // Thông báo ảnh quá lớn
-                    Toast.makeText(getApplicationContext(), "Kích thước ảnh vượt quá 5MB. Vui lòng chọn ảnh khác.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Kích thước ảnh vượt quá 10MB. Vui lòng chọn ảnh khác.", Toast.LENGTH_LONG).show();
                     return; // Kết thúc phương thức nếu kích thước ảnh vượt quá 5MB
                 }
 
                 Bitmap imageToStore = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
 
                 // Tiếp tục xử lý hình ảnh
-                user.setProfileImage(getBitmapFromBlob(bitmapToByteArray(imageToStore, 150, 100)));
+                user.setProfileImage(getBitmapFromBlob(bitmapToByteArray(imageToStore, 150, 80)));
             }
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();

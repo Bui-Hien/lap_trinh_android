@@ -11,23 +11,57 @@ public class Product {
     private String product_name;
     private String description;
     private double price;
+    private int quantity;
     private Bitmap image_product;
 
     public Product() {
     }
-    public Product( String product_name,String description, double price, Bitmap image_product) {
+
+    public Product(int product_id) {
+        this.product_id = product_id;
+    }
+
+    public Product(String product_name, String description, double price, Bitmap image_product) {
 
         this.product_name = product_name;
         this.description = description;
         this.price = price;
         this.image_product = image_product;
     }
+
+    public Product(int product_id, Bitmap image_product) {
+        this.product_id = product_id;
+        this.image_product = image_product;
+    }
+
+    public Product(int product_id, Category category, String product_name, String description, double price, int quantity, Bitmap image_product) {
+        this.product_id = product_id;
+        this.category = category;
+        this.product_name = product_name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.image_product = image_product;
+    }
+
     public Product(int product_id, Category category, String product_name, String description, double price, Bitmap image_product) {
         this.product_id = product_id;
         this.category = category;
         this.product_name = product_name;
         this.description = description;
         this.price = price;
+        this.image_product = image_product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setImage_product(Bitmap image_product) {
         this.image_product = image_product;
     }
 

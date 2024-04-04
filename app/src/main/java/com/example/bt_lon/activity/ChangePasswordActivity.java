@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.bt_lon.R;
 import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
+import com.example.bt_lon.sqlite_open_helper.DAO.UserDAO;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -54,8 +55,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                 RepositoryUser.getAccount().setPassword(String.valueOf(edtPasswordNew.getText()));
 
                                 DatabaseConnector databaseConnector = new DatabaseConnector(ChangePasswordActivity.this);
+                                UserDAO userDAO = new UserDAO(ChangePasswordActivity.this);
 
-                                if (databaseConnector.updatePasswordUser(RepositoryUser.getAccount()) > 0) {
+                                if (userDAO.updatePasswordUser(RepositoryUser.getAccount()) > 0) {
                                     Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -85,7 +87,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             } else {
                                 RepositoryUser.getAccount().setPassword(String.valueOf(edtPasswordNew.getText()));
                                 DatabaseConnector databaseConnector = new DatabaseConnector(ChangePasswordActivity.this);
-                                if (databaseConnector.updatePasswordUser(RepositoryUser.getAccount(), edtPasswordOld.getText().toString()) > 0) {
+                                UserDAO userDAO = new UserDAO(ChangePasswordActivity.this);
+                                if (userDAO.updatePasswordUser(RepositoryUser.getAccount(), edtPasswordOld.getText().toString()) > 0) {
                                     finish();
                                 } else {
                                     Toast.makeText(ChangePasswordActivity.this, "Mật khẩu bạn vừa nhập không đúng.", Toast.LENGTH_SHORT).show();
