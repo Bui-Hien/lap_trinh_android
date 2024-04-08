@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
+
+    private RecyclerView rcv_product;
+    private ProductAdapter mProductAdapter;
+
     public HomeFragment() {
     }
 
@@ -35,6 +39,7 @@ public class HomeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
