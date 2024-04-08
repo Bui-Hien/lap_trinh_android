@@ -1,8 +1,10 @@
 package com.example.bt_lon.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.example.bt_lon.R;
 import com.example.bt_lon.activity.CartActivity;
 import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.product.Product;
+import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
 
 import java.util.List;
 
@@ -54,7 +57,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.imgViewCart.setImageBitmap(product.getImage_product());
         holder.tvCartNameProduct.setText(product.getProduct_name());
         holder.tvCartDescriptionProduct.setText(product.getDescription());
-        holder.tvCartPriceProduct.setText(decimalFormat.format(product.getPrice()).replace(",", "."));
+        holder.tvCartPriceProduct.setText("đ" + decimalFormat.format(product.getPrice()).replace(",", "."));
         holder.tvCartQualityProduct.setText(String.valueOf(cart.getQuantity()));
         holder.checkBoxCart.setChecked(cart.isChecked());
 
@@ -64,7 +67,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             holder.itemView.setLayoutParams(layoutParams);
 
         }
-
+        if (cart.getQuantity() == cart.getProduct().getQuantity()) {
+            holder.btnCartPlusProduct.setBackgroundColor(Color.parseColor("#e8e8e8"));
+        } else {
+            holder.btnCartPlusProduct.setBackgroundResource(R.drawable.btncongtru);
+        }
 
         holder.checkBoxCart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -78,16 +85,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
 
-                //giả sử tổng số lượng tất cả sản phầm là 10 sản phầm
-                holder.btnCartMinusProduct.setBackgroundResource(R.drawable.btncongtru);
-
-                if (cart.getQuantity() < 10) {
+                holder.btnCartPlusProduct.setBackgroundResource(R.drawable.btncongtru);
+                if (cart.getQuantity() < cart.getProduct().getQuantity()) {
                     int quantity = cart.getQuantity() + 1;
                     cart.setQuantity(quantity);
                     holder.tvCartQualityProduct.setText(String.valueOf(quantity));
                     ((CartActivity) mContext).updateText();
+
+//                    int userId, int productId, int newQuantity
+                    CartDAO cartDAO = new CartDAO(mContext.getApplicationContext());
+                    cartDAO.updateCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id(), quantity);
                 }
-                if (cart.getQuantity() == 10)
+                if (cart.getQuantity() == cart.getProduct().getQuantity())
                     holder.btnCartPlusProduct.setBackgroundColor(Color.parseColor("#e8e8e8"));
             }
         });
@@ -110,11 +119,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             }
         });
         btnDialogDelete.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
                 cartList.remove(holder.getAdapterPosition());
                 ((CartActivity) mContext).updateText();
                 notifyItemRemoved(holder.getAdapterPosition());
+                notifyDataSetChanged();
+                CartDAO cartDAO = new CartDAO(mContext.getApplicationContext());
+                cartDAO.deleteCartItem(cart.getUser().getUser_id(), cart.getProduct().getProduct_id());
+                if (cartList.isEmpty()) {
+                    ((CartActivity) mContext).updateLayout();
+                }
                 dialog.dismiss();
             }
         });
@@ -126,6 +142,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 if (cart.getQuantity() >= 1) {
                     int quantity = cart.getQuantity() - 1;
                     cart.setQuantity(quantity);
+                    //int userId, int productId, int newQuantity
+                    CartDAO cartDAO = new CartDAO(mContext.getApplicationContext());
+                    cartDAO.updateCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id(), quantity);
                     holder.tvCartQualityProduct.setText(String.valueOf(quantity));
                     if (cart.getQuantity() < 1) {
                         dialog.show();

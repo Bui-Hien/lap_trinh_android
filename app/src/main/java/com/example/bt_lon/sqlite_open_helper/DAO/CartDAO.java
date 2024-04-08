@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.bt_lon.model.cart.Cart;
+import com.example.bt_lon.model.category.Category;
 import com.example.bt_lon.model.product.Product;
 import com.example.bt_lon.model.user.User;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
@@ -31,12 +32,6 @@ public class CartDAO {
         dbHelper = new DatabaseConnector(context);
     }
 
-    public CartDAO(DatabaseConnector databaseConnector) {
-    }
-
-    public CartDAO(ForgotPasswordDAO forgotPasswordDAO) {
-    }
-
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
     }
@@ -47,9 +42,10 @@ public class CartDAO {
 
     public boolean storeProductToCart(Cart cart) {
         if (isProductInCart(cart.getUser().getUser_id(), cart.getProduct().getProduct_id())) {
-            Log.e("storeProductToCart", "da co");
+            Log.e("storeProductToCart", "Đã có sản phẩn này trong giỏ hàng");
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-            if (updateCartQuantity(cart)) {
+            int newQuantity = getCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id()) + 1;
+            if (updateCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id(), newQuantity)) {
                 db.close(); // Close the database connection after updating quantity
                 return true; // Return true if quantity updated successfully
             } else {
@@ -63,9 +59,9 @@ public class CartDAO {
             ContentValues values = new ContentValues();
             values.put("user_id", cart.getUser().getUser_id());
             values.put("product_id", cart.getProduct().getProduct_id());
-            values.put("quantity", cart.getQuantity());
+            values.put("quantity", 1);
 
-            if (db.insert("Cart", null, values) != -1) {
+            if (db.insert("Carts", null, values) != -1) {
                 Log.e("storeProductToCart", "thanh cong");
                 db.close();
                 return true;
@@ -78,10 +74,26 @@ public class CartDAO {
 
     }
 
+    public boolean deleteProductFromCart(int user_id, int product_id) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int rowsAffected = db.delete("Carts", "user_id = ? AND product_id = ?",
+                new String[]{String.valueOf(user_id), String.valueOf(product_id)});
+
+        db.close();
+
+        if (rowsAffected > 0) {
+            Log.d("deleteProductFromCart", "Deletion successful");
+            return true;
+        } else {
+            Log.e("deleteProductFromCart", "Deletion failed");
+            return false;
+        }
+    }
 
     public boolean isProductInCart(int userId, int productId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT COUNT(*) FROM Cart WHERE user_id = ? AND product_id = ?";
+        String query = "SELECT COUNT(*) FROM Carts WHERE user_id = ? AND product_id = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(productId)});
         int count = 0;
         if (cursor != null) {
@@ -94,25 +106,73 @@ public class CartDAO {
         return count > 0;
     }
 
-    public boolean updateCartQuantity(Cart cart) {
+    public boolean updateCartQuantity(int userId, int productId, int newQuantity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
         ContentValues values = new ContentValues();
-        values.put("quantity", cart.getQuantity());
+        values.put("quantity", newQuantity);
 
-        // Updating row
-        int rowsAffected = db.update("Cart", values, "user_id = ? AND product_id = ?", new String[]{String.valueOf(cart.getUser().getUser_id()), String.valueOf(cart.getProduct().getProduct_id())});
+        String selection = "user_id = ? AND product_id = ?";
+        String[] selectionArgs = {String.valueOf(userId), String.valueOf(productId)};
 
-        // Closing database connection
+        int rowsAffected = db.update("Carts", values, selection, selectionArgs);
+
         db.close();
 
-        // Check if the update was successful
-        return rowsAffected > 0;
+        if (rowsAffected > 0) {
+            Log.d("updateCartQuantity", "Update successful");
+            return true;
+        } else {
+            Log.d("updateCartQuantity", "No rows affected. User or product not found in the cart.");
+            return false;
+        }
     }
 
-    public List<Cart> getCartItemsByUserId(User user) {
+
+    public int getCartQuantity(int userId, int productId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {"quantity"};
+        String selection = "user_id = ? AND product_id = ?";
+        String[] selectionArgs = {String.valueOf(userId), String.valueOf(productId)};
+
+        Cursor cursor = db.query("Carts", projection, selection, selectionArgs, null, null, null);
+
+        int quantity = 0; // default value
+
+        if (cursor.moveToFirst()) {
+            quantity = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+
+        return quantity;
+    }
+
+    public boolean deleteCartItem(int userId, int productId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String selection = "user_id = ? AND product_id = ?";
+        String[] selectionArgs = {String.valueOf(userId), String.valueOf(productId)};
+
+        int rowsAffected = db.delete("Carts", selection, selectionArgs);
+
+        db.close();
+
+        if (rowsAffected > 0) {
+            Log.d("deleteCartItem", "Deletion successful");
+            return true;
+        } else {
+            Log.d("deleteCartItem", "No rows affected. User or product not found in the cart.");
+            return false;
+        }
+    }
+
+    public List<Cart> getCartItemsByUserId(Context context, User user) {
         List<Cart> cartItems = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT * FROM Cart WHERE user_id = ?";
+        String query = "SELECT * FROM Carts WHERE user_id = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(user.getUser_id())});
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -121,8 +181,9 @@ public class CartDAO {
                 int productId = cursor.getInt(2);
                 int quantity = cursor.getInt(3);
 
-                Product product = new Product(productId, user.getProfileImage());
-                // Create a Cart object and add it to the list
+                ProductDAO productDAO = new ProductDAO(context);
+                Product product = productDAO.getProductById(context, productId);
+
                 Cart cartItem = new Cart(cartId, user, product, false, quantity);
                 cartItems.add(cartItem);
             } while (cursor.moveToNext());

@@ -31,8 +31,6 @@ public class ForgotPasswordDAO {
         dbHelper = new DatabaseConnector(context);
     }
 
-    public ForgotPasswordDAO(DatabaseConnector databaseConnector) {
-    }
 
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
@@ -42,11 +40,11 @@ public class ForgotPasswordDAO {
         dbHelper.close();
     }
 
-    public boolean storeForgotPassword(ForgotPassword forgotPassword) {
+    public boolean storeForgotPassword(Context context, ForgotPassword forgotPassword) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("forgot_password_id", forgotPassword.getForgot_password_id());
-        UserDAO userDAO = new UserDAO(ForgotPasswordDAO.this);
+        UserDAO userDAO = new UserDAO(context);
         values.put("user_id", userDAO.checkUser(forgotPassword.getUser()).getUser_id());
         values.put("question_id", forgotPassword.getQuestion().getQuestion_id());
         values.put("answer", forgotPassword.getAnswer());
@@ -63,7 +61,7 @@ public class ForgotPasswordDAO {
     }
 
 
-    public List<ForgotPassword> getAllForgotPasswordsByUserId(User user) {
+    public List<ForgotPassword> getAllForgotPasswordsByUserId(Context context, User user) {
         List<ForgotPassword> forgotPasswordList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -82,7 +80,7 @@ public class ForgotPasswordDAO {
                 String answer = cursor.getString(3);
 
                 // Tạo đối tượng Question và thêm vào danh sách
-                QuestionDAO questionDAO = new QuestionDAO(ForgotPasswordDAO.this);
+                QuestionDAO questionDAO = new QuestionDAO(context);
                 Question question = new Question(question_id, String.valueOf(questionDAO.getQuestionById(question_id).getQuestion())); // Làm thế nào để lấy câu hỏi từ questionId, tùy thuộc vào cách bạn đã lưu dữ liệu
                 ForgotPassword forgotPassword = new ForgotPassword(forgot_password_id, user, question, answer);
                 forgotPasswordList.add(forgotPassword);

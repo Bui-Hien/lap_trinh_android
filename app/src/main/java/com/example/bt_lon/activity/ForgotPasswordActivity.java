@@ -111,9 +111,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     if (answer1.isEmpty() || answer2.isEmpty() || answer3.isEmpty()) {
                         Toast.makeText(ForgotPasswordActivity.this, "Câu trả lời không được bỏ trống.", Toast.LENGTH_SHORT).show();
                     } else {
-                        if (!answer1.equals(forgotPasswordList.get(0).getAnswer())
-                                || !answer2.equals(forgotPasswordList.get(1).getAnswer())
-                                || !answer3.equals(forgotPasswordList.get(2).getAnswer())) {
+                        if (!answer1.equals(forgotPasswordList.get(0).getAnswer()) || !answer2.equals(forgotPasswordList.get(1).getAnswer()) || !answer3.equals(forgotPasswordList.get(2).getAnswer())) {
                             Toast.makeText(ForgotPasswordActivity.this, "Câu trả lời không chính xác.", Toast.LENGTH_SHORT).show();
                         } else {
                             RepositoryUser.createNewAccount(forgotPasswordList.get(0).getUser().getUser_id(), forgotPasswordList.get(0).getUser().getUsername());
@@ -145,16 +143,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private List<ForgotPassword> initData(User user) {
-        DatabaseConnector databaseConnector = new DatabaseConnector(ForgotPasswordActivity.this);
-        UserDAO userDAO = new UserDAO(ForgotPasswordActivity.this);
-
-        userDAO.checkUser(user);
-
         ForgotPasswordDAO forgotPasswordDAO = new ForgotPasswordDAO(ForgotPasswordActivity.this);
-        if (forgotPasswordDAO.getAllForgotPasswordsByUserId(userDAO.checkUser(user)) != null) {
-            return forgotPasswordDAO.getAllForgotPasswordsByUserId(userDAO.checkUser(user));
+        UserDAO userDAO = new UserDAO(ForgotPasswordActivity.this);
+        if (userDAO.checkUser(user) != null) {
+            return forgotPasswordDAO.getAllForgotPasswordsByUserId(ForgotPasswordActivity.this, userDAO.checkUser(user));
         } else {
-            return null;
+            return new ArrayList<>();
         }
 
     }
@@ -174,9 +168,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     @NonNull
     private DatePickerDialog getDatePickerDialog(int year, int month, int dayOfMonth, EditText editText) {
         // Khởi tạo DatePickerDialog với giá trị mặc định là ngày tháng năm hiện tại
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                null, year, month, dayOfMonth);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, null, year, month, dayOfMonth);
 
         // Tắt phần hiển thị kiểu chữ và chỉ hiển thị NumberPicker
         datePickerDialog.getDatePicker().setCalendarViewShown(false);

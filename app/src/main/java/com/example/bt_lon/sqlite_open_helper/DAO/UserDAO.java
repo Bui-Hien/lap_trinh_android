@@ -1,8 +1,10 @@
 package com.example.bt_lon.sqlite_open_helper.DAO;
 
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +13,9 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.bt_lon.R;
+import com.example.bt_lon.model.forgotPassword.ForgotPassword;
+import com.example.bt_lon.model.question.Question;
 import com.example.bt_lon.model.user.User;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
@@ -28,14 +33,15 @@ public class UserDAO {
         dbHelper = new DatabaseConnector(context);
     }
 
-    public UserDAO(DatabaseConnector databaseConnector) {
-    }
-
-    public UserDAO(ForgotPasswordDAO forgotPasswordDAO) {
-    }
-
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
+    }
+
+    public void fakeUser(Context context, String username) {
+        Bitmap profileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.cargo);
+        User user = new User(1, "Bui Xuan Hien", username, "12345", true, new Date(), "Ha Noi", "0763433779", profileImage);
+        this.storeUser(user);
+        Log.d("fakeUser", "Inserted successfully");
     }
 
     public void close() {
@@ -203,5 +209,24 @@ public class UserDAO {
             Log.e("UserDAO bitmapToByteArray", e.toString());
         }
         return new byte[0];
+    }
+
+    public void fakeQuestionData(Context context, String username) {
+        User user = new User(username);
+
+        Question question1 = new Question(1, "1");
+        Question question2 = new Question(2, "2");
+        Question question3 = new Question(3, "3");
+
+        ForgotPassword forgotPassword1 = new ForgotPassword(1, user, question1, "15/03/2003");
+        ForgotPassword forgotPassword2 = new ForgotPassword(2, user, question2, "cho");
+        ForgotPassword forgotPassword3 = new ForgotPassword(3, user, question3, "ngu");
+
+        ForgotPasswordDAO forgotPasswordDAO = new ForgotPasswordDAO(context);
+        forgotPasswordDAO.storeForgotPassword(context, forgotPassword1);
+        forgotPasswordDAO.storeForgotPassword(context, forgotPassword2);
+        forgotPasswordDAO.storeForgotPassword(context, forgotPassword3);
+        Log.d("fakeQuestionData", "Inserted successfully");
+
     }
 }

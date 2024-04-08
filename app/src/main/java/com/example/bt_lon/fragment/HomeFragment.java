@@ -44,18 +44,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        Category category = new Category(1, "Books", "Category for books");
-//        Bitmap productImage = BitmapFactory.decodeResource(requireContext().getResources(), R.drawable.girl);
         List<Product> productList = new ArrayList<>();
-//
-//        for (int i = 0; i < 10; i++) {
-//            Product product = new Product(
-//                    i, category,
-//                    "Book Title" + i,
-//                    "Description of the book" + i,
-//                    19.99, productImage);
-//            productList.add(product);
-//        }
+
         ProductDAO productDAO = new ProductDAO(HomeFragment.this.getContext());
         productList = productDAO.getAllProducts();
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);

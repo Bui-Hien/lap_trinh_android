@@ -10,6 +10,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.example.bt_lon.R;
+import com.example.bt_lon.model.category.Category;
+import com.example.bt_lon.model.product.Product;
 import com.example.bt_lon.model.question.Question;
 import com.example.bt_lon.model.user.User;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
@@ -30,12 +33,6 @@ public class QuestionDAO {
         dbHelper = new DatabaseConnector(context);
     }
 
-    public QuestionDAO(DatabaseConnector databaseConnector) {
-    }
-
-    public QuestionDAO(ForgotPasswordDAO forgotPasswordDAO) {
-    }
-
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
     }
@@ -50,10 +47,8 @@ public class QuestionDAO {
         ContentValues values = new ContentValues();
         values.put("question", question.getQuestion());
 
-        // Chèn dữ liệu vào bảng
         long newRowId = db.insert("Questions", null, values);
 
-        // Kiểm tra xem việc chèn dữ liệu có thành công hay không
         if (newRowId != -1) {
             return true;
         } else {
@@ -102,8 +97,9 @@ public class QuestionDAO {
         for (int i = 0; i < 10; i++) {
             Question question = new Question(i, stringList.get(i));
             this.storeQuestion(question);
-            Log.d("createListQuestion", "id: " + question.getQuestion_id());
         }
+        Log.d("createListQuestion", "Inserted successfully");
+
     }
 
     public boolean deleteQuestion(Question question) {
@@ -146,4 +142,6 @@ public class QuestionDAO {
 
         return question; // Nếu question null, có nghĩa là không tìm thấy câu hỏi với questionId đã cho.
     }
+
+
 }

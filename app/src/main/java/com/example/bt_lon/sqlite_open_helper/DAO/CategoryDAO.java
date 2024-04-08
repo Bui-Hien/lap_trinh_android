@@ -27,6 +27,7 @@ public class CategoryDAO {
     public CategoryDAO(Context context) {
         dbHelper = new DatabaseConnector(context);
     }
+    
 
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
@@ -52,4 +53,28 @@ public class CategoryDAO {
             return false;
         }
     }
+
+    public Category getCategoryById(int categoryId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {"category_id", "category_name", "description"};
+        String selection = "category_id = ?";
+        String[] selectionArgs = {String.valueOf(categoryId)};
+        Cursor cursor = db.query("Categories", projection, selection, selectionArgs, null, null, null);
+
+        Category category = new Category(0, "", "");
+        if (cursor.moveToFirst()) {
+            String categoryName = cursor.getString(1);
+            String description = cursor.getString(2);
+
+            category = new Category(categoryId, categoryName, description);
+        }
+
+        cursor.close();
+        db.close();
+
+        return category;
+    }
+
+
 }
