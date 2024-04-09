@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Nội dung của CardView -->
+
+            <TextView
+                android:id="@+id/tvWarningDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:text="Bạn chắc chắn muốn bỏ sản phẩm này không?"
+                android:textColor="@color/color_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_border"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout4" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tvWarningDialog"
+                app:layout_constraintStart_toStartOf="@+id/tvWarningDialog"
+                app:layout_constraintTop_toBottomOf="@+id/tvWarningDialog">
+
+                <!-- View để tạo đường viền bên phải cho nút "Không" -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_border" /> <!-- Màu sắc của đường viền -->
+
+                <!-- Nút "Không" -->
+                <Button
+                    android:id="@+id/btnCancelDeleteProductCart"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_transparent"
+                    android:text="Không"
+                    android:textColor="@color/color_name_product"
+                    android:textAllCaps="false" />
+
+                <!-- View để tạo đường viền bên trái cho nút "Đồng ý" -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_border" /> <!-- Màu sắc của đường viền -->
+
+                <!-- Nút "Đồng ý" -->
+                <Button
+                    android:id="@+id/btnOklDeleteProductCart"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_transparent"
+                    android:text="Đồng ý"
+                    android:textColor="@color/color_primary"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
