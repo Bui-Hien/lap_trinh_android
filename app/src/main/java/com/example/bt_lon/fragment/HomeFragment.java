@@ -23,6 +23,7 @@ import com.example.bt_lon.sqlite_open_helper.DAO.ProductDAO;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -48,6 +49,15 @@ public class HomeFragment extends Fragment {
 
         ProductDAO productDAO = new ProductDAO(HomeFragment.this.getContext());
         productList = productDAO.getAllProducts();
+
+        // Filter out products with quantity equal to 0
+        Iterator<Product> iterator = productList.iterator();
+        while (iterator.hasNext()) {
+            Product product = iterator.next();
+            if (product.getQuantity() == 0) {
+                iterator.remove();
+            }
+        }
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         ProductAdapter productAdapter = new ProductAdapter(this, productList);
         recyclerView.setAdapter(productAdapter);

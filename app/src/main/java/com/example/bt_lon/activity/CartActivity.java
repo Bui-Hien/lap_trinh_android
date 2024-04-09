@@ -26,14 +26,18 @@ import com.example.bt_lon.R;
 import com.example.bt_lon.adapter.CartAdapter;
 import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.product.Product;
+import com.example.bt_lon.model.purchaseorder.PurchaseOrder;
 import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
 import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
 import com.example.bt_lon.sqlite_open_helper.DAO.ProductDAO;
+import com.example.bt_lon.sqlite_open_helper.DAO.PurchaseOrderDAO;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
@@ -112,9 +116,21 @@ public class CartActivity extends AppCompatActivity {
                     //chuyển sang màn đã mua
                     ProductDAO productDAO = new ProductDAO(CartActivity.this);
                     CartDAO cartDAO = new CartDAO(CartActivity.this);
+                    PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO(CartActivity.this);
                     for (int i = 0; i < cartList.size(); i++) {
+                        double cost = cartList.get(i).getQuantity() * cartList.get(i).getProduct().getPrice();
+                        PurchaseOrder purchaseOrder = new
+                                PurchaseOrder(
+                                cartList.get(i).getProduct(),
+                                cartList.get(i).getUser(),
+                                cartList.get(i).getQuantity(),
+                                new Date(),
+                                cost
+                        );
+                        purchaseOrderDAO.insertPurchaseOrder(purchaseOrder);
                         if (cartList.get(i).getQuantity() == cartList.get(i).getProduct().getQuantity()) {
-                            productDAO.deleteProduct(cartList.get(i).getProduct().getProduct_id());
+//                            productDAO.deleteProduct(cartList.get(i).getProduct().getProduct_id());
+                            productDAO.updateQuantity(cartList.get(i).getProduct(), 0);
                             cartDAO.deleteProductFromCart(cartList.get(i).getUser().getUser_id(), cartList.get(i).getProduct().getProduct_id());
                         } else {
                             int quantityNew = cartList.get(i).getProduct().getQuantity() - cartList.get(i).getQuantity();
@@ -123,11 +139,11 @@ public class CartActivity extends AppCompatActivity {
                         }
                     }
 
-                    cartList = InsertData();
-                    updateLayout();
-//                    Intent intent = new Intent(CartActivity.this, PurchaseOrderActivity.class);
-//                    startActivity(intent);
-//                    finish();
+//                    cartList = InsertData();
+//                    updateLayout();
+                    Intent intent = new Intent(CartActivity.this, PurchaseOrderActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -142,7 +158,10 @@ public class CartActivity extends AppCompatActivity {
 
     public List<Cart> InsertData() {
         CartDAO cartDAO = new CartDAO(CartActivity.this);
-        return cartDAO.getCartItemsByUserId(CartActivity.this, RepositoryUser.getAccount());
+        List<Cart> list = cartDAO.getCartItemsByUserId(CartActivity.this, RepositoryUser.getAccount());
+        Collections.reverse(list);
+
+        return list;
     }
 
     public String TotalCost(List<Cart> cartList) {

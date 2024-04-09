@@ -31,11 +31,15 @@ import com.example.bt_lon.activity.ProfileActivity;
 import com.example.bt_lon.activity.PurchaseOrderActivity;
 import com.example.bt_lon.activity.RegisterActivity;
 import com.example.bt_lon.adapter.Purchased;
+import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.purchaseorder.PurchaseOrder;
 import com.example.bt_lon.model.user.RepositoryUser;
 import com.example.bt_lon.model.user.User;
+import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
+import com.example.bt_lon.sqlite_open_helper.DAO.PurchaseOrderDAO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AccountFragment extends Fragment {
@@ -138,7 +142,7 @@ public class AccountFragment extends Fragment {
             });
 
             if (user.getUser_id() > 0) {
-                initData();
+                purchaseOrderList = initData();
                 purchaseOrderList = (purchaseOrderList == null) ? new ArrayList<>() : purchaseOrderList;
                 purchasedAdapter = (purchasedAdapter == null) ? new Purchased(purchaseOrderList, getContext()) : purchasedAdapter;
 
@@ -215,10 +219,10 @@ public class AccountFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
-    private void initData() {
-        purchaseOrderList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            purchaseOrderList.add(new PurchaseOrder());
-        }
+    private List<PurchaseOrder> initData() {
+        PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO(getContext());
+        List<PurchaseOrder> list = purchaseOrderDAO.getAllPurchaseOrdersByUserIdGroupByProductId(getContext(), RepositoryUser.getAccount().getUser_id());
+        Collections.reverse(list);
+        return list;
     }
 }
