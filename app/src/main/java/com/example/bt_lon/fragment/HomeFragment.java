@@ -27,6 +27,7 @@ import com.example.bt_lon.sqlite_open_helper.DAO.ProductDAO;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -76,6 +77,7 @@ public class HomeFragment extends Fragment {
         ProductDAO productDAO = new ProductDAO(HomeFragment.this.getContext());
         List<Product> productList = new ArrayList<>();
         productList = productDAO.getAllProducts();
+
 
         Button button1 = view.findViewById(R.id.button_category1);
         button1.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +162,7 @@ public class HomeFragment extends Fragment {
                 rcv_product.setAdapter(mProductAdapter);
             }
         });
+
     }
 
     /*
