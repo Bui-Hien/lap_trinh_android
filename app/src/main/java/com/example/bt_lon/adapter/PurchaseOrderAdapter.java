@@ -17,8 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bt_lon.R;
 import com.example.bt_lon.activity.CartActivity;
+import com.example.bt_lon.activity.LoginActivity;
 import com.example.bt_lon.activity.PurchaseOrderActivity;
+import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.purchaseorder.PurchaseOrder;
+import com.example.bt_lon.model.user.RepositoryUser;
+import com.example.bt_lon.model.user.User;
+import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -66,7 +71,8 @@ public class PurchaseOrderAdapter extends RecyclerView.Adapter<PurchaseOrderAdap
         holder.btnRepurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((PurchaseOrderActivity) mContext).Repurchase(purchaseOrder);
+                Cart cart = new Cart(purchaseOrder.getUser(), purchaseOrder.getProduct());
+                ((PurchaseOrderActivity) mContext).Repurchase(cart);
             }
         });
     }

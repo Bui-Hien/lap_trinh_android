@@ -40,11 +40,11 @@ public class CartDAO {
         dbHelper.close();
     }
 
-    public boolean storeProductToCart(Cart cart) {
+    public boolean storeProductToCart(Cart cart, int quantity) {
         if (isProductInCart(cart.getUser().getUser_id(), cart.getProduct().getProduct_id())) {
             Log.e("storeProductToCart", "Đã có sản phẩn này trong giỏ hàng");
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-            int newQuantity = getCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id()) + 1;
+            int newQuantity = getCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id()) + quantity;
             if (updateCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id(), newQuantity)) {
                 db.close(); // Close the database connection after updating quantity
                 return true; // Return true if quantity updated successfully
@@ -59,7 +59,7 @@ public class CartDAO {
             ContentValues values = new ContentValues();
             values.put("user_id", cart.getUser().getUser_id());
             values.put("product_id", cart.getProduct().getProduct_id());
-            values.put("quantity", 1);
+            values.put("quantity", quantity);
 
             if (db.insert("Carts", null, values) != -1) {
                 Log.e("storeProductToCart", "thanh cong");
