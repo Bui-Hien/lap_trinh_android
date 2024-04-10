@@ -33,10 +33,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UserDAO userDAO = new UserDAO(LoginActivity.this);
 
+
 /*
 *   fake data login
 * */
 //                fakeData();
+
 
                 User user = userDAO.getUser("buixuanhien", "12345");
                 if (user != null) {
