@@ -193,6 +193,7 @@ public class HomeFragment extends Fragment {
                 mProductAdapter.setData(productList);
                 rcv_product.setAdapter(mProductAdapter);
 
+
                 return true;
             }
         });
