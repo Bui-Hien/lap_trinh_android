@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.bt_lon.R;
+import com.example.bt_lon.activity.LoginActivity;
 import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.category.Category;
 import com.example.bt_lon.model.product.Product;
@@ -112,7 +113,7 @@ public class ProductDAO {
                 Bitmap imageProduct = getBitmapFromBlob(imageBytes);
                 int quantity = (int) cursor.getLong(6);
 
-                Category category = new Category(categoryId, "", "");
+                Category category = new Category(categoryId, "");
                 Product product = new Product(productId, category, productName, description, price, quantity, imageProduct);
                 productList.add(product);
             } while (cursor.moveToNext());
@@ -123,6 +124,7 @@ public class ProductDAO {
 
         return productList;
     }
+
 
     public Product getProductById(Context context, int productId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -149,30 +151,63 @@ public class ProductDAO {
         return product;
     }
 
-    public void fakeProductData(Context context) {
-        Category category = new Category(1, "dien thoai", "iphone 15 promax");
-        CategoryDAO categoryDAO = new CategoryDAO(context);
-        categoryDAO.insertCategory(category);
+public List<Product> getAllProductsByCategoryId(Context context, int categoryId) {
+    List<Product> productList = new ArrayList<>();
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT * FROM Products WHERE category_id = ?", new String[]{String.valueOf(categoryId)});
 
-        Bitmap productImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.girl);
+    if (cursor.moveToFirst()) {
+        do {
+            int productId = (int) cursor.getLong(0);
+//            int categoryId = (int) cursor.getLong(1);
+            String productName = cursor.getString(2);
+            String description = cursor.getString(3);
+            double price = cursor.getDouble(4);
+            byte[] imageBytes = cursor.getBlob(5);
+            Bitmap imageProduct = getBitmapFromBlob(imageBytes);
+            int quantity = (int) cursor.getLong(6);
 
-        ProductDAO productDAO = new ProductDAO(context);
-        for (int i = 1; i <= 10; i++) {
+            CategoryDAO categoryDAO = new CategoryDAO(context);
+            Category category = categoryDAO.getCategoryById(categoryId);
+            Product product = new Product(productId, category, productName, description, price, quantity, imageProduct);
+            productList.add(product);
+        } while (cursor.moveToNext());
+    }
 
-            Random rand = new Random();
-            int QuantityProduct = rand.nextInt(100) + 1;
+    cursor.close();
+    db.close();
 
-            Product product = new Product(
-                    i, category,
-                    "Book Title" + i,
-                    "Description of the book" + i,
-                    1999.99,
-                    QuantityProduct,
-                    productImage);
-            productDAO.insertProduct(product);
+    return productList;
+}
+
+    public List<Product> getAllProductsByName(Context context, String name) {
+        List<Product> productList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Products WHERE product_name LIKE ?", new String[]{"%" + name + "%"});
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                int productId = (int) cursor.getLong(0);
+                int categoryId = (int) cursor.getLong(1);
+                String productName = cursor.getString(2);
+                String description = cursor.getString(3);
+                double price = cursor.getDouble(4);
+                byte[] imageBytes = cursor.getBlob(5);
+                Bitmap imageProduct = getBitmapFromBlob(imageBytes);
+                int quantity = (int) cursor.getLong(6);
+
+                CategoryDAO categoryDAO = new CategoryDAO(context);
+                Category category = categoryDAO.getCategoryById(categoryId);
+                Product product = new Product(productId, category, productName, description, price, quantity, imageProduct);
+                productList.add(product);
+            } while (cursor.moveToNext());
         }
-        Log.d("fakeProductData", "Inserted successfully");
 
+        cursor.close();
+        db.close();
+
+        return productList;
     }
 
     public Bitmap getBitmapFromBlob(byte[] blob) {
@@ -192,4 +227,41 @@ public class ProductDAO {
         return new byte[0];
     }
 
+    private Bitmap resizeBitmap(Bitmap bitmap, int targetSizeDP, Context context) {
+
+        float density = context.getResources().getDisplayMetrics().density;
+        int targetSizePx = (int) (targetSizeDP * density);
+        float aspectRatio = (float) bitmap.getWidth() / bitmap.getHeight();
+        int targetWidth = Math.round(targetSizePx * aspectRatio);
+        int targetHeight = targetSizePx;
+
+        return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
+    }
+    public byte[] bitmapToByteArray(Bitmap bitmap, int targetSizeDP, int quality, Context context) {
+        try {
+            Bitmap resizedBitmap = resizeBitmap(bitmap, targetSizeDP, context);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (Exception e) {
+//            Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        return new byte[0];
+    }
+    public void fakeProductData(Context context) {
+        Category category = new Category(1, "Váy");
+        CategoryDAO categoryDAO = new CategoryDAO(context);
+        categoryDAO.insertCategory(category);
+        Bitmap productImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_1);
+        Bitmap resizedImage = resizeBitmap(productImage,120,context);
+        ProductDAO productDAO = new ProductDAO(context);
+        Product product = new Product(
+                category,
+                "Set váy ngắn",
+                "váy ngắn dễ thương",
+                20,
+                resizedImage);
+        productDAO.insertProduct(product);
+        Log.d("fakeProductData", "Inserted successfully");
+    }
 }
