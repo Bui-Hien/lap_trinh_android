@@ -102,7 +102,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickGoToDetail(product);
+                onClickGoToDetail(product.getProduct_id(),v);
             }
         });
         holder.button_buy.setOnClickListener(new View.OnClickListener() {
@@ -122,12 +122,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         });
     }
 
-    private void onClickGoToDetail(Product product){
-        Intent intent = new Intent(mContext.getContext(), Detail_Activity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("object_item",product);
-        intent.putExtras(bundle);
-        mContext.startActivity(intent);
+    public void onClickGoToDetail(int product_id,View v){
+        Intent intent = new Intent(v.getContext(), Detail_Activity.class);
+        intent.putExtra("product_id", product_id);
+        v.getContext().startActivity(intent);
     }
 
     @Override
