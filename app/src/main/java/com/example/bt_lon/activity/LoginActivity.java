@@ -32,11 +32,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UserDAO userDAO = new UserDAO(LoginActivity.this);
-/*
-*   insert product to database
-* */
-//                ProductDAO productDAO = new ProductDAO(LoginActivity.this);
-//                productDAO.fakeProductData(LoginActivity.this);
+
 /*
 *   fake data login
 * */

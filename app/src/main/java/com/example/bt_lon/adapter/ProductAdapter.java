@@ -33,6 +33,8 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private List<Product> productList;
+
+    private List<Product> filteredList;
     private HomeFragment mContext;
 
     private RecycleViewItemClickListener recycleViewItemClickListener;
@@ -80,6 +82,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     }
 
+    public void filterList(List<Product> filteredList) {
+        this.filteredList = filteredList;
+        this.productList = null;
+    }
+
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -91,8 +98,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        Product product = productList.get(position);
-
+        Product product;
+        if (filteredList != null && filteredList.size() > 0) {
+            product = filteredList.get(position);
+        } else {
+            product = productList.get(position);
+        }
         holder.button_buy.setText(String.valueOf(product.getProduct_id()));
         holder.nameProduct.setText(product.getProduct_name());
         holder.descriptionProduct.setText(product.getDescription());
