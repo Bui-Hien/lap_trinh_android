@@ -74,63 +74,63 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/button21"
+                        android:id="@+id/button_category1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/color_primary"
-                        android:text="Button"
+                        android:text="váy"
                         android:textColor="@color/white" />
 
                     <Button
-                        android:id="@+id/button22"
+                        android:id="@+id/button_category2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/color_primary"
-                        android:text="Button"
+                        android:text="áo"
                         android:textColor="@color/white" />
 
                     <Button
-                        android:id="@+id/button23"
+                        android:id="@+id/button_category3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/color_primary"
-                        android:text="Button"
+                        android:text="jeans"
                         android:textColor="@color/white" />
 
                     <Button
-                        android:id="@+id/button24"
+                        android:id="@+id/button_category4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/color_primary"
-                        android:text="Button"
+                        android:text="t-shirt"
                         android:textColor="@color/white" />
 
                     <Button
-                        android:id="@+id/button25"
+                        android:id="@+id/button_category5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/color_primary"
-                        android:text="Button"
+                        android:text="set"
                         android:textColor="@color/white" />
 
                     <Button
-                        android:id="@+id/button26"
+                        android:id="@+id/button_category6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/color_primary"
-                        android:text="Button"
+                        android:text="sock"
                         android:textColor="@color/white" />
 
 

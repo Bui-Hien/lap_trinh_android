@@ -1,6 +1,7 @@
 package com.example.bt_lon.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -31,6 +32,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UserDAO userDAO = new UserDAO(LoginActivity.this);
+/*
+*   insert product to database
+* */
+//                ProductDAO productDAO = new ProductDAO(LoginActivity.this);
+//                productDAO.fakeProductData(LoginActivity.this);
+/*
+*   fake data login
+* */
+//                fakeData();
 
                 User user = userDAO.getUser("buixuanhien", "12345");
                 if (user != null) {

@@ -41,7 +41,7 @@ public class CategoryDAO {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("category_name", category.getCategory_name());
-        values.put("description", category.getDescription());
+//        values.put("description", category.getDescription());
 
         long result = db.insert("Categories", null, values);
         db.close(); // Close the database connection after use
@@ -62,12 +62,12 @@ public class CategoryDAO {
         String[] selectionArgs = {String.valueOf(categoryId)};
         Cursor cursor = db.query("Categories", projection, selection, selectionArgs, null, null, null);
 
-        Category category = new Category(0, "", "");
+        Category category = new Category(0, "");
         if (cursor.moveToFirst()) {
             String categoryName = cursor.getString(1);
             String description = cursor.getString(2);
 
-            category = new Category(categoryId, categoryName, description);
+            category = new Category(categoryId, categoryName);
         }
 
         cursor.close();
