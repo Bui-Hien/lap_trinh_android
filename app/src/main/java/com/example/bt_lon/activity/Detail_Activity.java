@@ -171,7 +171,10 @@ public class Detail_Activity extends AppCompatActivity {
                         productDAO.updateQuantity(product, quantityNew);
                         cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());
                     }
+                    Intent intent = new Intent(Detail_Activity.this, PurchaseOrderActivity.class);
+                    startActivity(intent);
                     finish();
+                    dialog.dismiss();
                 } else {
                     Intent intent = new Intent(Detail_Activity.this, LoginActivity.class);
                     startActivity(intent);
