@@ -69,7 +69,7 @@ public class PurchaseOrderActivity extends AppCompatActivity {
         if (productCheck.getQuantity() != 0) {
             if (RepositoryUser.getAccount() != null) {
                 CartDAO cartDAO = new CartDAO(PurchaseOrderActivity.this);
-                cartDAO.storeProductToCart(cart);
+                cartDAO.storeProductToCart(cart, 1);
                 Intent intent = new Intent(PurchaseOrderActivity.this, CartActivity.class);
                 startActivity(intent);
                 finish();

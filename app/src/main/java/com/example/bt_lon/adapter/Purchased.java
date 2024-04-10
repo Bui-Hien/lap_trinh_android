@@ -88,7 +88,7 @@ public class Purchased extends RecyclerView.Adapter<Purchased.ViewHolder> {
                         Cart cart = new Cart(data.getUser(), data.getProduct());
                         if (RepositoryUser.getAccount() != null) {
                             CartDAO cartDAO = new CartDAO(v.getContext());
-                            cartDAO.storeProductToCart(cart);
+                            cartDAO.storeProductToCart(cart, 1);
                             Intent intent = new Intent(v.getContext(), CartActivity.class);
                             v.getContext().startActivity(intent);
                         } else {

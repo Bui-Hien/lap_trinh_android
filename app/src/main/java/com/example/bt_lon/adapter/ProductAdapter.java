@@ -60,12 +60,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
     }
 
-    public ProductAdapter(HomeFragment context, List<Product> productList, RecycleViewItemClickListener recycleViewItemClickListener  ) {
+    public ProductAdapter(HomeFragment context, List<Product> productList, RecycleViewItemClickListener recycleViewItemClickListener) {
         this.mContext = context;
         this.productList = productList;
         this.recycleViewItemClickListener = recycleViewItemClickListener;
     }
-    public ProductAdapter(HomeFragment context, List<Product> productList  ) {
+
+    public ProductAdapter(HomeFragment context, List<Product> productList) {
         this.mContext = context;
         this.productList = productList;
     }
@@ -83,7 +84,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home, parent, false);
 //        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 //        View listItem = layoutInflater.inflate(R.layout.item_home, parent, false);
         return new ProductViewHolder(view);
@@ -96,13 +97,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.button_buy.setText(String.valueOf(product.getProduct_id()));
         holder.nameProduct.setText(product.getProduct_name());
         holder.descriptionProduct.setText(product.getDescription());
-        holder.priceProduct.setText(product.getPrice()+"$");
+        holder.priceProduct.setText(product.getPrice() + "$");
         holder.imgProduct.setImageBitmap(product.getImage_product());
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickGoToDetail(product.getProduct_id(),v);
+                onClickGoToDetail(product.getProduct_id(), v);
             }
         });
         holder.button_buy.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +113,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     User user = RepositoryUser.getAccount();
                     Cart cart = new Cart(user, product, 1);
                     CartDAO cartDAO = new CartDAO(mContext.getContext());
-                    cartDAO.storeProductToCart(cart);
+                    cartDAO.storeProductToCart(cart, 1);
                 } else {
                     Intent intent = new Intent(mContext.getContext(), LoginActivity.class);
                     mContext.startActivity(intent);
@@ -122,7 +123,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         });
     }
 
-    public void onClickGoToDetail(int product_id,View v){
+    public void onClickGoToDetail(int product_id, View v) {
         Intent intent = new Intent(v.getContext(), Detail_Activity.class);
         intent.putExtra("product_id", product_id);
         v.getContext().startActivity(intent);
