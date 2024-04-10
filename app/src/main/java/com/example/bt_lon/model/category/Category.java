@@ -3,15 +3,15 @@ package com.example.bt_lon.model.category;
 public class Category {
     private int category_id;
     private String category_name;
-    private String description;
+//    private String description;
 
     public Category() {
     }
 
-    public Category(int category_id, String category_name, String description) {
+    public Category(int category_id, String category_name) {
         this.category_id = category_id;
         this.category_name = category_name;
-        this.description = description;
+//        this.description = description;
     }
 
     public int getCategory_id() {
@@ -30,11 +30,11 @@ public class Category {
         this.category_name = category_name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+//    public String getDescription() {
+//        return description;
+//    }
+//
+//    public void setDescription(String description) {
+//        this.description = description;
+//    }
 }

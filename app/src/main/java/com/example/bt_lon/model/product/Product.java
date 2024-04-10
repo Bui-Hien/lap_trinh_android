@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 
 import com.example.bt_lon.model.category.Category;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     private int product_id;
     private Category category;
     private String product_name;
@@ -46,6 +48,14 @@ public class Product {
 
     public Product(int product_id, Category category, String product_name, String description, double price, Bitmap image_product) {
         this.product_id = product_id;
+        this.category = category;
+        this.product_name = product_name;
+        this.description = description;
+        this.price = price;
+        this.image_product = image_product;
+    }
+
+    public Product( Category category, String product_name, String description, double price, Bitmap image_product) {
         this.category = category;
         this.product_name = product_name;
         this.description = description;

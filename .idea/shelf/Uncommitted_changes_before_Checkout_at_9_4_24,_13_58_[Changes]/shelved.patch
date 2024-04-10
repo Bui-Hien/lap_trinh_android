@@ -1,0 +1,426 @@
+Index: app/src/main/res/layout/fragment_home.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:background=\"#FEFEFE\"\n    tools:context=\".fragment.HomeFragment\">\n\n\n    <androidx.recyclerview.widget.RecyclerView\n        android:id=\"@+id/recyclerView\"\n        android:layout_width=\"405dp\"\n        android:layout_height=\"513dp\"\n        app:layout_constraintBottom_toBottomOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintHorizontal_bias=\"0.0\"\n        app:layout_constraintStart_toStartOf=\"parent\" />\n\n    <com.google.android.material.textfield.TextInputEditText\n        android:id=\"@+id/search_input_text\"\n        android:layout_width=\"351dp\"\n        android:layout_height=\"43dp\"\n        android:hint=\"bạn muốn mua gì hôm nay?\"\n        app:layout_constraintEnd_toStartOf=\"@+id/imageButton\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintTop_toTopOf=\"parent\" />\n\n    <ImageButton\n        android:id=\"@+id/imageButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:background=\"@color/color_primary\"\n        android:src=\"@drawable/icon_search\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintTop_toTopOf=\"parent\" />\n\n    <HorizontalScrollView\n        android:id=\"@+id/horizontalScrollView\"\n        android:layout_width=\"410dp\"\n        android:layout_height=\"58dp\"\n        app:layout_constraintBottom_toTopOf=\"@+id/recyclerView\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintHorizontal_bias=\"0.0\"\n        app:layout_constraintStart_toStartOf=\"parent\">\n\n        <LinearLayout\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"match_parent\"\n            android:orientation=\"horizontal\">\n\n            <Button\n                android:id=\"@+id/button21\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_margin=\"5dp\"\n                android:layout_weight=\"1\"\n                android:background=\"@color/color_primary\"\n                android:text=\"Button\"\n                android:textColor=\"@color/white\" />\n\n            <Button\n                android:id=\"@+id/button22\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_margin=\"5dp\"\n                android:layout_weight=\"1\"\n                android:background=\"@color/color_primary\"\n                android:text=\"Button\"\n                android:textColor=\"@color/white\" />\n\n            <Button\n                android:id=\"@+id/button23\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_margin=\"5dp\"\n                android:layout_weight=\"1\"\n                android:background=\"@color/color_primary\"\n                android:text=\"Button\"\n                android:textColor=\"@color/white\" />\n\n            <Button\n                android:id=\"@+id/button24\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_margin=\"5dp\"\n                android:layout_weight=\"1\"\n                android:background=\"@color/color_primary\"\n                android:text=\"Button\"\n                android:textColor=\"@color/white\" />\n\n            <Button\n                android:id=\"@+id/button25\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_margin=\"5dp\"\n                android:layout_weight=\"1\"\n                android:background=\"@color/color_primary\"\n                android:text=\"Button\"\n                android:textColor=\"@color/white\" />\n\n            <Button\n                android:id=\"@+id/button26\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_margin=\"5dp\"\n                android:layout_weight=\"1\"\n                android:background=\"@color/color_primary\"\n                android:text=\"Button\"\n                android:textColor=\"@color/white\" />\n\n\n        </LinearLayout>\n    </HorizontalScrollView>\n\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_home.xml b/app/src/main/res/layout/fragment_home.xml
+--- a/app/src/main/res/layout/fragment_home.xml	
++++ b/app/src/main/res/layout/fragment_home.xml	
+@@ -9,9 +9,9 @@
+ 
+ 
+     <androidx.recyclerview.widget.RecyclerView
+-        android:id="@+id/recyclerView"
+-        android:layout_width="405dp"
+-        android:layout_height="513dp"
++        android:id="@+id/recyclerViewItem"
++        android:layout_width="403dp"
++        android:layout_height="399dp"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.0"
+@@ -26,6 +26,27 @@
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent" />
+ 
++    <androidx.cardview.widget.CardView
++        android:layout_width="match_parent"
++        android:layout_height="150dp"
++        android:layout_margin="10dp"
++        android:elevation="20dp"
++        app:cardCornerRadius="20dp"
++        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
++        app:layout_constraintTop_toBottomOf="@+id/search_input_text"
++        tools:layout_editor_absoluteX="20dp">
++
++        <com.denzcoskun.imageslider.ImageSlider
++            android:id="@+id/imageSlider"
++            android:layout_width="match_parent"
++            android:layout_height="198dp"
++            app:iss_auto_cycle="true"
++
++            app:iss_delay="1000"
++            app:iss_period="1000"
++            app:iss_title_background="@color/color_primary" />
++    </androidx.cardview.widget.CardView>
++
+     <ImageButton
+         android:id="@+id/imageButton"
+         android:layout_width="wrap_content"
+@@ -39,7 +60,7 @@
+         android:id="@+id/horizontalScrollView"
+         android:layout_width="410dp"
+         android:layout_height="58dp"
+-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
++        app:layout_constraintBottom_toTopOf="@+id/recyclerViewItem"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.0"
+         app:layout_constraintStart_toStartOf="parent">
+Index: app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bt_lon.adapter;\n\nimport static androidx.core.content.ContextCompat.startActivity;\n\nimport android.content.Context;\nimport android.content.Intent;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.Button;\nimport android.widget.ImageView;\nimport android.widget.Toast;\n\nimport androidx.annotation.NonNull;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport com.example.bt_lon.R;\nimport com.example.bt_lon.activity.CartActivity;\nimport com.example.bt_lon.activity.LoginActivity;\nimport com.example.bt_lon.activity.PurchaseOrderActivity;\nimport com.example.bt_lon.fragment.HomeFragment;\nimport com.example.bt_lon.model.cart.Cart;\nimport com.example.bt_lon.model.product.Product;\nimport com.example.bt_lon.model.user.RepositoryUser;\nimport com.example.bt_lon.model.user.User;\nimport com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;\nimport com.example.bt_lon.sqlite_open_helper.DatabaseConnector;\n\nimport java.util.List;\n\npublic class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {\n    private List<Product> productList;\n    private HomeFragment mContext;\n\n    public ProductAdapter(HomeFragment context, List<Product> productList) {\n        this.mContext = context;\n        this.productList = productList;\n    }\n\n    @NonNull\n    @Override\n    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {\n        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());\n        View listItem = layoutInflater.inflate(R.layout.item_product, parent, false);\n        return new ViewHolder(listItem);\n    }\n\n    @Override\n    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {\n        Product product = productList.get(position);\n        holder.btnId.setText(String.valueOf(product.getProduct_id()));\n        holder.imgProduct.setImageBitmap(product.getImage_product());\n        holder.btnId.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                if (RepositoryUser.getAccount() != null) {\n                    User user = RepositoryUser.getAccount();\n                    Cart cart = new Cart(user, product, 1);\n                    CartDAO cartDAO = new CartDAO(mContext.getContext());\n                    cartDAO.storeProductToCart(cart);\n                } else {\n                    Intent intent = new Intent(mContext.getContext(), LoginActivity.class);\n                    mContext.startActivity(intent);\n                }\n\n            }\n        });\n    }\n\n    @Override\n    public int getItemCount() {\n        return productList.size();\n    }\n\n    public static class ViewHolder extends RecyclerView.ViewHolder {\n\n        Button btnId;\n        ImageView imgProduct;\n\n        public ViewHolder(@NonNull View itemView) {\n            super(itemView);\n            btnId = itemView.findViewById(R.id.btnId);\n            imgProduct = itemView.findViewById(R.id.imgProduct);\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java b/app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java
+--- a/app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java	
++++ b/app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java	
+@@ -1,56 +1,92 @@
+ package com.example.bt_lon.adapter;
+ 
+-import static androidx.core.content.ContextCompat.startActivity;
+-
+-import android.content.Context;
+ import android.content.Intent;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.Button;
+ import android.widget.ImageView;
+-import android.widget.Toast;
++import android.widget.TextView;
+ 
+ import androidx.annotation.NonNull;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
+ import com.example.bt_lon.R;
+-import com.example.bt_lon.activity.CartActivity;
+ import com.example.bt_lon.activity.LoginActivity;
+-import com.example.bt_lon.activity.PurchaseOrderActivity;
+ import com.example.bt_lon.fragment.HomeFragment;
+ import com.example.bt_lon.model.cart.Cart;
++import com.example.bt_lon.model.category.Category;
+ import com.example.bt_lon.model.product.Product;
+ import com.example.bt_lon.model.user.RepositoryUser;
+ import com.example.bt_lon.model.user.User;
+ import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
+-import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
++
++import org.w3c.dom.Text;
+ 
+ import java.util.List;
+ 
+-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
++public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+     private List<Product> productList;
+     private HomeFragment mContext;
+ 
++    public static class ProductViewHolder extends RecyclerView.ViewHolder {
++
++        Button button_buy;
++        ImageView imgProduct;
++
++        TextView nameProduct;
++        TextView descriptionProduct;
++        TextView priceProduct;
++
++
++
++        public ProductViewHolder(@NonNull View itemView) {
++            super(itemView);
++            button_buy = itemView.findViewById(R.id.button_buy);
++            imgProduct = itemView.findViewById(R.id.imgProduct);
++            nameProduct = itemView.findViewById(R.id.product_name);
++            descriptionProduct = itemView.findViewById(R.id.product_description);
++            priceProduct = itemView.findViewById(R.id.product_price);
++
++        }
++    }
++
+     public ProductAdapter(HomeFragment context, List<Product> productList) {
+         this.mContext = context;
+         this.productList = productList;
+     }
+ 
++    public ProductAdapter(HomeFragment context) {
++        this.mContext = context;
++//        this.productList = productList;
++    }
++
++    public void setData(List<Product> list) {
++        this.productList = list;
++
++    }
++
+     @NonNull
+     @Override
+-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+-        View listItem = layoutInflater.inflate(R.layout.item_product, parent, false);
+-        return new ViewHolder(listItem);
++    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home,parent,false);
++//        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
++//        View listItem = layoutInflater.inflate(R.layout.item_home, parent, false);
++        return new ProductViewHolder(view);
+     }
+ 
+     @Override
+-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
++    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+         Product product = productList.get(position);
+-        holder.btnId.setText(String.valueOf(product.getProduct_id()));
++
++        holder.button_buy.setText(String.valueOf(product.getProduct_id()));
++        holder.nameProduct.setText(product.getProduct_name());
++        holder.descriptionProduct.setText(product.getDescription());
++        holder.priceProduct.setText(product.getPrice()+"$");
++
++
+         holder.imgProduct.setImageBitmap(product.getImage_product());
+-        holder.btnId.setOnClickListener(new View.OnClickListener() {
++        holder.button_buy.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 if (RepositoryUser.getAccount() != null) {
+@@ -69,18 +105,10 @@
+ 
+     @Override
+     public int getItemCount() {
+-        return productList.size();
++        if (productList != null) {
++            return productList.size();
++        } else return 0;
+     }
+ 
+-    public static class ViewHolder extends RecyclerView.ViewHolder {
+-
+-        Button btnId;
+-        ImageView imgProduct;
+ 
+-        public ViewHolder(@NonNull View itemView) {
+-            super(itemView);
+-            btnId = itemView.findViewById(R.id.btnId);
+-            imgProduct = itemView.findViewById(R.id.imgProduct);
+-        }
+-    }
+ }
+Index: app/src/main/java/com/example/bt_lon/fragment/HomeFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bt_lon.fragment;\n\nimport android.graphics.Bitmap;\nimport android.graphics.BitmapFactory;\nimport android.os.Bundle;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.fragment.app.Fragment;\nimport androidx.recyclerview.widget.GridLayoutManager;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\n\nimport com.example.bt_lon.R;\nimport com.example.bt_lon.activity.LoginActivity;\nimport com.example.bt_lon.adapter.ProductAdapter;\nimport com.example.bt_lon.model.category.Category;\nimport com.example.bt_lon.model.product.Product;\nimport com.example.bt_lon.sqlite_open_helper.DAO.ProductDAO;\nimport com.example.bt_lon.sqlite_open_helper.DatabaseConnector;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class HomeFragment extends Fragment {\n\n    private RecyclerView rcv_product;\n    private ProductAdapter mProductAdapter;\n\n    public HomeFragment() {\n    }\n\n    public static HomeFragment newInstance(String param1, String param2) {\n        HomeFragment fragment = new HomeFragment();\n        Bundle args = new Bundle();\n        fragment.setArguments(args);\n        return fragment;\n    }\n\n\n    @Override\n    public void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n    }\n\n    @Override\n    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {\n        super.onViewCreated(view, savedInstanceState);\n//        Category category = new Category(1, \"Books\", \"Category for books\");\n//        Bitmap productImage = BitmapFactory.decodeResource(requireContext().getResources(), R.drawable.girl);\n        List<Product> productList = new ArrayList<>();\n//\n//        for (int i = 0; i < 10; i++) {\n//            Product product = new Product(\n//                    i, category,\n//                    \"Book Title\" + i,\n//                    \"Description of the book\" + i,\n//                    19.99, productImage);\n//            productList.add(product);\n//        }\n        ProductDAO productDAO = new ProductDAO(HomeFragment.this.getContext());\n        productList = productDAO.getAllProducts();\n        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);\n        ProductAdapter productAdapter = new ProductAdapter(this, productList);\n        recyclerView.setAdapter(productAdapter);\n        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));\n    }\n\n\n    @Override\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\n                             Bundle savedInstanceState) {\n        return inflater.inflate(R.layout.fragment_home, container, false);\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/bt_lon/fragment/HomeFragment.java b/app/src/main/java/com/example/bt_lon/fragment/HomeFragment.java
+--- a/app/src/main/java/com/example/bt_lon/fragment/HomeFragment.java	
++++ b/app/src/main/java/com/example/bt_lon/fragment/HomeFragment.java	
+@@ -14,6 +14,9 @@
+ import android.view.View;
+ import android.view.ViewGroup;
+ 
++import com.denzcoskun.imageslider.ImageSlider;
++import com.denzcoskun.imageslider.constants.ScaleTypes;
++import com.denzcoskun.imageslider.models.SlideModel;
+ import com.example.bt_lon.R;
+ import com.example.bt_lon.activity.LoginActivity;
+ import com.example.bt_lon.adapter.ProductAdapter;
+@@ -27,9 +30,6 @@
+ 
+ public class HomeFragment extends Fragment {
+ 
+-    private RecyclerView rcv_product;
+-    private ProductAdapter mProductAdapter;
+-
+     public HomeFragment() {
+     }
+ 
+@@ -41,14 +41,37 @@
+     }
+ 
+ 
+-    @Override
+-    public void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-    }
++//    @Override
++//    public void onCreate(Bundle savedInstanceState) {
++//        super.onCreate(savedInstanceState);
++//    }
+ 
+     @Override
+     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+         super.onViewCreated(view, savedInstanceState);
++
++        ImageSlider imageSlider = view.findViewById(R.id.imageSlider);
++        ArrayList<SlideModel> slideModels = new ArrayList<>();
++
++        slideModels.add(new SlideModel(R.drawable.item_1, ScaleTypes.CENTER_CROP));
++        slideModels.add(new SlideModel(R.drawable.item_2, ScaleTypes.CENTER_CROP));
++        slideModels.add(new SlideModel(R.drawable.item_3, ScaleTypes.CENTER_CROP));
++        slideModels.add(new SlideModel(R.drawable.item_4, ScaleTypes.CENTER_CROP));
++
++        imageSlider.setImageList(slideModels, ScaleTypes.CENTER_CROP);
++
++
++
++
++//        RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
++//        ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this,getListItem());
++//        rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 3));
++//        mProductAdapter.setData(getListItem());
++//        rcv_product.setAdapter(mProductAdapter);
++
++
++
++
+ //        Category category = new Category(1, "Books", "Category for books");
+ //        Bitmap productImage = BitmapFactory.decodeResource(requireContext().getResources(), R.drawable.girl);
+         List<Product> productList = new ArrayList<>();
+@@ -63,16 +86,35 @@
+ //        }
+         ProductDAO productDAO = new ProductDAO(HomeFragment.this.getContext());
+         productList = productDAO.getAllProducts();
+-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
++        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewItem);
+         ProductAdapter productAdapter = new ProductAdapter(this, productList);
+         recyclerView.setAdapter(productAdapter);
+         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+     }
+ 
++//    String product_name, String description, double price, Bitmap image_product
++//    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.image);
++
++    public List<Product> getListItem() {
++        List<Product> list = new ArrayList<>();
++        list.add(new Product("item 1", "day la item 1",20, BitmapFactory.decodeResource(getResources(), R.drawable.item_1)));
++        list.add(new Product("item 2", "day la item 2",20, BitmapFactory.decodeResource(getResources(), R.drawable.item_2)));
++        list.add(new Product("item 3", "day la item 3",20, BitmapFactory.decodeResource(getResources(), R.drawable.item_3)));
++        list.add(new Product("item 4", "day la item 4",20, BitmapFactory.decodeResource(getResources(), R.drawable.item_4)));
++//        list.add(new Product(1,new Category(1,"nu","nu"),"item 1","day la item 1",20.5,1,BitmapFactory.decodeResource(getResources(), R.drawable.item_4)));
++
++        return list;
++    }
+ 
+     @Override
+-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+-                             Bundle savedInstanceState) {
+-        return inflater.inflate(R.layout.fragment_home, container, false);
++    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
++        View view = inflater.inflate(R.layout.fragment_home, container, false);
++
++        RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
++        ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this,getListItem());
++        rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 3));
++        mProductAdapter.setData(getListItem());
++        rcv_product.setAdapter(mProductAdapter);
++        return view;
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/slider.xml
+===================================================================
+diff --git a/app/src/main/res/layout/slider.xml b/app/src/main/res/layout/slider.xml
+new file mode 100644
+--- /dev/null	
++++ b/app/src/main/res/layout/slider.xml	
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    xmlns:app="http://schemas.android.com/apk/res-auto">
++
++    <androidx.cardview.widget.CardView
++        android:layout_width="match_parent"
++        android:layout_height="200dp"
++        android:layout_margin="20dp"
++        android:elevation="20dp"
++        app:cardCornerRadius="20dp">
++
++        <com.denzcoskun.imageslider.ImageSlider
++            android:id="@+id/imageSlider"
++            android:layout_width="match_parent"
++            android:layout_height="200dp"
++            app:iss_auto_cycle="true"
++            app:iss_corner_radius="20"
++            app:iss_delay="1000"
++            app:iss_period="1000"
++            app:iss_title_background="@color/color_primary" />
++    </androidx.cardview.widget.CardView>
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/item_home.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.cardview.widget.CardView xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    app:cardCornerRadius=\"10dp\"\n    android:background=\"@color/color_primary\">\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"\n        android:orientation=\"vertical\">\n\n        <ImageView\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"150dp\"\n            android:src=\"@drawable/item_1\"\n\n            />\n        <TextView\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"match_parent\"\n            android:textColor=\"@color/black\"\n            android:textSize=\"16sp\"\n            android:padding=\"6dp\"\n            android:text=\"@string/app_name\"\n            />\n    </LinearLayout>\n\n</androidx.cardview.widget.CardView>
+===================================================================
+diff --git a/app/src/main/res/layout/item_home.xml b/app/src/main/res/layout/item_home.xml
+--- a/app/src/main/res/layout/item_home.xml	
++++ b/app/src/main/res/layout/item_home.xml	
+@@ -5,25 +5,60 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     app:cardCornerRadius="10dp"
+     android:background="@color/color_primary">
++
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+-        android:orientation="vertical">
++        android:orientation="horizontal">
+ 
+         <ImageView
+-            android:layout_width="match_parent"
+-            android:layout_height="150dp"
++            android:id="@+id/img_item"
++            android:layout_width="128dp"
++            android:layout_height="166dp"
+             android:src="@drawable/item_1"
+ 
+             />
+-        <TextView
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:textColor="@color/black"
+-            android:textSize="16sp"
+-            android:padding="6dp"
+-            android:text="@string/app_name"
+-            />
++
++        <LinearLayout
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:orientation="vertical">
++
++            <TextView
++                android:id="@+id/product_name"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_margin="6dp"
++                android:text="@string/app_name"
++                android:textColor="#000000"></TextView>
++
++            <TextView
++                android:id="@+id/product_description"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_margin="6dp"
++                android:text="@string/app_name"
++                android:textColor="#000000"></TextView>
++
++            <TextView
++                android:id="@+id/product_price"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_margin="6dp"
++                android:text="@string/app_name"
++                android:textColor="#000000"></TextView>
++
++            <Button
++                android:id="@+id/button_buy"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_margin="6dp"
++                android:background="@color/color_primary"
++                android:text="Mua"
++                android:textColor="#FFFFFF" />
++
++        </LinearLayout>
++
+     </LinearLayout>
+ 
+ </androidx.cardview.widget.CardView>
+\ No newline at end of file
