@@ -285,7 +285,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Set váy ngắn",
                 "váy ngắn dễ thương",
                 20,
-                resizedImage);
+                resizedImage,
+                10);
         productDAO.insertProduct(product);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -297,7 +298,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Set váy nâu",
                 "Vải đũi",
                 20,
-                resizedImage2);
+                resizedImage2,
+                10);
         productDAO.insertProduct(product2);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -308,7 +310,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Áo Nâu",
                 "Cotton da cá",
                 20,
-                resizedImage3);
+                resizedImage3,
+                10);
         productDAO.insertProduct(product3);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -320,7 +323,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Set váy công sở",
                 "váy công sở",
                 20,
-                resizedImage4);
+                resizedImage4,
+                10);
         productDAO.insertProduct(product4);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -332,7 +336,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Sweater cổ V nâu",
                 "Cotton dày",
                 20,
-                resizedImage5);
+                resizedImage5,
+                10);
         productDAO.insertProduct(product5);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -344,7 +349,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Váy 2 dây hoa",
                 "váy xinh",
                 20,
-                resizedImage6);
+                resizedImage6,
+                10);
         productDAO.insertProduct(product6);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -356,7 +362,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Áo T-shirt trắng",
                 "áo trắng",
                 20,
-                resizedImage7);
+                resizedImage7,
+                10);
         productDAO.insertProduct(product7);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -368,7 +375,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Set váy Tím",
                 "váy tím",
                 20,
-                resizedImage8);
+                resizedImage8,
+                10);
         productDAO.insertProduct(product8);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -380,7 +388,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Áo sweater kẻ sọc",
                 "áo len",
                 20,
-                resizedImage9);
+                resizedImage9,
+                10);
         productDAO.insertProduct(product9);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -392,7 +401,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "áo t-shirts màu be",
                 "áo be",
                 20,
-                resizedImage10);
+                resizedImage10,
+                10);
         productDAO.insertProduct(product10);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -404,7 +414,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Áo",
                 "váy ngắn dễ thương",
                 20,
-                resizedImage11);
+                resizedImage11,
+                10);
         productDAO.insertProduct(product11);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -416,7 +427,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Set váy hoa nhí",
                 "váy ngắn dễ thương",
                 20,
-                resizedImage12);
+                resizedImage12,
+                10);
         productDAO.insertProduct(product12);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -428,7 +440,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "Áo hoodie",
                 "váy ngắn dễ thương",
                 20,
-                resizedImage13);
+                resizedImage13,
+                10);
         productDAO.insertProduct(product13);
         Log.d("fakeProductData", "Inserted successfully");
 
@@ -440,7 +453,8 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
                 "T-shirt kẻ caro",
                 "váy ngắn dễ thương",
                 20,
-                resizedImage14);
+                resizedImage14,
+                10);
         productDAO.insertProduct(product14);
         Log.d("fakeProductData", "Inserted successfully");
 
