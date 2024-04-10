@@ -26,7 +26,13 @@ import android.widget.Toolbar;
 
 import com.example.bt_lon.R;
 import com.example.bt_lon.model.product.Product;
+import com.example.bt_lon.model.purchaseorder.PurchaseOrder;
+import com.example.bt_lon.model.user.RepositoryUser;
+import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
 import com.example.bt_lon.sqlite_open_helper.DAO.ProductDAO;
+import com.example.bt_lon.sqlite_open_helper.DAO.PurchaseOrderDAO;
+
+import java.util.Date;
 
 public class Detail_Activity extends AppCompatActivity {
     ImageView img, imageBack;
@@ -140,6 +146,29 @@ public class Detail_Activity extends AppCompatActivity {
         btnMua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProductDAO productDAO = new ProductDAO(Detail_Activity.this);
+                CartDAO cartDAO = new CartDAO(Detail_Activity.this);
+                PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO(Detail_Activity.this);
+                int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));
+                double cost = sl * product.getPrice();
+                PurchaseOrder purchaseOrder = new
+                        PurchaseOrder(
+                        product,
+                        RepositoryUser.getAccount(),
+                        sl,
+                        new Date(),
+                        cost
+                );
+                purchaseOrderDAO.insertPurchaseOrder(purchaseOrder);
+                if (sl == product.getQuantity()) {
+//                            productDAO.deleteProduct(cartList.get(i).getProduct().getProduct_id());
+                    productDAO.updateQuantity(product, 0);
+                    cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());
+                } else {
+                    int quantityNew = product.getQuantity() - sl;
+                    productDAO.updateQuantity(product, quantityNew);
+                    cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());
+                }
                 Intent intent = new Intent(Detail_Activity.this, CartActivity.class);
                 startActivity(intent);
             }
