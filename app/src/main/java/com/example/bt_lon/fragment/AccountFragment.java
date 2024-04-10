@@ -150,9 +150,14 @@ public class AccountFragment extends Fragment {
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(purchasedAdapter);
+                if (!purchaseOrderList.isEmpty()) {
+                    constrainLayoutNoPurchased.setVisibility(View.GONE);
+                    recyclerViewPurchased.setVisibility(View.VISIBLE);
+                } else {
+                    constrainLayoutNoPurchased.setVisibility(View.VISIBLE);
+                    recyclerViewPurchased.setVisibility(View.GONE);
+                }
 
-                constrainLayoutNoPurchased.setVisibility(View.GONE);
-                recyclerViewPurchased.setVisibility(View.VISIBLE);
             } else {
                 constrainLayoutNoPurchased.setVisibility(View.VISIBLE);
                 recyclerViewPurchased.setVisibility(View.GONE);
@@ -222,7 +227,9 @@ public class AccountFragment extends Fragment {
     private List<PurchaseOrder> initData() {
         PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO(getContext());
         List<PurchaseOrder> list = purchaseOrderDAO.getAllPurchaseOrdersByUserIdGroupByProductId(getContext(), RepositoryUser.getAccount().getUser_id());
-        Collections.reverse(list);
+        if (!list.isEmpty()) {
+            Collections.reverse(list);
+        }
         return list;
     }
 }
