@@ -63,6 +63,15 @@ public class Product implements Serializable {
         this.image_product = image_product;
     }
 
+    public Product( Category category, String product_name, String description, double price, Bitmap image_product,int quantity) {
+        this.category = category;
+        this.product_name = product_name;
+        this.description = description;
+        this.price = price;
+        this.image_product = image_product;
+        this.quantity = quantity;
+    }
+
     public int getQuantity() {
         return quantity;
     }

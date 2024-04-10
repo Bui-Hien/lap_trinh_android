@@ -43,10 +43,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         Button button_buy;
         ImageView imgProduct;
-
         TextView nameProduct;
         TextView descriptionProduct;
         TextView priceProduct;
+
+        TextView quantityProduct;
 
         CardView cardView;
 
@@ -58,6 +59,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             descriptionProduct = itemView.findViewById(R.id.product_description);
             priceProduct = itemView.findViewById(R.id.product_price);
             cardView = itemView.findViewById(R.id.layout_item);
+            quantityProduct = itemView.findViewById(R.id.product_quantity);
 
         }
     }
@@ -110,6 +112,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.descriptionProduct.setText(product.getDescription());
         holder.priceProduct.setText(product.getPrice() + "$");
         holder.imgProduct.setImageBitmap(product.getImage_product());
+        holder.quantityProduct.setText( "Số lương: "+String.valueOf( product.getQuantity()));
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
