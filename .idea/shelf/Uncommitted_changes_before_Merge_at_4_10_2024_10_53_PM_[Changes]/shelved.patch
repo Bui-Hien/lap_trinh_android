@@ -1,0 +1,159 @@
+Index: app/src/main/java/com/example/bt_lon/activity/Detail_Activity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bt_lon.activity;\r\n\r\nimport static java.lang.Double.parseDouble;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\n\r\nimport android.annotation.SuppressLint;\r\nimport android.app.Dialog;\r\nimport android.content.Intent;\r\nimport android.graphics.Color;\r\nimport android.graphics.drawable.ColorDrawable;\r\nimport android.os.Bundle;\r\nimport android.view.Gravity;\r\nimport android.view.View;\r\nimport android.view.Window;\r\nimport android.view.WindowManager;\r\nimport android.widget.ArrayAdapter;\r\nimport android.widget.Button;\r\nimport android.widget.ImageView;\r\nimport android.widget.Spinner;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\nimport android.widget.Toolbar;\r\n\r\n\r\nimport com.example.bt_lon.R;\r\nimport com.example.bt_lon.model.product.Product;\r\nimport com.example.bt_lon.model.purchaseorder.PurchaseOrder;\r\nimport com.example.bt_lon.model.user.RepositoryUser;\r\nimport com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;\r\nimport com.example.bt_lon.sqlite_open_helper.DAO.ProductDAO;\r\nimport com.example.bt_lon.sqlite_open_helper.DAO.PurchaseOrderDAO;\r\n\r\nimport java.util.Date;\r\n\r\npublic class Detail_Activity extends AppCompatActivity {\r\n    ImageView img, imageBack;\r\n    TextView txtGia, txtTen, txtMota;\r\n    Button btnThem, btnMua;\r\n    int product_id;\r\n    Product product;\r\n\r\n    @SuppressLint(\"SetTextI18n\")\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_detail);\r\n        Intent intent = getIntent();\r\n        product_id = intent.getIntExtra(\"product_id\", 1);\r\n\r\n        ProductDAO productDAO = new ProductDAO(this);\r\n\r\n        product = productDAO.getProductById(this, product_id);\r\n\r\n        img = (ImageView) findViewById(R.id.imgProduct);\r\n        imageBack = (ImageView) findViewById(R.id.imageBack);\r\n        txtGia = findViewById(R.id.txtGia);\r\n        txtTen = findViewById(R.id.txtTen);\r\n        txtMota = findViewById(R.id.txtMota);\r\n        btnThem = findViewById(R.id.btnThem);\r\n        btnMua = findViewById(R.id.btnMua);\r\n\r\n\r\n        img.setImageBitmap(product.getImage_product());\r\n        txtGia.setText(\"Giá sản phẩm: \" + product.getPrice() + \" đ\");\r\n        txtTen.setText(\"Tên sản phẩm: \" + product.getProduct_name());\r\n        txtMota.setText(product.getDescription());\r\n        btnThem.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                openThemDialog(Gravity.CENTER);\r\n\r\n            }\r\n        });\r\n\r\n        btnMua.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                openMuaDialog(Gravity.CENTER);\r\n            }\r\n        });\r\n        imageBack.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                finish();\r\n            }\r\n        });\r\n    }\r\n\r\n\r\n    private void openMuaDialog(int gravity) {\r\n        final Dialog dialog = new Dialog(this);\r\n        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);\r\n        dialog.setContentView(R.layout.layout_mua);\r\n        Window window = dialog.getWindow();\r\n        if (window == null) {\r\n            return;\r\n        }\r\n        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);\r\n        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));\r\n\r\n        WindowManager.LayoutParams windowAttributes = window.getAttributes();\r\n        windowAttributes.gravity = gravity;\r\n        window.setAttributes(windowAttributes);\r\n\r\n\r\n        if (Gravity.CENTER == gravity) {\r\n            dialog.setCancelable(true);\r\n        }\r\n\r\n        Button btnThoat = dialog.findViewById(R.id.btnThoat);\r\n        Button btnMua = dialog.findViewById(R.id.btnMua);\r\n        Button btntru = dialog.findViewById(R.id.btntru);\r\n        Button btngiatri = dialog.findViewById(R.id.btngiatri);\r\n        Button btncong = dialog.findViewById(R.id.btncong);\r\n\r\n        btncong.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));\r\n                sl += 1;\r\n                btngiatri.setText(String.valueOf(sl));\r\n            }\r\n        });\r\n\r\n        btntru.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));\r\n                if (sl > 1) {\r\n                    sl -= 1;\r\n                    btngiatri.setText(String.valueOf(sl));\r\n                }\r\n            }\r\n        });\r\n\r\n\r\n        btnThoat.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                dialog.dismiss();\r\n            }\r\n        });\r\n\r\n        btnMua.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                ProductDAO productDAO = new ProductDAO(Detail_Activity.this);\r\n                CartDAO cartDAO = new CartDAO(Detail_Activity.this);\r\n                PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO(Detail_Activity.this);\r\n                int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));\r\n                double cost = sl * product.getPrice();\r\n                PurchaseOrder purchaseOrder = new\r\n                        PurchaseOrder(\r\n                        product,\r\n                        RepositoryUser.getAccount(),\r\n                        sl,\r\n                        new Date(),\r\n                        cost\r\n                );\r\n                purchaseOrderDAO.insertPurchaseOrder(purchaseOrder);\r\n                if (sl == product.getQuantity()) {\r\n//                            productDAO.deleteProduct(cartList.get(i).getProduct().getProduct_id());\r\n                    productDAO.updateQuantity(product, 0);\r\n                    cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());\r\n                } else {\r\n                    int quantityNew = product.getQuantity() - sl;\r\n                    productDAO.updateQuantity(product, quantityNew);\r\n                    cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());\r\n                }\r\n                Intent intent = new Intent(Detail_Activity.this, CartActivity.class);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n        dialog.show();\r\n\r\n    }\r\n\r\n    private void openThemDialog(int gravity) {\r\n        final Dialog dialog = new Dialog(this);\r\n        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);\r\n        dialog.setContentView(R.layout.layout_them);\r\n//        dialog.setContentView(R.layout.layout_mua);\r\n        Window window = dialog.getWindow();\r\n        if (window == null) {\r\n            return;\r\n        }\r\n        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);\r\n        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));\r\n\r\n        WindowManager.LayoutParams windowAttributes = window.getAttributes();\r\n        windowAttributes.gravity = gravity;\r\n        window.setAttributes(windowAttributes);\r\n\r\n\r\n        if (Gravity.CENTER == gravity) {\r\n            dialog.setCancelable(true);\r\n        }\r\n\r\n        Button btnThoat = dialog.findViewById(R.id.btnThoat);\r\n        Button btnThem = dialog.findViewById(R.id.btnThem);\r\n        Button btntru = dialog.findViewById(R.id.btntru);\r\n        Button btngiatri = dialog.findViewById(R.id.btngiatri);\r\n        Button btncong = dialog.findViewById(R.id.btncong);\r\n\r\n        btncong.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));\r\n                sl += 1;\r\n                btngiatri.setText(String.valueOf(sl));\r\n            }\r\n        });\r\n\r\n        btntru.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));\r\n                if (sl > 1) {\r\n                    sl -= 1;\r\n                    btngiatri.setText(String.valueOf(sl));\r\n                }\r\n            }\r\n        });\r\n        btnThoat.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                dialog.dismiss();\r\n            }\r\n        });\r\n\r\n        btnThem.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                Intent intent = new Intent(Detail_Activity.this, CartActivity.class);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n        dialog.show();\r\n\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/bt_lon/activity/Detail_Activity.java b/app/src/main/java/com/example/bt_lon/activity/Detail_Activity.java
+--- a/app/src/main/java/com/example/bt_lon/activity/Detail_Activity.java	(revision b9745bb9eb44cf19dfbff5b916e8ea618e0bcfb4)
++++ b/app/src/main/java/com/example/bt_lon/activity/Detail_Activity.java	(date 1712763942882)
+@@ -25,9 +25,11 @@
+ 
+ 
+ import com.example.bt_lon.R;
++import com.example.bt_lon.model.cart.Cart;
+ import com.example.bt_lon.model.product.Product;
+ import com.example.bt_lon.model.purchaseorder.PurchaseOrder;
+ import com.example.bt_lon.model.user.RepositoryUser;
++import com.example.bt_lon.model.user.User;
+ import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
+ import com.example.bt_lon.sqlite_open_helper.DAO.ProductDAO;
+ import com.example.bt_lon.sqlite_open_helper.DAO.PurchaseOrderDAO;
+@@ -146,31 +148,35 @@
+         btnMua.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+-                ProductDAO productDAO = new ProductDAO(Detail_Activity.this);
+-                CartDAO cartDAO = new CartDAO(Detail_Activity.this);
+-                PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO(Detail_Activity.this);
+-                int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));
+-                double cost = sl * product.getPrice();
+-                PurchaseOrder purchaseOrder = new
+-                        PurchaseOrder(
+-                        product,
+-                        RepositoryUser.getAccount(),
+-                        sl,
+-                        new Date(),
+-                        cost
+-                );
+-                purchaseOrderDAO.insertPurchaseOrder(purchaseOrder);
+-                if (sl == product.getQuantity()) {
+-//                            productDAO.deleteProduct(cartList.get(i).getProduct().getProduct_id());
+-                    productDAO.updateQuantity(product, 0);
+-                    cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());
+-                } else {
+-                    int quantityNew = product.getQuantity() - sl;
+-                    productDAO.updateQuantity(product, quantityNew);
+-                    cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());
+-                }
+-                Intent intent = new Intent(Detail_Activity.this, CartActivity.class);
+-                startActivity(intent);
++                if (RepositoryUser.getAccount() != null) {
++                    ProductDAO productDAO = new ProductDAO(Detail_Activity.this);
++                    CartDAO cartDAO = new CartDAO(Detail_Activity.this);
++                    PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO(Detail_Activity.this);
++                    int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));
++                    double cost = sl * product.getPrice();
++                    PurchaseOrder purchaseOrder = new
++                            PurchaseOrder(
++                            product,
++                            RepositoryUser.getAccount(),
++                            sl,
++                            new Date(),
++                            cost
++                    );
++                    purchaseOrderDAO.insertPurchaseOrder(purchaseOrder);
++                    if (sl == product.getQuantity()) {
++                        productDAO.updateQuantity(product, 0);
++                        cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());
++                    } else {
++                        int quantityNew = product.getQuantity() - sl;
++                        productDAO.updateQuantity(product, quantityNew);
++                        cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());
++                    }
++                    finish();
++                } else {
++                    Intent intent = new Intent(Detail_Activity.this, LoginActivity.class);
++                    startActivity(intent);
++                }
++
+             }
+         });
+         dialog.show();
+@@ -233,8 +239,21 @@
+         btnThem.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+-                Intent intent = new Intent(Detail_Activity.this, CartActivity.class);
+-                startActivity(intent);
++
++                if (RepositoryUser.getAccount() != null) {
++                    User user = RepositoryUser.getAccount();
++                    Cart cart = new Cart(user, product, 1);
++                    CartDAO cartDAO = new CartDAO(Detail_Activity.this);
++                    int sl = Integer.parseInt(String.valueOf(btngiatri.getText()));
++                    cartDAO.storeProductToCart(cart, sl);
++                    Intent intent = new Intent(Detail_Activity.this, CartActivity.class);
++                    startActivity(intent);
++                    dialog.dismiss();
++                    finish();
++                } else {
++                    Intent intent = new Intent(Detail_Activity.this, LoginActivity.class);
++                    startActivity(intent);
++                }
+             }
+         });
+         dialog.show();
+Index: app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bt_lon.adapter;\r\n\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Button;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.cardview.widget.CardView;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.example.bt_lon.Interface.RecycleViewItemClickListener;\r\nimport com.example.bt_lon.R;\r\nimport com.example.bt_lon.activity.Detail_Activity;\r\nimport com.example.bt_lon.activity.LoginActivity;\r\nimport com.example.bt_lon.fragment.HomeFragment;\r\nimport com.example.bt_lon.model.cart.Cart;\r\nimport com.example.bt_lon.model.category.Category;\r\nimport com.example.bt_lon.model.product.Product;\r\nimport com.example.bt_lon.model.user.RepositoryUser;\r\nimport com.example.bt_lon.model.user.User;\r\nimport com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;\r\n\r\n\r\nimport org.w3c.dom.Text;\r\n\r\nimport java.util.List;\r\n\r\npublic class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {\r\n    private List<Product> productList;\r\n    private HomeFragment mContext;\r\n\r\n    private RecycleViewItemClickListener recycleViewItemClickListener;\r\n\r\n    public static class ProductViewHolder extends RecyclerView.ViewHolder {\r\n\r\n        Button button_buy;\r\n        ImageView imgProduct;\r\n\r\n        TextView nameProduct;\r\n        TextView descriptionProduct;\r\n        TextView priceProduct;\r\n\r\n        CardView cardView;\r\n\r\n        public ProductViewHolder(@NonNull View itemView) {\r\n            super(itemView);\r\n            button_buy = itemView.findViewById(R.id.button_buy);\r\n            imgProduct = itemView.findViewById(R.id.img_item);\r\n            nameProduct = itemView.findViewById(R.id.product_name);\r\n            descriptionProduct = itemView.findViewById(R.id.product_description);\r\n            priceProduct = itemView.findViewById(R.id.product_price);\r\n            cardView = itemView.findViewById(R.id.layout_item);\r\n\r\n        }\r\n    }\r\n\r\n    public ProductAdapter(HomeFragment context, List<Product> productList, RecycleViewItemClickListener recycleViewItemClickListener  ) {\r\n        this.mContext = context;\r\n        this.productList = productList;\r\n        this.recycleViewItemClickListener = recycleViewItemClickListener;\r\n    }\r\n    public ProductAdapter(HomeFragment context, List<Product> productList  ) {\r\n        this.mContext = context;\r\n        this.productList = productList;\r\n    }\r\n\r\n    public ProductAdapter(HomeFragment context) {\r\n        this.mContext = context;\r\n//        this.productList = productList;\r\n    }\r\n\r\n    public void setData(List<Product> list) {\r\n        this.productList = list;\r\n\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home,parent,false);\r\n//        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());\r\n//        View listItem = layoutInflater.inflate(R.layout.item_home, parent, false);\r\n        return new ProductViewHolder(view);\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {\r\n        Product product = productList.get(position);\r\n\r\n        holder.button_buy.setText(String.valueOf(product.getProduct_id()));\r\n        holder.nameProduct.setText(product.getProduct_name());\r\n        holder.descriptionProduct.setText(product.getDescription());\r\n        holder.priceProduct.setText(product.getPrice()+\"$\");\r\n        holder.imgProduct.setImageBitmap(product.getImage_product());\r\n\r\n        holder.cardView.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                onClickGoToDetail(product.getProduct_id(),v);\r\n            }\r\n        });\r\n        holder.button_buy.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                if (RepositoryUser.getAccount() != null) {\r\n                    User user = RepositoryUser.getAccount();\r\n                    Cart cart = new Cart(user, product, 1);\r\n                    CartDAO cartDAO = new CartDAO(mContext.getContext());\r\n                    cartDAO.storeProductToCart(cart);\r\n                } else {\r\n                    Intent intent = new Intent(mContext.getContext(), LoginActivity.class);\r\n                    mContext.startActivity(intent);\r\n                }\r\n\r\n            }\r\n        });\r\n    }\r\n\r\n    public void onClickGoToDetail(int product_id,View v){\r\n        Intent intent = new Intent(v.getContext(), Detail_Activity.class);\r\n        intent.putExtra(\"product_id\", product_id);\r\n        v.getContext().startActivity(intent);\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        if (productList != null) {\r\n            return productList.size();\r\n        } else return 0;\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java b/app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java
+--- a/app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java	(revision b9745bb9eb44cf19dfbff5b916e8ea618e0bcfb4)
++++ b/app/src/main/java/com/example/bt_lon/adapter/ProductAdapter.java	(date 1712764011070)
+@@ -112,7 +112,7 @@
+                     User user = RepositoryUser.getAccount();
+                     Cart cart = new Cart(user, product, 1);
+                     CartDAO cartDAO = new CartDAO(mContext.getContext());
+-                    cartDAO.storeProductToCart(cart);
++                    cartDAO.storeProductToCart(cart, 1);
+                 } else {
+                     Intent intent = new Intent(mContext.getContext(), LoginActivity.class);
+                     mContext.startActivity(intent);
+Index: app/src/main/java/com/example/bt_lon/sqlite_open_helper/DAO/CartDAO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bt_lon.sqlite_open_helper.DAO;\r\n\r\nimport android.annotation.SuppressLint;\r\nimport android.content.ContentValues;\r\nimport android.content.Context;\r\nimport android.database.Cursor;\r\nimport android.database.SQLException;\r\nimport android.database.sqlite.SQLiteDatabase;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.util.Log;\r\n\r\nimport com.example.bt_lon.model.cart.Cart;\r\nimport com.example.bt_lon.model.category.Category;\r\nimport com.example.bt_lon.model.product.Product;\r\nimport com.example.bt_lon.model.user.User;\r\nimport com.example.bt_lon.sqlite_open_helper.DatabaseConnector;\r\n\r\nimport java.io.ByteArrayOutputStream;\r\nimport java.text.ParseException;\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.ArrayList;\r\nimport java.util.Date;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\n\r\npublic class CartDAO {\r\n    private SQLiteDatabase database;\r\n    private DatabaseConnector dbHelper;\r\n\r\n    public CartDAO(Context context) {\r\n        dbHelper = new DatabaseConnector(context);\r\n    }\r\n\r\n    public void open() throws SQLException {\r\n        database = dbHelper.getWritableDatabase();\r\n    }\r\n\r\n    public void close() {\r\n        dbHelper.close();\r\n    }\r\n\r\n    public boolean storeProductToCart(Cart cart) {\r\n        if (isProductInCart(cart.getUser().getUser_id(), cart.getProduct().getProduct_id())) {\r\n            Log.e(\"storeProductToCart\", \"Đã có sản phẩn này trong giỏ hàng\");\r\n            SQLiteDatabase db = dbHelper.getWritableDatabase();\r\n            int newQuantity = getCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id()) + 1;\r\n            if (updateCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id(), newQuantity)) {\r\n                db.close(); // Close the database connection after updating quantity\r\n                return true; // Return true if quantity updated successfully\r\n            } else {\r\n                db.close();\r\n                return false; // Return false if update failed\r\n            }\r\n        } else {\r\n            Log.e(\"storeProductToCart\", \"Chưa có sản phẩn này trong giỏ hàng\");\r\n            SQLiteDatabase db = dbHelper.getWritableDatabase();\r\n\r\n            ContentValues values = new ContentValues();\r\n            values.put(\"user_id\", cart.getUser().getUser_id());\r\n            values.put(\"product_id\", cart.getProduct().getProduct_id());\r\n            values.put(\"quantity\", 1);\r\n\r\n            if (db.insert(\"Carts\", null, values) != -1) {\r\n                Log.e(\"storeProductToCart\", \"thanh cong\");\r\n                db.close();\r\n                return true;\r\n            } else {\r\n                Log.e(\"storeProductToCart\", \"that bai\");\r\n                db.close();\r\n                return false;\r\n            }\r\n        }\r\n\r\n    }\r\n\r\n    public boolean deleteProductFromCart(int user_id, int product_id) {\r\n        SQLiteDatabase db = dbHelper.getWritableDatabase();\r\n\r\n        int rowsAffected = db.delete(\"Carts\", \"user_id = ? AND product_id = ?\",\r\n                new String[]{String.valueOf(user_id), String.valueOf(product_id)});\r\n\r\n        db.close();\r\n\r\n        if (rowsAffected > 0) {\r\n            Log.d(\"deleteProductFromCart\", \"Deletion successful\");\r\n            return true;\r\n        } else {\r\n            Log.e(\"deleteProductFromCart\", \"Deletion failed\");\r\n            return false;\r\n        }\r\n    }\r\n\r\n    public boolean isProductInCart(int userId, int productId) {\r\n        SQLiteDatabase db = dbHelper.getReadableDatabase();\r\n        String query = \"SELECT COUNT(*) FROM Carts WHERE user_id = ? AND product_id = ?\";\r\n        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(productId)});\r\n        int count = 0;\r\n        if (cursor != null) {\r\n            if (cursor.moveToFirst()) {\r\n                count = cursor.getInt(0);\r\n            }\r\n            cursor.close();\r\n        }\r\n        db.close();\r\n        return count > 0;\r\n    }\r\n\r\n    public boolean updateCartQuantity(int userId, int productId, int newQuantity) {\r\n        SQLiteDatabase db = dbHelper.getWritableDatabase();\r\n\r\n        ContentValues values = new ContentValues();\r\n        values.put(\"quantity\", newQuantity);\r\n\r\n        String selection = \"user_id = ? AND product_id = ?\";\r\n        String[] selectionArgs = {String.valueOf(userId), String.valueOf(productId)};\r\n\r\n        int rowsAffected = db.update(\"Carts\", values, selection, selectionArgs);\r\n\r\n        db.close();\r\n\r\n        if (rowsAffected > 0) {\r\n            Log.d(\"updateCartQuantity\", \"Update successful\");\r\n            return true;\r\n        } else {\r\n            Log.d(\"updateCartQuantity\", \"No rows affected. User or product not found in the cart.\");\r\n            return false;\r\n        }\r\n    }\r\n\r\n\r\n    public int getCartQuantity(int userId, int productId) {\r\n        SQLiteDatabase db = dbHelper.getReadableDatabase();\r\n\r\n        String[] projection = {\"quantity\"};\r\n        String selection = \"user_id = ? AND product_id = ?\";\r\n        String[] selectionArgs = {String.valueOf(userId), String.valueOf(productId)};\r\n\r\n        Cursor cursor = db.query(\"Carts\", projection, selection, selectionArgs, null, null, null);\r\n\r\n        int quantity = 0; // default value\r\n\r\n        if (cursor.moveToFirst()) {\r\n            quantity = cursor.getInt(0);\r\n        }\r\n\r\n        cursor.close();\r\n        db.close();\r\n\r\n        return quantity;\r\n    }\r\n\r\n    public boolean deleteCartItem(int userId, int productId) {\r\n        SQLiteDatabase db = dbHelper.getWritableDatabase();\r\n\r\n        String selection = \"user_id = ? AND product_id = ?\";\r\n        String[] selectionArgs = {String.valueOf(userId), String.valueOf(productId)};\r\n\r\n        int rowsAffected = db.delete(\"Carts\", selection, selectionArgs);\r\n\r\n        db.close();\r\n\r\n        if (rowsAffected > 0) {\r\n            Log.d(\"deleteCartItem\", \"Deletion successful\");\r\n            return true;\r\n        } else {\r\n            Log.d(\"deleteCartItem\", \"No rows affected. User or product not found in the cart.\");\r\n            return false;\r\n        }\r\n    }\r\n\r\n    public List<Cart> getCartItemsByUserId(Context context, User user) {\r\n        List<Cart> cartItems = new ArrayList<>();\r\n        SQLiteDatabase db = dbHelper.getReadableDatabase();\r\n        String query = \"SELECT * FROM Carts WHERE user_id = ?\";\r\n        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(user.getUser_id())});\r\n\r\n        if (cursor != null && cursor.moveToFirst()) {\r\n            do {\r\n                int cartId = cursor.getInt(1);\r\n                int productId = cursor.getInt(2);\r\n                int quantity = cursor.getInt(3);\r\n\r\n                ProductDAO productDAO = new ProductDAO(context);\r\n                Product product = productDAO.getProductById(context, productId);\r\n\r\n                Cart cartItem = new Cart(cartId, user, product, false, quantity);\r\n                cartItems.add(cartItem);\r\n            } while (cursor.moveToNext());\r\n\r\n            cursor.close();\r\n        }\r\n\r\n        db.close();\r\n        return cartItems;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/bt_lon/sqlite_open_helper/DAO/CartDAO.java b/app/src/main/java/com/example/bt_lon/sqlite_open_helper/DAO/CartDAO.java
+--- a/app/src/main/java/com/example/bt_lon/sqlite_open_helper/DAO/CartDAO.java	(revision b9745bb9eb44cf19dfbff5b916e8ea618e0bcfb4)
++++ b/app/src/main/java/com/example/bt_lon/sqlite_open_helper/DAO/CartDAO.java	(date 1712763998990)
+@@ -40,11 +40,11 @@
+         dbHelper.close();
+     }
+ 
+-    public boolean storeProductToCart(Cart cart) {
++    public boolean storeProductToCart(Cart cart, int quantity) {
+         if (isProductInCart(cart.getUser().getUser_id(), cart.getProduct().getProduct_id())) {
+             Log.e("storeProductToCart", "Đã có sản phẩn này trong giỏ hàng");
+             SQLiteDatabase db = dbHelper.getWritableDatabase();
+-            int newQuantity = getCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id()) + 1;
++            int newQuantity = getCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id()) + quantity;
+             if (updateCartQuantity(cart.getUser().getUser_id(), cart.getProduct().getProduct_id(), newQuantity)) {
+                 db.close(); // Close the database connection after updating quantity
+                 return true; // Return true if quantity updated successfully
+@@ -59,7 +59,7 @@
+             ContentValues values = new ContentValues();
+             values.put("user_id", cart.getUser().getUser_id());
+             values.put("product_id", cart.getProduct().getProduct_id());
+-            values.put("quantity", 1);
++            values.put("quantity", quantity);
+ 
+             if (db.insert("Carts", null, values) != -1) {
+                 Log.e("storeProductToCart", "thanh cong");

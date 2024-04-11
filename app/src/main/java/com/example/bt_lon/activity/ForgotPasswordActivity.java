@@ -58,74 +58,85 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         Button btnNextForgotPassword = findViewById(R.id.btnNextForgotPassword);
         ImageView imageBack = findViewById(R.id.imageBack);
 
-        if (initData(new User("buixuanhien")) != null) {
-            List<ForgotPassword> forgotPasswordList = initData(new User("buixuanhien"));
 
-            tvForgotPasswordName.setText(forgotPasswordList.get(0).getUser().getUsername());
-            tvQuestionSecurityOne.setText(forgotPasswordList.get(0).getQuestion().getQuestion());
-            tvQuestionSecuritySecond.setText(forgotPasswordList.get(1).getQuestion().getQuestion());
-            tvQuestionSecurityThird.setText(forgotPasswordList.get(2).getQuestion().getQuestion());
+        Intent intentusername = getIntent();
+        Bundle bundle = intentusername.getExtras();
 
-            if (forgotPasswordList.get(0).getQuestion().getQuestion_id() == 1) {
-                // Không cho phép chỉnh sửa nội dung
-                edtAnswerOne.setFocusable(false);
-                edtAnswerOne.setFocusableInTouchMode(false);
-                edtAnswerOne.setHint("dd/MM/yyyy");
-                edtAnswerOne.setOnClickListener(new View.OnClickListener() {
+        if (bundle != null) {
+            String username = (String) bundle.get("username");
+            if (initData(new User(username)) != null) {
+                List<ForgotPassword> forgotPasswordList = initData(new User(username));
+
+                tvForgotPasswordName.setText(forgotPasswordList.get(0).getUser().getUsername());
+                tvQuestionSecurityOne.setText(forgotPasswordList.get(0).getQuestion().getQuestion());
+                tvQuestionSecuritySecond.setText(forgotPasswordList.get(1).getQuestion().getQuestion());
+                tvQuestionSecurityThird.setText(forgotPasswordList.get(2).getQuestion().getQuestion());
+
+                if (forgotPasswordList.get(0).getQuestion().getQuestion_id() == 1) {
+                    // Không cho phép chỉnh sửa nội dung
+                    edtAnswerOne.setFocusable(false);
+                    edtAnswerOne.setFocusableInTouchMode(false);
+                    edtAnswerOne.setHint("dd/MM/yyyy");
+                    edtAnswerOne.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            initDatePicker(edtAnswerOne);
+                        }
+                    });
+
+                }
+                if (forgotPasswordList.get(1).getQuestion().getQuestion_id() == 1) {
+                    // Không cho phép chỉnh sửa nội dung
+                    edtAnswersSecond.setFocusable(false);
+                    edtAnswersSecond.setFocusableInTouchMode(false);
+                    edtAnswersSecond.setHint("dd/MM/yyyy");
+                    edtAnswersSecond.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            initDatePicker(edtAnswersSecond);
+                        }
+                    });
+                }
+                if (forgotPasswordList.get(2).getQuestion().getQuestion_id() == 1) {
+                    // Không cho phép chỉnh sửa nội dung
+                    edtAnswerThird.setFocusable(false);
+                    edtAnswerThird.setFocusableInTouchMode(false);
+                    edtAnswerThird.setHint("dd/MM/yyyy");
+                    edtAnswerThird.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            initDatePicker(edtAnswerThird);
+                        }
+                    });
+                }
+                btnNextForgotPassword.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        initDatePicker(edtAnswerOne);
-                    }
-                });
-
-            } else if (forgotPasswordList.get(1).getQuestion().getQuestion_id() == 1) {
-                // Không cho phép chỉnh sửa nội dung
-                edtAnswersSecond.setFocusable(false);
-                edtAnswersSecond.setFocusableInTouchMode(false);
-                edtAnswersSecond.setHint("dd/MM/yyyy");
-                edtAnswersSecond.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        initDatePicker(edtAnswersSecond);
-                    }
-                });
-            } else if (forgotPasswordList.get(2).getQuestion().getQuestion_id() == 1) {
-                // Không cho phép chỉnh sửa nội dung
-                edtAnswerThird.setFocusable(false);
-                edtAnswerThird.setFocusableInTouchMode(false);
-                edtAnswerThird.setHint("dd/MM/yyyy");
-                edtAnswerThird.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        initDatePicker(edtAnswerThird);
-                    }
-                });
-            }
-            btnNextForgotPassword.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String answer1, answer2, answer3;
-                    answer1 = String.valueOf(edtAnswerOne.getText());
-                    answer2 = String.valueOf(edtAnswersSecond.getText());
-                    answer3 = String.valueOf(edtAnswerThird.getText());
-                    if (answer1.isEmpty() || answer2.isEmpty() || answer3.isEmpty()) {
-                        Toast.makeText(ForgotPasswordActivity.this, "Câu trả lời không được bỏ trống.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (!answer1.equals(forgotPasswordList.get(0).getAnswer()) || !answer2.equals(forgotPasswordList.get(1).getAnswer()) || !answer3.equals(forgotPasswordList.get(2).getAnswer())) {
-                            Toast.makeText(ForgotPasswordActivity.this, "Câu trả lời không chính xác.", Toast.LENGTH_SHORT).show();
+                        String answer1, answer2, answer3;
+                        answer1 = String.valueOf(edtAnswerOne.getText());
+                        answer2 = String.valueOf(edtAnswersSecond.getText());
+                        answer3 = String.valueOf(edtAnswerThird.getText());
+                        if (answer1.isEmpty() || answer2.isEmpty() || answer3.isEmpty()) {
+                            Toast.makeText(ForgotPasswordActivity.this, "Câu trả lời không được bỏ trống.", Toast.LENGTH_SHORT).show();
                         } else {
-                            RepositoryUser.createNewAccount(forgotPasswordList.get(0).getUser().getUser_id(), forgotPasswordList.get(0).getUser().getUsername());
-                            Intent intent = new Intent(ForgotPasswordActivity.this, ChangePasswordActivity.class);
+                            if (!answer1.equals(forgotPasswordList.get(0).getAnswer()) || !answer2.equals(forgotPasswordList.get(1).getAnswer()) || !answer3.equals(forgotPasswordList.get(2).getAnswer())) {
+                                Toast.makeText(ForgotPasswordActivity.this, "Câu trả lời không chính xác.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                RepositoryUser.createNewAccount(forgotPasswordList.get(0).getUser().getUser_id(), forgotPasswordList.get(0).getUser().getUsername());
+                                Intent intent = new Intent(ForgotPasswordActivity.this, ChangePasswordActivity.class);
 
-                            // Put extra data into the Intent using key-value pairs
-                            intent.putExtra("previous", "forgot");
+                                // Put extra data into the Intent using key-value pairs
+                                intent.putExtra("previous", "forgot");
 
-                            // Start the new activity
-                            startActivity(intent);
+                                // Start the new activity
+                                startActivity(intent);
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                Log.e("not found user", "ForgotPasswordActivityForgotPasswordActivity");
+            }
         } else {
             Log.e("not found user", "ForgotPasswordActivityForgotPasswordActivity");
         }
@@ -148,7 +159,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         if (userDAO.checkUser(user) != null) {
             return forgotPasswordDAO.getAllForgotPasswordsByUserId(ForgotPasswordActivity.this, userDAO.checkUser(user));
         } else {
-            return new ArrayList<>();
+            return null;
         }
 
     }

@@ -43,7 +43,6 @@ public class ForgotPasswordDAO {
     public boolean storeForgotPassword(Context context, ForgotPassword forgotPassword) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("forgot_password_id", forgotPassword.getForgot_password_id());
         UserDAO userDAO = new UserDAO(context);
         values.put("user_id", userDAO.checkUser(forgotPassword.getUser()).getUser_id());
         values.put("question_id", forgotPassword.getQuestion().getQuestion_id());

@@ -2,12 +2,15 @@ package com.example.bt_lon.model.question;
 
 import com.example.bt_lon.model.forgotPassword.ForgotPassword;
 
-public class Question
-{
+public class Question {
     private int question_id;
     private String question;
 
     public Question() {
+    }
+
+    public Question(int question_id) {
+        this.question_id = question_id;
     }
 
     public Question(int question_id, String question) {
