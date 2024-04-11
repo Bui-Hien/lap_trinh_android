@@ -1,28 +1,44 @@
 package com.example.bt_lon.sqlite_open_helper.DAO;
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.example.bt_lon.model.category.Category;
-import com.example.bt_lon.model.user.User;
-import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import java.io.ByteArrayOutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.example.bt_lon.model.category.Category;
+import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.example.bt_lon.Interface.OnCompleteListener;
+
+
 
 public class CategoryDAO {
     private SQLiteDatabase database;
     private DatabaseConnector dbHelper;
+
+    public class FirebaseCategoryDAO {
+        public void writeCategoryToFirebase(Category category, OnCompleteListener onCompleteListener) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("categories");
+            databaseReference.push().setValue(category, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                    if (error != null) {
+                        // Xảy ra lỗi trong quá trình thêm dữ liệu
+                        onCompleteListener.onComplete(false, error.getMessage());
+                    } else {
+                        // Dữ liệu đã được push thành công
+                        onCompleteListener.onComplete(true, "Push succeeded");
+                    }
+                }
+            });
+        }
+    }
 
     public CategoryDAO(Context context) {
         dbHelper = new DatabaseConnector(context);
@@ -37,21 +53,35 @@ public class CategoryDAO {
         dbHelper.close();
     }
 
-    public boolean insertCategory(Category category) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("category_name", category.getCategory_name());
-//        values.put("description", category.getDescription());
+    public void insertCategory(Category category) {
 
-        long result = db.insert("Categories", null, values);
-        db.close(); // Close the database connection after use
-        if (result != -1) {
-            Log.d("insertCategory", "Insertion successful");
-            return true;
-        } else {
-            Log.d("insertCategory", "Insertion failed");
-            return false;
-        }
+        FirebaseCategoryDAO firebaseCategoryDAO = new FirebaseCategoryDAO();
+        firebaseCategoryDAO.writeCategoryToFirebase(category, new OnCompleteListener() {
+            @Override
+            public void onComplete(boolean isSuccess, String message) {
+                if (isSuccess) {
+                    // Thành công
+                    Log.d("CATEGORY", "Category inserted successfully: " + message);
+                } else {
+                    // Lỗi
+                    Log.e("CATEGORY", "Failed to insert category: " + message);
+                }
+            }
+        });
+//        SQLiteDatabase db = dbHelper.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//        values.put("category_name", category.getCategory_name());
+////        values.put("description", category.getDescription());
+//
+//        long result = db.insert("Categories", null, values);
+//        db.close(); // Close the database connection after use
+//        if (result != -1) {
+//            Log.d("insertCategory", "Insertion successful");
+//            return true;
+//        } else {
+//            Log.d("insertCategory", "Insertion failed");
+//            return false;
+//        }
     }
 
     public Category getCategoryById(int categoryId) {
@@ -66,7 +96,6 @@ public class CategoryDAO {
         if (cursor.moveToFirst()) {
             String categoryName = cursor.getString(1);
             String description = cursor.getString(2);
-
             category = new Category(categoryId, categoryName);
         }
 

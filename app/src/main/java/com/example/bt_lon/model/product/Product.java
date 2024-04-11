@@ -16,6 +16,8 @@ public class Product implements Serializable {
     private int quantity;
     private Bitmap image_product;
 
+    String base64;
+
     public Product() {
     }
 
@@ -69,6 +71,15 @@ public class Product implements Serializable {
         this.description = description;
         this.price = price;
         this.image_product = image_product;
+        this.quantity = quantity;
+    }
+
+    public Product( Category category, String product_name, String description, double price, String base64,int quantity) {
+        this.category = category;
+        this.product_name = product_name;
+        this.description = description;
+        this.price = price;
+        this.base64 = base64;
         this.quantity = quantity;
     }
 

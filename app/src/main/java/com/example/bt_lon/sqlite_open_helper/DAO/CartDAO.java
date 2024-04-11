@@ -15,6 +15,8 @@ import com.example.bt_lon.model.category.Category;
 import com.example.bt_lon.model.product.Product;
 import com.example.bt_lon.model.user.User;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
@@ -27,6 +29,9 @@ import java.util.Locale;
 public class CartDAO {
     private SQLiteDatabase database;
     private DatabaseConnector dbHelper;
+
+    // Lớp DAO cho Firebase
+
 
     public CartDAO(Context context) {
         dbHelper = new DatabaseConnector(context);

@@ -48,35 +48,21 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-//                fakeData();
+                fakeData();
 
-                String username = String.valueOf(etUser.getText());
-
-                UserDAO userDAO = new UserDAO(LoginActivity.this);
-
-
-                if (username.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Tên đăng nhập không được trống.", Toast.LENGTH_SHORT).show();
-
-
-/*
-*   fake data login
-* */
-
-
-
-
-
-
-                } else {
-                    if (userDAO.checkUser(new User(username)) == null) {
-                        Toast.makeText(LoginActivity.this, "Tên đăng nhập không tồn tại.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-                        intent.putExtra("username", username);
-                        startActivity(intent);
-                    }
-                }
+//                String username = String.valueOf(etUser.getText());
+//                UserDAO userDAO = new UserDAO(LoginActivity.this);
+//                if (username.isEmpty()) {
+//                    Toast.makeText(LoginActivity.this, "Tên đăng nhập không được trống.", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    if (userDAO.checkUser(new User(username)) == null) {
+//                        Toast.makeText(LoginActivity.this, "Tên đăng nhập không tồn tại.", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+//                        intent.putExtra("username", username);
+//                        startActivity(intent);
+//                    }
+//                }
             }
         });
         imageBack.setOnClickListener(new View.OnClickListener() {

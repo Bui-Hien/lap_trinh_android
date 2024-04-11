@@ -1,9 +1,15 @@
 package com.example.bt_lon.model.category;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Category {
     private int category_id;
     private String category_name;
 //    private String description;
+
+
+
 
     public Category() {
     }
