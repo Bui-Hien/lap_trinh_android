@@ -51,8 +51,19 @@ public class LoginActivity extends AppCompatActivity {
 
                 UserDAO userDAO = new UserDAO(LoginActivity.this);
 
+
                 if (username.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Tên đăng nhập không được trống.", Toast.LENGTH_SHORT).show();
+
+
+/*
+*   fake data login
+* */
+//                fakeData();
+
+
+                
+
                 } else {
                     if (userDAO.checkUser(new User(username)) == null) {
                         Toast.makeText(LoginActivity.this, "Tên đăng nhập không tồn tại.", Toast.LENGTH_SHORT).show();

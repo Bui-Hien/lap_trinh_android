@@ -249,19 +249,336 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
         return new byte[0];
     }
     public void fakeProductData(Context context) {
+
+        /*
+        * add category data
+        * */
         Category category = new Category(1, "Váy");
         CategoryDAO categoryDAO = new CategoryDAO(context);
         categoryDAO.insertCategory(category);
+
+        Category category2 = new Category(2, "Áo");
+        categoryDAO.insertCategory(category);
+
+        Category category3 = new Category(3, "Jeans");
+        categoryDAO.insertCategory(category);
+
+        Category category4 = new Category(4, "T-shirts");
+        categoryDAO.insertCategory(category);
+
+        Category category5 = new Category(5, "Set");
+        categoryDAO.insertCategory(category);
+
+        Category category6= new Category(6, "Sock");
+        categoryDAO.insertCategory(category);
+
+/*
+* add data product
+* */
+        ProductDAO productDAO = new ProductDAO(context);
+
+
         Bitmap productImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_1);
         Bitmap resizedImage = resizeBitmap(productImage,120,context);
-        ProductDAO productDAO = new ProductDAO(context);
         Product product = new Product(
                 category,
                 "Set váy ngắn",
                 "váy ngắn dễ thương",
                 20,
-                resizedImage);
+                resizedImage,
+                10);
         productDAO.insertProduct(product);
         Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+        Bitmap resizedImage2 = resizeBitmap(productImage2,120,context);
+        Product product2 = new Product(
+                category5,
+                "Set váy nâu",
+                "Vải đũi",
+                20,
+                resizedImage2,
+                10);
+        productDAO.insertProduct(product2);
+        Log.d("fakeProductData", "Inserted successfully");
+
+        Bitmap productImage3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_3);
+        Bitmap resizedImage3 = resizeBitmap(productImage3,120,context);
+        Product product3 = new Product(
+                category2,
+                "Áo Nâu",
+                "Cotton da cá",
+                20,
+                resizedImage3,
+                10);
+        productDAO.insertProduct(product3);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_4);
+        Bitmap resizedImage4 = resizeBitmap(productImage4,120,context);
+        Product product4 = new Product(
+                category5,
+                "Set váy công sở",
+                "váy công sở",
+                20,
+                resizedImage4,
+                10);
+        productDAO.insertProduct(product4);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_5);
+        Bitmap resizedImage5 = resizeBitmap(productImage5,120,context);
+        Product product5 = new Product(
+                category2,
+                "Sweater cổ V nâu",
+                "Cotton dày",
+                20,
+                resizedImage5,
+                10);
+        productDAO.insertProduct(product5);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage6 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_6);
+        Bitmap resizedImage6 = resizeBitmap(productImage6,120,context);
+        Product product6 = new Product(
+                category5,
+                "Váy 2 dây hoa",
+                "váy xinh",
+                20,
+                resizedImage6,
+                10);
+        productDAO.insertProduct(product6);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage7 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_7);
+        Bitmap resizedImage7 = resizeBitmap(productImage7,120,context);
+        Product product7 = new Product(
+                category4,
+                "Áo T-shirt trắng",
+                "áo trắng",
+                20,
+                resizedImage7,
+                10);
+        productDAO.insertProduct(product7);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage8 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_8);
+        Bitmap resizedImage8 = resizeBitmap(productImage8,120,context);
+        Product product8 = new Product(
+                category5,
+                "Set váy Tím",
+                "váy tím",
+                20,
+                resizedImage8,
+                10);
+        productDAO.insertProduct(product8);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage9 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_9);
+        Bitmap resizedImage9 = resizeBitmap(productImage9,120,context);
+        Product product9 = new Product(
+                category2,
+                "Áo sweater kẻ sọc",
+                "áo len",
+                20,
+                resizedImage9,
+                10);
+        productDAO.insertProduct(product9);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage10 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_10);
+        Bitmap resizedImage10 = resizeBitmap(productImage10,120,context);
+        Product product10 = new Product(
+                category4,
+                "áo t-shirts màu be",
+                "áo be",
+                20,
+                resizedImage10,
+                10);
+        productDAO.insertProduct(product10);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage11 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_11);
+        Bitmap resizedImage11 = resizeBitmap(productImage11,120,context);
+        Product product11 = new Product(
+                category2,
+                "Áo",
+                "váy ngắn dễ thương",
+                20,
+                resizedImage11,
+                10);
+        productDAO.insertProduct(product11);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage12 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_12);
+        Bitmap resizedImage12 = resizeBitmap(productImage12,120,context);
+        Product product12 = new Product(
+                category,
+                "Set váy hoa nhí",
+                "váy ngắn dễ thương",
+                20,
+                resizedImage12,
+                10);
+        productDAO.insertProduct(product12);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage13 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_13);
+        Bitmap resizedImage13 = resizeBitmap(productImage13,120,context);
+        Product product13 = new Product(
+                category2,
+                "Áo hoodie",
+                "váy ngắn dễ thương",
+                20,
+                resizedImage13,
+                10);
+        productDAO.insertProduct(product13);
+        Log.d("fakeProductData", "Inserted successfully");
+
+
+        Bitmap productImage14 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_14);
+        Bitmap resizedImage14 = resizeBitmap(productImage14,120,context);
+        Product product14 = new Product(
+                category4,
+                "T-shirt kẻ caro",
+                "váy ngắn dễ thương",
+                20,
+                resizedImage14,
+                10);
+        productDAO.insertProduct(product14);
+        Log.d("fakeProductData", "Inserted successfully");
+
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
+//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
+//        Product product2 = new Product(
+//                category5,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                resizedImage);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+
+
+
     }
 }
