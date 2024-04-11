@@ -47,6 +47,9 @@ public class LoginActivity extends AppCompatActivity {
         btnFogotPw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+//                fakeData();
+
                 String username = String.valueOf(etUser.getText());
 
                 UserDAO userDAO = new UserDAO(LoginActivity.this);
@@ -59,10 +62,11 @@ public class LoginActivity extends AppCompatActivity {
 /*
 *   fake data login
 * */
-//                fakeData();
 
 
-                
+
+
+
 
                 } else {
                     if (userDAO.checkUser(new User(username)) == null) {
@@ -99,5 +103,19 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+    }
+    public void fakeData() {
+        QuestionDAO questionDAO = new QuestionDAO(LoginActivity.this);
+        questionDAO.createListQuestion();
+
+        ProductDAO productDAO = new ProductDAO(LoginActivity.this);
+        productDAO.fakeProductData(LoginActivity.this);
+
+        String username = "buixuanhien";
+        UserDAO userDAO = new UserDAO(LoginActivity.this);
+        userDAO.fakeUser(LoginActivity.this, username);
+        userDAO.fakeQuestionData(LoginActivity.this, username);
     }
 }

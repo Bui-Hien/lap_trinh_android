@@ -164,7 +164,7 @@ public class AnswerActivity extends AppCompatActivity {
                         Question question3 = new Question(questionIds[2]);
 //
 
-                        Toast.makeText(getApplicationContext(), " " + question1.getQuestion_id() + " " + question2.getQuestion_id() + " " + question3.getQuestion_id(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(), " " + question1.getQuestion_id() + " " + question2.getQuestion_id() + " " + question3.getQuestion_id(), Toast.LENGTH_LONG).show();
 
                         ForgotPassword forgotPassword1 = new ForgotPassword(1, userId, question1, answer1);
                         ForgotPassword forgotPassword2 = new ForgotPassword(2, userId, question2, answer2);

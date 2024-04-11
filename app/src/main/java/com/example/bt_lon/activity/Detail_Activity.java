@@ -48,6 +48,8 @@ public class Detail_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        // lay du lieu tu home homefragment
         Intent intent = getIntent();
         product_id = intent.getIntExtra("product_id", 1);
 

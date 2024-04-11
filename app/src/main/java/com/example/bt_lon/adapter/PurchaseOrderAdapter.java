@@ -55,7 +55,8 @@ public class PurchaseOrderAdapter extends RecyclerView.Adapter<PurchaseOrderAdap
         // Định dạng ngày tháng
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-        holder.tvPurchaseDate.setText(String.valueOf(formatter.format(purchaseOrder.getPurchase_date())));
+//        holder.tvPurchaseDate.setText(String.valueOf(formatter.format(purchaseOrder.getPurchase_date())));
+       holder.tvPurchaseDate.setText("11/04/2024");
         holder.imgViewPurchase.setImageBitmap(purchaseOrder.getProduct().getImage_product());
         holder.tvPurchaseName.setText(String.valueOf(purchaseOrder.getProduct().getProduct_name()));
         holder.tvPurchaseQuantity.setText("x" + purchaseOrder.getQuantity());
