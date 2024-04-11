@@ -47,6 +47,20 @@ public class UserDAO {
     public void close() {
         dbHelper.close();
     }
+    public boolean deleteUser(String username) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Define the WHERE clause to identify the user by their username
+        String selection = "username = ?";
+        String[] selectionArgs = { username };
+
+        // Delete the user record
+        int rowsDeleted = db.delete("users", selection, selectionArgs);
+        db.close();
+
+        // Check if any rows were deleted
+        return rowsDeleted > 0;
+    }
 
     public boolean storeUser(User user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -89,12 +103,12 @@ public class UserDAO {
             int userId = cursor.getInt(0);
             String username = cursor.getString(1);
             // Khởi tạo đối tượng User từ dữ liệu
-            user = new User(userId, user.getUsername());
+            userQuery = new User(userId, user.getUsername());
         }
 
         cursor.close();
 
-        return user; // Nếu user null, có nghĩa là không tìm thấy user với username đã cho.
+        return userQuery; // Nếu user null, có nghĩa là không tìm thấy user với username đã cho.
     }
 
 

@@ -39,12 +39,13 @@ public class PurchaseOrderDAO {
 
     public boolean insertPurchaseOrder(PurchaseOrder purchaseOrder) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+Date date = new Date();
 
         ContentValues values = new ContentValues();
         values.put("product_id", purchaseOrder.getProduct().getProduct_id());
         values.put("user_id", purchaseOrder.getUser().getUser_id());
         values.put("quantity", purchaseOrder.getQuantity());
-        values.put("purchase_time", String.valueOf(purchaseOrder.getPurchase_date()));
+        values.put("purchase_time", date.toString());
         values.put("cost", purchaseOrder.getCost());
 
         long result = db.insert("PurchaseOrders", null, values);

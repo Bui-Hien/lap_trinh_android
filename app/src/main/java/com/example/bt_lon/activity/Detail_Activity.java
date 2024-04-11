@@ -48,6 +48,8 @@ public class Detail_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        // lay du lieu tu home homefragment
         Intent intent = getIntent();
         product_id = intent.getIntExtra("product_id", 1);
 
@@ -171,7 +173,10 @@ public class Detail_Activity extends AppCompatActivity {
                         productDAO.updateQuantity(product, quantityNew);
                         cartDAO.deleteProductFromCart(RepositoryUser.getAccount().getUser_id(), product.getProduct_id());
                     }
+                    Intent intent = new Intent(Detail_Activity.this, PurchaseOrderActivity.class);
+                    startActivity(intent);
                     finish();
+                    dialog.dismiss();
                 } else {
                     Intent intent = new Intent(Detail_Activity.this, LoginActivity.class);
                     startActivity(intent);
