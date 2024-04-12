@@ -127,7 +127,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 notifyItemRemoved(holder.getAdapterPosition());
                 notifyDataSetChanged();
                 CartDAO cartDAO = new CartDAO(mContext.getApplicationContext());
-                cartDAO.deleteCartItem(cart.getUser().getUser_id(), cart.getProduct().getProduct_id());
+//                cartDAO.deleteCartItem(cart.getUser().getUser_id(), cart.getProduct().getProduct_id());
                 if (cartList.isEmpty()) {
                     ((CartActivity) mContext).updateLayout();
                 }

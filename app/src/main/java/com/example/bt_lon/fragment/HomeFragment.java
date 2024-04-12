@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
 
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 1+"");
+//                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 1+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
 
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 2+"");
+//                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 2+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
 
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 3+"");
+//                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 3+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
 
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 4+"");
+//                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 4+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 5+"");
+//                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 5+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -143,7 +143,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 6+"");
+//                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 6+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));

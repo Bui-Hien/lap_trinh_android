@@ -64,7 +64,7 @@ public class CartActivity extends AppCompatActivity {
         CheckBox checkBoxAllCart = findViewById(R.id.checkBoxAllCart);
         constrainLayoutNoProduct = findViewById(R.id.constrainLayoutNoProduct);
         recyclerView = findViewById(R.id.recyclerViewCart);
-        cartList = InsertData();
+//        cartList = InsertData();
         if (cartList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             constrainLayoutNoProduct.setVisibility(View.VISIBLE);
@@ -155,14 +155,14 @@ public class CartActivity extends AppCompatActivity {
             }
         });
     }
+//
+//    public List<Cart> InsertData() {
+//        CartDAO cartDAO = new CartDAO(CartActivity.this);
+//        List<Cart> list = cartDAO.getCartItemsByUserId(CartActivity.this, RepositoryUser.getAccount());
+//        Collections.reverse(list);
 
-    public List<Cart> InsertData() {
-        CartDAO cartDAO = new CartDAO(CartActivity.this);
-        List<Cart> list = cartDAO.getCartItemsByUserId(CartActivity.this, RepositoryUser.getAccount());
-        Collections.reverse(list);
-
-        return list;
-    }
+//        return list;
+//    }
 
     public String TotalCost(List<Cart> cartList) {
         double totalCost = 0;

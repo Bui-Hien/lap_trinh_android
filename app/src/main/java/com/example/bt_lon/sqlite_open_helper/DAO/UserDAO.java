@@ -10,20 +10,32 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.example.bt_lon.R;
 import com.example.bt_lon.model.forgotPassword.ForgotPassword;
 import com.example.bt_lon.model.question.Question;
 import com.example.bt_lon.model.user.User;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class UserDAO {
     private SQLiteDatabase database;
@@ -44,15 +56,72 @@ public class UserDAO {
         Log.d("fakeUser", "Inserted successfully");
     }
 
+
+    public void storeUser(User user) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+
+        // Generate a unique key for the user
+        String userId = usersRef.push().getKey();
+
+        // If userId is null, try again to generate a unique key
+        if (userId == null) {
+            userId = usersRef.push().getKey();
+        }
+
+        // Convert bitmap to base64 string
+        String imageBase64 = bitmapToBase64(user.getProfileImage());
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String birthDateString = formatter.format(user.getYear_of_birth());
+
+        // Create a HashMap to hold user data
+        HashMap<String, Object> userData = new HashMap<>();
+        userData.put("full_name", user.getFull_name());
+        userData.put("username", user.getUsername());
+        userData.put("password", user.getPassword());
+        userData.put("sex", user.isMale() ? "male" : "female"); // Store sex as string
+        userData.put("year_of_birth", birthDateString);
+        userData.put("address", user.getAddress());
+        userData.put("phone_number", user.getPhone_number());
+        userData.put("profileImage", imageBase64);
+        // Add other user data as needed
+
+        // Store user data to Firebase
+        usersRef.child(userId).setValue(userData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Data successfully saved
+                        Log.d("Firebase", "User data saved successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle any errors
+                        Log.e("Firebase", "Error saving user data", e);
+                    }
+                });
+    }
+
+
+    private String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
     public void close() {
         dbHelper.close();
     }
+
     public boolean deleteUser(String username) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         // Define the WHERE clause to identify the user by their username
         String selection = "username = ?";
-        String[] selectionArgs = { username };
+        String[] selectionArgs = {username};
 
         // Delete the user record
         int rowsDeleted = db.delete("users", selection, selectionArgs);
@@ -62,34 +131,34 @@ public class UserDAO {
         return rowsDeleted > 0;
     }
 
-    public boolean storeUser(User user) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        byte[] imageInBytes = bitmapToByteArray(user.getProfileImage());
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String birthDateString = formatter.format(user.getYear_of_birth());
-
-
-        ContentValues values = new ContentValues();
-        values.put("full_name", user.getFull_name());
-        values.put("username", user.getUsername());
-        values.put("password", user.getPassword());
-        values.put("sex", user.isMale() ? 1 : 0);
-        values.put("year_of_birth", birthDateString);
-        values.put("address", user.getAddress());
-        values.put("phone_number", user.getPhone_number());
-        values.put("profileImage", imageInBytes);
-        // Add other columns here
-
-        long qk = db.insert("users", null, values);
-        db.close();
-        if (qk > 0) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
+//    public boolean storeUser(User user) {
+//        SQLiteDatabase db = dbHelper.getWritableDatabase();
+//
+//        byte[] imageInBytes = bitmapToByteArray(user.getProfileImage());
+//        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        String birthDateString = formatter.format(user.getYear_of_birth());
+//
+//
+//        ContentValues values = new ContentValues();
+//        values.put("full_name", user.getFull_name());
+//        values.put("username", user.getUsername());
+//        values.put("password", user.getPassword());
+//        values.put("sex", user.isMale() ? 1 : 0);
+//        values.put("year_of_birth", birthDateString);
+//        values.put("address", user.getAddress());
+//        values.put("phone_number", user.getPhone_number());
+//        values.put("profileImage", imageInBytes);
+//        // Add other columns here
+//
+//        long qk = db.insert("users", null, values);
+//        db.close();
+//        if (qk > 0) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//
+//    }
 
     public User checkUser(User user) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -111,7 +180,172 @@ public class UserDAO {
         return userQuery; // Nếu user null, có nghĩa là không tìm thấy user với username đã cho.
     }
 
+    public interface UserCallback {
+        void onCallback(User user);
+    }
 
+    public void checkUser(String username, UserCallback userCallback) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+
+        usersRef.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Người dùng tồn tại trong cơ sở dữ liệu Firebase
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        // Lấy thông tin người dùng từ dataSnapshot
+                        User user = userSnapshot.getValue(User.class);
+                        userCallback.onCallback(user);
+                        return; // Kết thúc vòng lặp khi tìm thấy người dùng
+                    }
+                } else {
+                    // Người dùng không tồn tại trong cơ sở dữ liệu Firebase
+                    userCallback.onCallback(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+                userCallback.onCallback(null);
+            }
+        });
+    }
+
+//    checkUser("username", new UserCallback() {
+//        @Override
+//        public void onCallback(User user) {
+//            if (user != null) {
+//                // Người dùng tồn tại
+//            } else {
+//                // Người dùng không tồn tại
+//            }
+//        }
+//    });
+
+    public void getUser(String userName, String password, UserCallback userCallback) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+
+        usersRef.orderByChild("username").equalTo(userName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        if (user.getPassword().equals(password)) {
+                            // Mật khẩu đúng, trả về thông tin người dùng
+                            userCallback.onCallback(user);
+                            return;
+                        }
+                    }
+                }
+                // Không tìm thấy người dùng hoặc mật khẩu không đúng
+                userCallback.onCallback(null);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+                userCallback.onCallback(null);
+            }
+        });
+    }
+
+//    getUser("username", "password", new UserCallback() {
+//        @Override
+//        public void onCallback(User user) {
+//            if (user != null) {
+//                // Người dùng tồn tại và mật khẩu đúng
+//            } else {
+//                // Người dùng không tồn tại hoặc mật khẩu không đúng
+//            }
+//        }
+//    });
+
+    public void updateUserInfo(User user) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUsername());
+
+        // Chuyển đổi hình ảnh sang dạng Base64 nếu cần thiết
+        String imageBase64 = bitmapToBase64(user.getProfileImage());
+
+        // Format ngày sinh
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String birthDateString = formatter.format(user.getYear_of_birth());
+
+        // Tạo HashMap để chứa thông tin người dùng cần cập nhật
+        Map<String, Object> userInfoUpdates = new HashMap<>();
+        userInfoUpdates.put("full_name", user.getFull_name());
+        userInfoUpdates.put("sex", user.isMale() ? "male" : "female");
+        userInfoUpdates.put("year_of_birth", birthDateString);
+        userInfoUpdates.put("address", user.getAddress());
+        userInfoUpdates.put("phone_number", user.getPhone_number());
+        userInfoUpdates.put("profileImage", imageBase64);
+        // Thêm các trường dữ liệu khác cần cập nhật vào đây
+
+        // Thực hiện cập nhật dữ liệu trong Firebase
+        usersRef.updateChildren(userInfoUpdates)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Xử lý khi cập nhật thành công
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Xử lý khi cập nhật thất bại
+                    }
+                });
+    }
+
+    public void updatePasswordUser(String username, String newPassword) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users").child(username);
+
+        // Tạo HashMap để chỉ cập nhật mật khẩu
+        Map<String, Object> passwordUpdate = new HashMap<>();
+        passwordUpdate.put("password", newPassword);
+
+        // Thực hiện cập nhật mật khẩu trong Firebase
+        usersRef.updateChildren(passwordUpdate)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Xử lý khi cập nhật mật khẩu thành công
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Xử lý khi cập nhật mật khẩu thất bại
+                    }
+                });
+    }
+
+    public void updatePasswordUserFirebase(String username, String newPassword) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users").child(username);
+
+        // Tạo HashMap để chỉ cập nhật mật khẩu
+        Map<String, Object> passwordUpdate = new HashMap<>();
+        passwordUpdate.put("password", newPassword);
+
+        // Thực hiện cập nhật mật khẩu trong Firebase
+        usersRef.updateChildren(passwordUpdate)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Xử lý khi cập nhật mật khẩu thành công
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Xử lý khi cập nhật mật khẩu thất bại
+                    }
+                });
+    }
+
+
+    //sqlite
     public User getUser(String userName, String password) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -224,6 +458,7 @@ public class UserDAO {
         }
         return new byte[0];
     }
+
 
     public void fakeQuestionData(Context context, String username) {
         User user = new User(username);

@@ -67,7 +67,7 @@ public class Detail_Activity extends AppCompatActivity {
 
             }
         };
-        productDAO.getProductById(product_id+"",listener);
+//        productDAO.getProductById(product_id+"",listener);
 
 
 

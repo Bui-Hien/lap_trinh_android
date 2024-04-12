@@ -32,8 +32,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_login);
+//        binding = ActivityMainBinding.inflate(getLayoutInflater());
+//        setContentView(binding.getRoot());
 
 //        DatabaseConnector databaseConnector = new DatabaseConnector(this);
 //        Bitmap profileImage = BitmapFactory.decodeResource(getResources(), R.drawable.cargo);
@@ -50,42 +51,42 @@ public class MainActivity extends AppCompatActivity {
 //        Bitmap profileImage = BitmapFactory.decodeResource(getResources(), R.drawable.cargo);
 //        User user = new User(1, "Bui Xuan Hien 1", "buihien1", "123455", true, new Date(), "Ha Noi", "0763433779", profileImage);
 //
-
-
-        replaceFragment(new HomeFragment());
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        setUpUI();
-        bottomNavigationView.setSelectedItemId(R.id.home);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.home) {
-                previousFragment = 1;
-                replaceFragment(new HomeFragment());
-            } else if (item.getItemId() == R.id.cart) {
-                User user = RepositoryUser.getAccount();
-                if (user != null) {
-                    Intent intent = new Intent(this, CartActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                }
-
-            } else if (item.getItemId() == R.id.account) {
-                previousFragment = 2;
-                replaceFragment(new AccountFragment());
-            }
-            return true;
-        });
+//
+//
+//        replaceFragment(new HomeFragment());
+//        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+//        setUpUI();
+//        bottomNavigationView.setSelectedItemId(R.id.home);
+//        bottomNavigationView.setOnItemSelectedListener(item -> {
+//            if (item.getItemId() == R.id.home) {
+//                previousFragment = 1;
+//                replaceFragment(new HomeFragment());
+//            } else if (item.getItemId() == R.id.cart) {
+//                User user = RepositoryUser.getAccount();
+//                if (user != null) {
+//                    Intent intent = new Intent(this, CartActivity.class);
+//                    startActivity(intent);
+//                } else {
+//                    Intent intent = new Intent(this, LoginActivity.class);
+//                    startActivity(intent);
+//                }
+//
+//            } else if (item.getItemId() == R.id.account) {
+//                previousFragment = 2;
+//                replaceFragment(new AccountFragment());
+//            }
+//            return true;
+//        });
     }
 
-        private void setUpUI() {
-        bottomNavigationView.setSelectedItemId(previousFragment == 1 ? R.id.home : R.id.account);
-    }
+//        private void setUpUI() {
+//        bottomNavigationView.setSelectedItemId(previousFragment == 1 ? R.id.home : R.id.account);
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUpUI();
+//        setUpUI();
     }
 
     private void replaceFragment(Fragment fragment) {

@@ -162,10 +162,10 @@ Date date = new Date();
 
                 ProductDAO productDAO = new ProductDAO(context);
                 User user = RepositoryUser.getAccount();
-                Product product = productDAO.getProductById(context, productId);
+//                Product product = productDAO.getProductById(context, productId);
 
-                PurchaseOrder purchaseOrder = new PurchaseOrder(purchaseOrderId, product, user, quantity, purchaseTime, cost, numberOfPurchases);
-                purchaseOrders.add(purchaseOrder);
+//                PurchaseOrder purchaseOrder = new PurchaseOrder(purchaseOrderId, product, user, quantity, purchaseTime, cost, numberOfPurchases);
+//                purchaseOrders.add(purchaseOrder);
             } while (cursor.moveToNext());
 
             cursor.close();

@@ -83,8 +83,8 @@ public class Purchased extends RecyclerView.Adapter<Purchased.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     ProductDAO productDAO = new ProductDAO(v.getContext());
-                    Product productCheck = productDAO.getProductById(v.getContext(), data.getProduct().getProduct_id());
-                    if (productCheck.getQuantity() != 0) {
+//                    Product productCheck = productDAO.getProductById(v.getContext(), data.getProduct().getProduct_id());
+//                    if (productCheck.getQuantity() != 0) {
                         Cart cart = new Cart(data.getUser(), data.getProduct());
                         if (RepositoryUser.getAccount() != null) {
                             CartDAO cartDAO = new CartDAO(v.getContext());
@@ -95,9 +95,9 @@ public class Purchased extends RecyclerView.Adapter<Purchased.ViewHolder> {
                             Intent intent = new Intent(v.getContext(), LoginActivity.class);
                             v.getContext().startActivity(intent);
                         }
-                    } else {
-                        Toast.makeText(context, "Sản phẩm đã hết.", Toast.LENGTH_SHORT).show();
-                    }
+//                    } else {
+//                        Toast.makeText(context, "Sản phẩm đã hết.", Toast.LENGTH_SHORT).show();
+//                    }
                 }
             });
         }
