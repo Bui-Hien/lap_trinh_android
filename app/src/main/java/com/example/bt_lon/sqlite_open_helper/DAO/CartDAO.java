@@ -79,7 +79,7 @@ public class CartDAO {
 
     }
 
-    public boolean deleteProductFromCart(int user_id, int product_id) {
+    public boolean deleteProductFromCart(int user_id, String product_id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         int rowsAffected = db.delete("Carts", "user_id = ? AND product_id = ?",
@@ -96,7 +96,7 @@ public class CartDAO {
         }
     }
 
-    public boolean isProductInCart(int userId, int productId) {
+    public boolean isProductInCart(int userId, String productId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String query = "SELECT COUNT(*) FROM Carts WHERE user_id = ? AND product_id = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(productId)});
@@ -111,7 +111,7 @@ public class CartDAO {
         return count > 0;
     }
 
-    public boolean updateCartQuantity(int userId, int productId, int newQuantity) {
+    public boolean updateCartQuantity(int userId, String productId, int newQuantity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -134,7 +134,7 @@ public class CartDAO {
     }
 
 
-    public int getCartQuantity(int userId, int productId) {
+    public int getCartQuantity(int userId, String productId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String[] projection = {"quantity"};
@@ -174,29 +174,29 @@ public class CartDAO {
         }
     }
 
-    public List<Cart> getCartItemsByUserId(Context context, User user) {
-        List<Cart> cartItems = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT * FROM Carts WHERE user_id = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(user.getUser_id())});
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int cartId = cursor.getInt(1);
-                int productId = cursor.getInt(2);
-                int quantity = cursor.getInt(3);
-
-                ProductDAO productDAO = new ProductDAO(context);
-                Product product = productDAO.getProductById(context, productId);
-
-                Cart cartItem = new Cart(cartId, user, product, false, quantity);
-                cartItems.add(cartItem);
-            } while (cursor.moveToNext());
-
-            cursor.close();
-        }
-
-        db.close();
-        return cartItems;
-    }
+//    public List<Cart> getCartItemsByUserId(Context context, User user) {
+//        List<Cart> cartItems = new ArrayList<>();
+//        SQLiteDatabase db = dbHelper.getReadableDatabase();
+//        String query = "SELECT * FROM Carts WHERE user_id = ?";
+//        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(user.getUser_id())});
+//
+//        if (cursor != null && cursor.moveToFirst()) {
+//            do {
+//                int cartId = cursor.getInt(1);
+//                String productId = cursor.getInt(2)+"";
+//                int quantity = cursor.getInt(3);
+//
+//                ProductDAO productDAO = new ProductDAO(context);
+//                Product product = productDAO.getProductById(context, productId);
+//
+//                Cart cartItem = new Cart(cartId, user, product, false, quantity);
+//                cartItems.add(cartItem);
+//            } while (cursor.moveToNext());
+//
+//            cursor.close();
+//        }
+//
+//        db.close();
+//        return cartItems;
+//    }
 }

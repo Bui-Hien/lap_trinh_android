@@ -8,7 +8,7 @@ import com.example.bt_lon.model.category.Category;
 import java.io.Serializable;
 
 public class Product implements Serializable {
-    private int product_id;
+    private String product_id;
     private Category category;
     private String product_name;
     private String description;
@@ -21,7 +21,7 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(int product_id) {
+    public Product(String product_id) {
         this.product_id = product_id;
     }
 
@@ -33,12 +33,12 @@ public class Product implements Serializable {
         this.image_product = image_product;
     }
 
-    public Product(int product_id, Bitmap image_product) {
+    public Product(String product_id, Bitmap image_product) {
         this.product_id = product_id;
         this.image_product = image_product;
     }
 
-    public Product(int product_id, Category category, String product_name, String description, double price, int quantity, Bitmap image_product) {
+    public Product(String product_id, Category category, String product_name, String description, double price, int quantity, Bitmap image_product) {
         this.product_id = product_id;
         this.category = category;
         this.product_name = product_name;
@@ -48,7 +48,7 @@ public class Product implements Serializable {
         this.image_product = image_product;
     }
 
-    public Product(int product_id, Category category, String product_name, String description, double price, Bitmap image_product) {
+    public Product(String product_id, Category category, String product_name, String description, double price, Bitmap image_product) {
         this.product_id = product_id;
         this.category = category;
         this.product_name = product_name;
@@ -95,11 +95,11 @@ public class Product implements Serializable {
         this.image_product = image_product;
     }
 
-    public int getProduct_id() {
+    public String getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(int product_id) {
+    public void setProduct_id(String product_id) {
         this.product_id = product_id;
     }
 

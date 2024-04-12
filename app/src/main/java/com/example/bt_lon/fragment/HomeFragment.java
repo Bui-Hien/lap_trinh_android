@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.bt_lon.Interface.OnGetAllProductsListener;
 import com.example.bt_lon.R;
 import com.example.bt_lon.activity.LoginActivity;
 import com.example.bt_lon.adapter.ProductAdapter;
@@ -58,18 +60,17 @@ public class HomeFragment extends Fragment {
         slideModels.add(new SlideModel(R.drawable.item_4, ScaleTypes.CENTER_CROP));
         imageSlider.setImageList(slideModels, ScaleTypes.CENTER_CROP);
 
+        //tạo ProductDAO để xử lý button category
 
         ProductDAO productDAO = new ProductDAO(HomeFragment.this.getContext());
-//        List<Product> productList = new ArrayList<>();
-//        productList = productDAO.getAllProducts();
-
 
         Button button1 = view.findViewById(R.id.button_category1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
-                productList = productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 1);
+
+                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 1+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -83,7 +84,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
-                productList = productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 2);
+
+                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 2+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -97,7 +99,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
-                productList = productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 3);
+
+                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 3+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -111,7 +114,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
-                productList = productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 4);
+
+                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 4+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -125,7 +129,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
-                productList = productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 5);
+                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 5+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -139,7 +143,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Product> productList = new ArrayList<>();
-                productList = productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 6);
+                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 6+"");
                 RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
@@ -159,16 +163,29 @@ public class HomeFragment extends Fragment {
 
         ProductDAO productDAO = new ProductDAO(HomeFragment.this.getContext());
         List<Product> productList = new ArrayList<>();
-        productList = productDAO.getAllProducts();
-
         RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
         ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
         rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        mProductAdapter.setData(productList);
         rcv_product.setAdapter(mProductAdapter);
+        OnGetAllProductsListener listener = new OnGetAllProductsListener() {
+            @Override
+            public void onSuccess(List<Product> sucessproductList) {
+                // Cập nhật danh sách sản phẩm và adapter
+                productList.clear(); // Xóa danh sách cũ trước khi thêm mới
+                productList.addAll(sucessproductList); // Thêm danh sách mới vào
+                mProductAdapter.notifyDataSetChanged(); // Thông báo cho adapter là dữ liệu đã thay đổi
+            }
+            @Override
+            public void onError(String errorMessage) {
+                // Xử lý khi gặp lỗi trong quá trình lấy danh sách sản phẩm
+                Log.e("Product", "Error retrieving products: " + errorMessage);
+            }
+        };
+        productDAO.getAllProducts(HomeFragment.this.getContext(),listener);
+
+
 
         SearchView searchView = view.findViewById(R.id.searchView);
-
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -178,29 +195,18 @@ public class HomeFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                ProductDAO productDAO = new ProductDAO(HomeFragment.this.getContext());
-                List<Product> productList = new ArrayList<>();
-                productList = productDAO.getAllProducts();
-
+                // Tạo danh sách mới để lưu kết quả tìm kiếm
                 ArrayList<Product> filteredList = new ArrayList<>();
                 for (Product product : productList) {
                     if (product.getProduct_name().toLowerCase().contains(newText.toLowerCase())) {
                         filteredList.add(product);
                     }
                 }
-
-                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
+                // Cập nhật dữ liệu trong adapter với danh sách sản phẩm đã lọc
                 mProductAdapter.filterList(filteredList);
-                rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                mProductAdapter.setData(productList);
-                rcv_product.setAdapter(mProductAdapter);
-
-
                 return true;
             }
         });
-
 
         return view;
     }

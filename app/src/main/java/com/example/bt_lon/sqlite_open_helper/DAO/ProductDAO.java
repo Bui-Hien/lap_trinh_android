@@ -14,7 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.bt_lon.Interface.OnCompleteListener;
+
+import com.example.bt_lon.Interface.OnGetProductsListener;
 import com.example.bt_lon.R;
 import com.example.bt_lon.activity.LoginActivity;
 import com.example.bt_lon.model.cart.Cart;
@@ -22,6 +23,7 @@ import com.example.bt_lon.model.category.Category;
 import com.example.bt_lon.model.product.Product;
 import com.example.bt_lon.model.user.User;
 import com.example.bt_lon.sqlite_open_helper.DatabaseConnector;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,11 +32,31 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import com.example.bt_lon.Interface.OnCompleteListener;
+import com.example.bt_lon.Interface.OnGetAllProductsListener;
+import com.example.bt_lon.Interface.OnGetProductByIdListener;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 
 public class ProductDAO {
     private SQLiteDatabase database;
     private DatabaseConnector dbHelper;
 
+    public ProductDAO(Context context) {
+        dbHelper = new DatabaseConnector(context);
+    }
+
+    public void open() throws SQLException {
+        database = dbHelper.getWritableDatabase();
+    }
+
+    public void close() {
+        dbHelper.close();
+    }
+
+
+    //innner class đổi bitmap sang Base64
     public class BitmapUtil {
 
         // Chuyển đổi Bitmap thành chuỗi Base64
@@ -52,8 +74,9 @@ public class ProductDAO {
         }
     }
 
+    //inner class productDAO + firebase
     public class FirebaseProductDAO{
-        public void writeCategoryToFirebase(Product product, OnCompleteListener onCompleteListener) {
+        public void writeProductToFirebase(Product product, OnCompleteListener onCompleteListener) {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
             databaseReference.push().setValue(product, new DatabaseReference.CompletionListener() {
                 @Override
@@ -68,24 +91,99 @@ public class ProductDAO {
                 }
             });
         }
+
+        public void getAllProductsFromFireBase(OnGetAllProductsListener listener) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<Product> productList = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Product product = snapshot.getValue(Product.class);
+                        productList.add(product);
+                    }
+                    listener.onSuccess(productList);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    listener.onError(databaseError.getMessage());
+                }
+            });
+        }
+
+        public void getAllProductsByCategoryIdFromFireBase( String categoryId, OnGetAllProductsListener listener) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+            databaseReference.orderByChild("category/id").equalTo(categoryId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<Product> productList = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Product product = snapshot.getValue(Product.class);
+                        productList.add(product);
+                    }
+                    listener.onSuccess(productList);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    listener.onError(databaseError.getMessage());
+                }
+            });
+        }
+
+        public void getProductByIdFromFireBase(String productId, OnGetProductByIdListener listener) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products").child(productId);
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Product product = dataSnapshot.getValue(Product.class);
+                        listener.onSuccess(product);
+                    } else {
+                        listener.onError("Product not found");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    listener.onError(databaseError.getMessage());
+                }
+            });
+        }
+
+        public void getAllProductsByNameFromFireBase(String name, OnGetAllProductsListener listener) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+            Query query = databaseReference.orderByChild("product_name").startAt(name).endAt(name + "\uf8ff");
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<Product> productList = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Product product = snapshot.getValue(Product.class);
+                        productList.add(product);
+                    }
+                    listener.onSuccess(productList);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    listener.onError(databaseError.getMessage());
+                }
+            });
+        }
+
     }
 
-    public ProductDAO(Context context) {
-        dbHelper = new DatabaseConnector(context);
-    }
+    // end inner class firebaseDAO
+    //==============================================================================================
 
-    public void open() throws SQLException {
-        database = dbHelper.getWritableDatabase();
-    }
-
-    public void close() {
-        dbHelper.close();
-    }
 
     public void insertProduct(Product product) {
 
         ProductDAO.FirebaseProductDAO firebaseProductDAO = new ProductDAO.FirebaseProductDAO();
-        firebaseProductDAO.writeCategoryToFirebase(product, new OnCompleteListener() {
+        firebaseProductDAO.writeProductToFirebase(product, new OnCompleteListener() {
             @Override
             public void onComplete(boolean isSuccess, String message) {
                 if (isSuccess) {
@@ -98,26 +196,33 @@ public class ProductDAO {
             }
         });
 
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        values.put("category_id", product.getCategory().getCategory_id());
-//        values.put("product_name", product.getProduct_name());
-//        values.put("description", product.getDescription());
-//        values.put("price", product.getPrice());
-//        values.put("image_product", bitmapToByteArray(product.getImage_product()));
-//        values.put("quantity", product.getQuantity());
-//        long result = db.insert("Products", null, values);
-//        db.close();
-//
-//        if (result != -1) {
-//            Log.d("insertProduct", "Insertion successful");
-//            return true;
-//        } else {
-//            Log.d("insertProduct", "Insertion failed");
-//            return false;
-//        }
+
     }
+
+    public void getAllProducts(Context context, OnGetAllProductsListener listener) {
+        ProductDAO.FirebaseProductDAO firebaseProductDAO = new ProductDAO.FirebaseProductDAO();
+        firebaseProductDAO.getAllProductsFromFireBase(listener);
+    }
+
+    // Lấy tất cả sản phẩm theo ID danh mục
+    public void getAllProductsByCategoryId(Context context,String categoryId, OnGetAllProductsListener listener) {
+
+        ProductDAO.FirebaseProductDAO firebaseProductDAO = new ProductDAO.FirebaseProductDAO();
+        firebaseProductDAO.getAllProductsByCategoryIdFromFireBase(categoryId, listener);
+    }
+    // Lấy sản phẩm theo ID
+    public void getProductById(Context context, String productID, OnGetProductByIdListener listener) {
+
+        ProductDAO.FirebaseProductDAO firebaseProductDAO = new ProductDAO.FirebaseProductDAO();
+
+        firebaseProductDAO.getProductByIdFromFireBase(productID,  listener);
+    }
+    public void getAllProductsByName(Context context,String name,OnGetAllProductsListener listener) {
+
+        ProductDAO.FirebaseProductDAO firebaseProductDAO = new ProductDAO.FirebaseProductDAO();
+        firebaseProductDAO.getAllProductsByNameFromFireBase(name, listener);
+    }
+
 
     public boolean updateQuantity(Product product, int newQuantity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -137,135 +242,6 @@ public class ProductDAO {
             Log.d("updateQuantity", "Update failed");
             return false;
         }
-    }
-    public boolean deleteProduct(int productId) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        int rowsAffected = db.delete("Products", "product_id = ?", new String[]{String.valueOf(productId)});
-
-        db.close();
-
-        if (rowsAffected > 0) {
-            Log.d("deleteProduct", "Deletion successful");
-            return true;
-        } else {
-            Log.d("deleteProduct", "Deletion failed");
-            return false;
-        }
-    }
-
-
-    public List<Product> getAllProducts() {
-        List<Product> productList = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM Products", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                int productId = (int) cursor.getLong(0);
-                int categoryId = (int) cursor.getLong(1);
-                String productName = cursor.getString(2);
-                String description = cursor.getString(3);
-                double price = cursor.getDouble(4);
-                byte[] imageBytes = cursor.getBlob(5);
-                Bitmap imageProduct = getBitmapFromBlob(imageBytes);
-                int quantity = (int) cursor.getLong(6);
-
-                Category category = new Category(categoryId, "");
-                Product product = new Product(productId, category, productName, description, price, quantity, imageProduct);
-                productList.add(product);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-
-        return productList;
-    }
-
-
-    public Product getProductById(Context context, int productId) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM Products WHERE product_id = ?", new String[]{String.valueOf(productId)});
-
-        Product product = null;
-        if (cursor.moveToFirst()) {
-            int categoryId = cursor.getInt(1);
-            String productName = cursor.getString(2);
-            String description = cursor.getString(3);
-            double price = cursor.getDouble(4);
-            byte[] imageBytes = cursor.getBlob(5);
-            Bitmap imageProduct = getBitmapFromBlob(imageBytes);
-            int quantity = (int) cursor.getLong(6);
-
-            CategoryDAO categoryDAO = new CategoryDAO(context);
-            Category category = categoryDAO.getCategoryById(categoryId);
-            product = new Product(productId, category, productName, description, price, quantity, imageProduct);
-
-        }
-
-        cursor.close();
-        db.close();
-        return product;
-    }
-
-public List<Product> getAllProductsByCategoryId(Context context, int categoryId) {
-    List<Product> productList = new ArrayList<>();
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
-    Cursor cursor = db.rawQuery("SELECT * FROM Products WHERE category_id = ?", new String[]{String.valueOf(categoryId)});
-
-    if (cursor.moveToFirst()) {
-        do {
-            int productId = (int) cursor.getLong(0);
-//            int categoryId = (int) cursor.getLong(1);
-            String productName = cursor.getString(2);
-            String description = cursor.getString(3);
-            double price = cursor.getDouble(4);
-            byte[] imageBytes = cursor.getBlob(5);
-            Bitmap imageProduct = getBitmapFromBlob(imageBytes);
-            int quantity = (int) cursor.getLong(6);
-
-            CategoryDAO categoryDAO = new CategoryDAO(context);
-            Category category = categoryDAO.getCategoryById(categoryId);
-            Product product = new Product(productId, category, productName, description, price, quantity, imageProduct);
-            productList.add(product);
-        } while (cursor.moveToNext());
-    }
-
-    cursor.close();
-    db.close();
-
-    return productList;
-}
-
-    public List<Product> getAllProductsByName(Context context, String name) {
-        List<Product> productList = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM Products WHERE product_name LIKE ?", new String[]{"%" + name + "%"});
-
-
-        if (cursor.moveToFirst()) {
-            do {
-                int productId = (int) cursor.getLong(0);
-                int categoryId = (int) cursor.getLong(1);
-                String productName = cursor.getString(2);
-                String description = cursor.getString(3);
-                double price = cursor.getDouble(4);
-                byte[] imageBytes = cursor.getBlob(5);
-                Bitmap imageProduct = getBitmapFromBlob(imageBytes);
-                int quantity = (int) cursor.getLong(6);
-
-                CategoryDAO categoryDAO = new CategoryDAO(context);
-                Category category = categoryDAO.getCategoryById(categoryId);
-                Product product = new Product(productId, category, productName, description, price, quantity, imageProduct);
-                productList.add(product);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-
-        return productList;
     }
 
     public Bitmap getBitmapFromBlob(byte[] blob) {
@@ -313,22 +289,22 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
         * */
         Category category = new Category(1, "Váy");
         CategoryDAO categoryDAO = new CategoryDAO(context);
-        categoryDAO.insertCategory(category);
+//        categoryDAO.insertCategory(category);
 
         Category category2 = new Category(2, "Áo");
-        categoryDAO.insertCategory(category);
+//        categoryDAO.insertCategory(category);
 
         Category category3 = new Category(3, "Jeans");
-        categoryDAO.insertCategory(category);
+//        categoryDAO.insertCategory(category);
 
         Category category4 = new Category(4, "T-shirts");
-        categoryDAO.insertCategory(category);
+//        categoryDAO.insertCategory(category);
 
         Category category5 = new Category(5, "Set");
-        categoryDAO.insertCategory(category);
+//        categoryDAO.insertCategory(category);
 
         Category category6= new Category(6, "Sock");
-        categoryDAO.insertCategory(category);
+//        categoryDAO.insertCategory(category);
 
 /*
 * add data product
@@ -336,40 +312,42 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
         ProductDAO productDAO = new ProductDAO(context);
         BitmapUtil bitmapUtil = new BitmapUtil();
 
-        Bitmap productImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_1);
-        Bitmap resizedImage = resizeBitmap(productImage,120,context);
-        String base64String = bitmapUtil.bitmapToBase64(resizedImage);
-        Product product = new Product(
-                category,
-                "Set váy ngắn",
-                "váy ngắn dễ thương",
-                20,
-                base64String,
-                10);
-        productDAO.insertProduct(product);
-        Log.d("fakeProductData", "Inserted successfully");
-
-
+//        Bitmap productImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_1);
+//        Bitmap resizedImage = resizeBitmap(productImage,120,context);
+//        String base64String = bitmapUtil.bitmapToBase64(resizedImage);
+//        Product product = new Product(
+//                category,
+//                "Set váy ngắn",
+//                "váy ngắn dễ thương",
+//                20,
+//                base64String,
+//                10);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//
 //        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
 //        Bitmap resizedImage2 = resizeBitmap(productImage2,120,context);
+//        String base64String2 = bitmapUtil.bitmapToBase64(resizedImage2);
 //        Product product2 = new Product(
 //                category5,
 //                "Set váy nâu",
 //                "Vải đũi",
 //                20,
-//                resizedImage2,
+//                base64String2,
 //                10);
 //        productDAO.insertProduct(product2);
 //        Log.d("fakeProductData", "Inserted successfully");
 //
 //        Bitmap productImage3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_3);
 //        Bitmap resizedImage3 = resizeBitmap(productImage3,120,context);
+//        String base64String3 = bitmapUtil.bitmapToBase64(resizedImage3);
 //        Product product3 = new Product(
 //                category2,
 //                "Áo Nâu",
 //                "Cotton da cá",
 //                20,
-//                resizedImage3,
+//                base64String3,
 //                10);
 //        productDAO.insertProduct(product3);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -377,12 +355,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_4);
 //        Bitmap resizedImage4 = resizeBitmap(productImage4,120,context);
+//        String base64String4 = bitmapUtil.bitmapToBase64(resizedImage4);
 //        Product product4 = new Product(
 //                category5,
 //                "Set váy công sở",
 //                "váy công sở",
 //                20,
-//                resizedImage4,
+//                base64String4,
 //                10);
 //        productDAO.insertProduct(product4);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -390,12 +369,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_5);
 //        Bitmap resizedImage5 = resizeBitmap(productImage5,120,context);
+//        String base64String5 = bitmapUtil.bitmapToBase64(resizedImage5);
 //        Product product5 = new Product(
 //                category2,
 //                "Sweater cổ V nâu",
 //                "Cotton dày",
 //                20,
-//                resizedImage5,
+//                base64String5,
 //                10);
 //        productDAO.insertProduct(product5);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -403,12 +383,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage6 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_6);
 //        Bitmap resizedImage6 = resizeBitmap(productImage6,120,context);
+//        String base64String6 = bitmapUtil.bitmapToBase64(resizedImage6);
 //        Product product6 = new Product(
 //                category5,
 //                "Váy 2 dây hoa",
 //                "váy xinh",
 //                20,
-//                resizedImage6,
+//                base64String6,
 //                10);
 //        productDAO.insertProduct(product6);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -416,12 +397,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage7 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_7);
 //        Bitmap resizedImage7 = resizeBitmap(productImage7,120,context);
+//        String base64String7 = bitmapUtil.bitmapToBase64(resizedImage7);
 //        Product product7 = new Product(
 //                category4,
 //                "Áo T-shirt trắng",
 //                "áo trắng",
 //                20,
-//                resizedImage7,
+//                base64String7,
 //                10);
 //        productDAO.insertProduct(product7);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -429,12 +411,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage8 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_8);
 //        Bitmap resizedImage8 = resizeBitmap(productImage8,120,context);
+//        String base64String8 = bitmapUtil.bitmapToBase64(resizedImage8);
 //        Product product8 = new Product(
 //                category5,
 //                "Set váy Tím",
 //                "váy tím",
 //                20,
-//                resizedImage8,
+//                base64String8,
 //                10);
 //        productDAO.insertProduct(product8);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -442,12 +425,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage9 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_9);
 //        Bitmap resizedImage9 = resizeBitmap(productImage9,120,context);
+//        String base64String9 = bitmapUtil.bitmapToBase64(resizedImage9);
 //        Product product9 = new Product(
 //                category2,
 //                "Áo sweater kẻ sọc",
 //                "áo len",
 //                20,
-//                resizedImage9,
+//                base64String9,
 //                10);
 //        productDAO.insertProduct(product9);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -455,12 +439,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage10 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_10);
 //        Bitmap resizedImage10 = resizeBitmap(productImage10,120,context);
+//        String base64String10 = bitmapUtil.bitmapToBase64(resizedImage10);
 //        Product product10 = new Product(
 //                category4,
 //                "áo t-shirts màu be",
 //                "áo be",
 //                20,
-//                resizedImage10,
+//                base64String10,
 //                10);
 //        productDAO.insertProduct(product10);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -468,12 +453,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage11 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_11);
 //        Bitmap resizedImage11 = resizeBitmap(productImage11,120,context);
+//        String base64String11 = bitmapUtil.bitmapToBase64(resizedImage11);
 //        Product product11 = new Product(
 //                category2,
 //                "Áo",
 //                "váy ngắn dễ thương",
 //                20,
-//                resizedImage11,
+//                base64String11,
 //                10);
 //        productDAO.insertProduct(product11);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -481,12 +467,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage12 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_12);
 //        Bitmap resizedImage12 = resizeBitmap(productImage12,120,context);
+//        String base64String12 = bitmapUtil.bitmapToBase64(resizedImage12);
 //        Product product12 = new Product(
 //                category,
 //                "Set váy hoa nhí",
 //                "váy ngắn dễ thương",
 //                20,
-//                resizedImage12,
+//                base64String12,
 //                10);
 //        productDAO.insertProduct(product12);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -494,12 +481,13 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage13 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_13);
 //        Bitmap resizedImage13 = resizeBitmap(productImage13,120,context);
+//        String base64String13 = bitmapUtil.bitmapToBase64(resizedImage13);
 //        Product product13 = new Product(
 //                category2,
 //                "Áo hoodie",
 //                "váy ngắn dễ thương",
 //                20,
-//                resizedImage13,
+//                base64String13,
 //                10);
 //        productDAO.insertProduct(product13);
 //        Log.d("fakeProductData", "Inserted successfully");
@@ -507,135 +495,151 @@ public List<Product> getAllProductsByCategoryId(Context context, int categoryId)
 //
 //        Bitmap productImage14 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_14);
 //        Bitmap resizedImage14 = resizeBitmap(productImage14,120,context);
+//        String base64String14 = bitmapUtil.bitmapToBase64(resizedImage14);
 //        Product product14 = new Product(
 //                category4,
 //                "T-shirt kẻ caro",
 //                "váy ngắn dễ thương",
 //                20,
-//                resizedImage14,
+//                base64String14,
 //                10);
 //        productDAO.insertProduct(product14);
 //        Log.d("fakeProductData", "Inserted successfully");
+//
+//
+//        Bitmap productImage15 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_15);
+//        Bitmap resizedImage15 = resizeBitmap(productImage15,120,context);
+//        String base64String15 = bitmapUtil.bitmapToBase64(resizedImage15);
+//        Product product15 = new Product(
+//                category3,
+//                "Ao nau",
+//                "váy ngắn dễ thương",
+//                20,
+//                base64String15,
+//                10);
+//        productDAO.insertProduct(product15);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//        Bitmap productImage16 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_16);
+//        Bitmap resizedImage16 = resizeBitmap(productImage16,120,context);
+//        String base64String16 = bitmapUtil.bitmapToBase64(resizedImage16);
+//        Product product16 = new Product(
+//                category3,
+//                "yem jeans",
+//                "váy ngắn dễ thương",
+//                20,
+//                base64String16,
+//                10);
+//        productDAO.insertProduct(product16);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//        Bitmap productImage17 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_17);
+//        Bitmap resizedImage17 = resizeBitmap(productImage17,120,context);
+//        String base64String17 = bitmapUtil.bitmapToBase64(resizedImage17);
+//        Product product17 = new Product(
+//                category3,
+//                "Jeans tui hop",
+//                "váy ngắn dễ thương",
+//                20,
+//                base64String17,
+//                10);
+//        productDAO.insertProduct(product17);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//        Bitmap productImage18 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_18);
+//        Bitmap resizedImage18 = resizeBitmap(productImage18,120,context);
+//        String base64String18 = bitmapUtil.bitmapToBase64(resizedImage18);
+//        Product product18 = new Product(
+//                category6,
+//                "tat cute",
+//                "váy ngắn dễ thương",
+//                20,
+//                base64String18,
+//                10);
+//        productDAO.insertProduct(product18);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//        Bitmap productImage19 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_19);
+//        Bitmap resizedImage19 = resizeBitmap(productImage19,120,context);
+//        String base64String19 = bitmapUtil.bitmapToBase64(resizedImage19);
+//        Product product19 = new Product(
+//                category6,
+//                "tat co cao",
+//                "váy ngắn dễ thương",
+//                20,
+//                base64String19,
+//                10);
+//        productDAO.insertProduct(product19);
+//        Log.d("fakeProductData", "Inserted successfully");
+//
+//        Bitmap productImage20 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_20);
+//        Bitmap resizedImage20 = resizeBitmap(productImage20,120,context);
+//        String base64String20 = bitmapUtil.bitmapToBase64(resizedImage20);
+//        Product product20 = new Product(
+//                category6,
+//                "Tat hoa co",
+//                "váy ngắn dễ thương",
+//                20,
+//                base64String20,
+//                10);
+//        productDAO.insertProduct(product20);
+//        Log.d("fakeProductData", "Inserted successfully");
 
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
+       // ========================================================
+
+//        Bitmap productImage15 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_15);
+//        Bitmap resizedImage15 = resizeBitmap(productImage,120,context);
+//        String base64String15 = bitmapUtil.bitmapToBase64(resizedImage15);
+//        Product product15 = new Product(
 //                category5,
 //                "Set váy nâu",
 //                "váy ngắn dễ thương",
 //                20,
-//                resizedImage);
+//                base64String15,
+//                10);
 //        productDAO.insertProduct(product);
 //        Log.d("fakeProductData", "Inserted successfully");
 //
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
+//        Bitmap productImage15 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_15);
+//        Bitmap resizedImage15 = resizeBitmap(productImage,120,context);
+//        String base64String15 = bitmapUtil.bitmapToBase64(resizedImage15);
+//        Product product15 = new Product(
 //                category5,
 //                "Set váy nâu",
 //                "váy ngắn dễ thương",
 //                20,
-//                resizedImage);
+//                base64String15,
+//                10);
 //        productDAO.insertProduct(product);
 //        Log.d("fakeProductData", "Inserted successfully");
 //
+//        Bitmap productImage15 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_15);
+//        Bitmap resizedImage15 = resizeBitmap(productImage,120,context);
+//        String base64String15 = bitmapUtil.bitmapToBase64(resizedImage15);
+//        Product product15 = new Product(
+//                category3,
+//                "Set váy nâu",
+//                "váy ngắn dễ thương",
+//                20,
+//                base64String15,
+//                10);
+//        productDAO.insertProduct(product);
+//        Log.d("fakeProductData", "Inserted successfully");
 //
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
+//        Bitmap productImage15 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_15);
+//        Bitmap resizedImage15 = resizeBitmap(productImage,120,context);
+//        String base64String15 = bitmapUtil.bitmapToBase64(resizedImage15);
+//        Product product15 = new Product(
 //                category5,
 //                "Set váy nâu",
 //                "váy ngắn dễ thương",
 //                20,
-//                resizedImage);
+//                base64String15,
+//                10);
 //        productDAO.insertProduct(product);
 //        Log.d("fakeProductData", "Inserted successfully");
-//
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
-//                category5,
-//                "Set váy nâu",
-//                "váy ngắn dễ thương",
-//                20,
-//                resizedImage);
-//        productDAO.insertProduct(product);
-//        Log.d("fakeProductData", "Inserted successfully");
-//
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
-//                category5,
-//                "Set váy nâu",
-//                "váy ngắn dễ thương",
-//                20,
-//                resizedImage);
-//        productDAO.insertProduct(product);
-//        Log.d("fakeProductData", "Inserted successfully");
-//
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
-//                category5,
-//                "Set váy nâu",
-//                "váy ngắn dễ thương",
-//                20,
-//                resizedImage);
-//        productDAO.insertProduct(product);
-//        Log.d("fakeProductData", "Inserted successfully");
-//
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
-//                category5,
-//                "Set váy nâu",
-//                "váy ngắn dễ thương",
-//                20,
-//                resizedImage);
-//        productDAO.insertProduct(product);
-//        Log.d("fakeProductData", "Inserted successfully");
-//
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
-//                category5,
-//                "Set váy nâu",
-//                "váy ngắn dễ thương",
-//                20,
-//                resizedImage);
-//        productDAO.insertProduct(product);
-//        Log.d("fakeProductData", "Inserted successfully");
-//
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
-//                category5,
-//                "Set váy nâu",
-//                "váy ngắn dễ thương",
-//                20,
-//                resizedImage);
-//        productDAO.insertProduct(product);
-//        Log.d("fakeProductData", "Inserted successfully");
-//
-//
-//        Bitmap productImage2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_2);
-//        Bitmap resizedImage2 = resizeBitmap(productImage,120,context);
-//        Product product2 = new Product(
-//                category5,
-//                "Set váy nâu",
-//                "váy ngắn dễ thương",
-//                20,
-//                resizedImage);
-//        productDAO.insertProduct(product);
-//        Log.d("fakeProductData", "Inserted successfully");
+
+
 
 
 

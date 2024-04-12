@@ -11,6 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bt_lon.Interface.OnGetAllProductsListener;
+import com.example.bt_lon.Interface.OnGetProductByIdListener;
 import com.example.bt_lon.R;
 import com.example.bt_lon.adapter.PurchaseOrderAdapter;
 import com.example.bt_lon.model.cart.Cart;
@@ -22,6 +24,7 @@ import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
 import com.example.bt_lon.sqlite_open_helper.DAO.ProductDAO;
 import com.example.bt_lon.sqlite_open_helper.DAO.PurchaseOrderDAO;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,26 +65,41 @@ public class PurchaseOrderActivity extends AppCompatActivity {
         });
     }
 
-    public void Repurchase(Cart cart) {
-        //them purchaseOrder vao db
-        ProductDAO productDAO = new ProductDAO(PurchaseOrderActivity.this);
-        Product productCheck = productDAO.getProductById(PurchaseOrderActivity.this, cart.getProduct().getProduct_id());
-        if (productCheck.getQuantity() != 0) {
-            if (RepositoryUser.getAccount() != null) {
-                CartDAO cartDAO = new CartDAO(PurchaseOrderActivity.this);
-                cartDAO.storeProductToCart(cart, 1);
-                Intent intent = new Intent(PurchaseOrderActivity.this, CartActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Intent intent = new Intent(PurchaseOrderActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        } else {
-            Toast.makeText(PurchaseOrderActivity.this, "Sản phẩm đã hết.", Toast.LENGTH_SHORT).show();
-        }
-
-    }
+//    public void Repurchase(Cart cart) {
+//        //them purchaseOrder vao db
+//        ProductDAO productDAO = new ProductDAO(PurchaseOrderActivity.this);
+//
+//        Product product = new Product();
+//        OnGetAllProductsListener listener = new OnGetAllProductsListener () {
+//
+//            @Override
+//            public void onSuccess(List<Product> productList) {
+//
+//            }
+//
+//            @Override
+//            public void onError(String errorMessage) {
+//
+//            }
+//        };
+//        productDAO.getAllProducts(listener);
+//        Product productCheck = productDAO.getProductById(PurchaseOrderActivity.this, cart.getProduct().getProduct_id());
+//        if (productCheck.getQuantity() != 0) {
+//            if (RepositoryUser.getAccount() != null) {
+//                CartDAO cartDAO = new CartDAO(PurchaseOrderActivity.this);
+//                cartDAO.storeProductToCart(cart, 1);
+//                Intent intent = new Intent(PurchaseOrderActivity.this, CartActivity.class);
+//                startActivity(intent);
+//                finish();
+//            } else {
+//                Intent intent = new Intent(PurchaseOrderActivity.this, LoginActivity.class);
+//                startActivity(intent);
+//            }
+//        } else {
+//            Toast.makeText(PurchaseOrderActivity.this, "Sản phẩm đã hết.", Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
     private List<PurchaseOrder> initData() {
         PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO(PurchaseOrderActivity.this);

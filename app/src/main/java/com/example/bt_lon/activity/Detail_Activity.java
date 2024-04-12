@@ -24,6 +24,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 
+import com.example.bt_lon.Interface.OnGetProductByIdListener;
 import com.example.bt_lon.R;
 import com.example.bt_lon.model.cart.Cart;
 import com.example.bt_lon.model.product.Product;
@@ -55,7 +56,20 @@ public class Detail_Activity extends AppCompatActivity {
 
         ProductDAO productDAO = new ProductDAO(this);
 
-        product = productDAO.getProductById(this, product_id);
+        OnGetProductByIdListener listener = new OnGetProductByIdListener() {
+            @Override
+            public void onSuccess(Product sucessproduct) {
+                product = sucessproduct;
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        };
+        productDAO.getProductById(product_id+"",listener);
+
+
 
         img = (ImageView) findViewById(R.id.imgProduct);
         imageBack = (ImageView) findViewById(R.id.imageBack);

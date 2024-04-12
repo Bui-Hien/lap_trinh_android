@@ -114,12 +114,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.imgProduct.setImageBitmap(product.getImage_product());
         holder.quantityProduct.setText( "Số lương: "+String.valueOf( product.getQuantity()));
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickGoToDetail(product.getProduct_id(), v);
-            }
-        });
+//        holder.cardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onClickGoToDetail(product.getProduct_id(), v);
+//            }
+//        });
         holder.button_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
