@@ -64,36 +64,36 @@ public class CartActivity extends AppCompatActivity {
         CheckBox checkBoxAllCart = findViewById(R.id.checkBoxAllCart);
         constrainLayoutNoProduct = findViewById(R.id.constrainLayoutNoProduct);
         recyclerView = findViewById(R.id.recyclerViewCart);
-        cartList = InsertData();
-        if (cartList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            constrainLayoutNoProduct.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            constrainLayoutNoProduct.setVisibility(View.GONE);
-            cartAdapter = new CartAdapter(this, cartList);
-            recyclerView.setAdapter(cartAdapter);
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-            tvCartLogo.setText("Giỏ hàng (" + cartList.size() + ")");
-            checkBoxAllCart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        for (Cart cart : cartList) {
-                            cart.setChecked(true);
-                        }
-                        tvCartTotalCost.setText("đ" + TotalCost(cartList));
-                    } else {
-                        for (Cart cart : cartList) {
-                            cart.setChecked(false);
-                        }
-                        tvCartTotalCost.setText("đ0");
-                    }
-                    cartAdapter.notifyDataSetChanged();
-                }
-            });
-        }
+//        cartList = InsertData();
+//        if (cartList.isEmpty()) {
+//            recyclerView.setVisibility(View.GONE);
+//            constrainLayoutNoProduct.setVisibility(View.VISIBLE);
+//        } else {
+//            recyclerView.setVisibility(View.VISIBLE);
+//            constrainLayoutNoProduct.setVisibility(View.GONE);
+//            cartAdapter = new CartAdapter(this, cartList);
+//            recyclerView.setAdapter(cartAdapter);
+//            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+//            tvCartLogo.setText("Giỏ hàng (" + cartList.size() + ")");
+//            checkBoxAllCart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+//                @Override
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                    if (isChecked) {
+//                        for (Cart cart : cartList) {
+//                            cart.setChecked(true);
+//                        }
+//                        tvCartTotalCost.setText("đ" + TotalCost(cartList));
+//                    } else {
+//                        for (Cart cart : cartList) {
+//                            cart.setChecked(false);
+//                        }
+//                        tvCartTotalCost.setText("đ0");
+//                    }
+//                    cartAdapter.notifyDataSetChanged();
+//                }
+//            });
+//        }
         Dialog dialog;
         dialog = new Dialog(CartActivity.this);
         dialog.setContentView(R.layout.warning_dialog);
@@ -156,13 +156,13 @@ public class CartActivity extends AppCompatActivity {
         });
     }
 
-    public List<Cart> InsertData() {
-        CartDAO cartDAO = new CartDAO(CartActivity.this);
-        List<Cart> list = cartDAO.getCartItemsByUserId(CartActivity.this, RepositoryUser.getAccount());
-        Collections.reverse(list);
-
-        return list;
-    }
+//    public List<Cart> InsertData() {
+//        CartDAO cartDAO = new CartDAO(CartActivity.this);
+//        List<Cart> list = cartDAO.getCartItemsByUserId(CartActivity.this, RepositoryUser.getAccount());
+//        Collections.reverse(list);
+//
+//        return list;
+//    }
 
     public String TotalCost(List<Cart> cartList) {
         double totalCost = 0;

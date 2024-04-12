@@ -50,19 +50,19 @@ public class LoginActivity extends AppCompatActivity {
 
 //                fakeData();
 
-                String username = String.valueOf(etUser.getText());
-                UserDAO userDAO = new UserDAO(LoginActivity.this);
-                if (username.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Tên đăng nhập không được trống.", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (userDAO.checkUser(new User(username)) == null) {
-                        Toast.makeText(LoginActivity.this, "Tên đăng nhập không tồn tại.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-                        intent.putExtra("username", username);
-                        startActivity(intent);
-                    }
-                }
+//                String username = String.valueOf(etUser.getText());
+//                UserDAO userDAO = new UserDAO(LoginActivity.this);
+//                if (username.isEmpty()) {
+//                    Toast.makeText(LoginActivity.this, "Tên đăng nhập không được trống.", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    if (userDAO.checkUser(new User(username)) == null) {
+//                        Toast.makeText(LoginActivity.this, "Tên đăng nhập không tồn tại.", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+//                        intent.putExtra("username", username);
+//                        startActivity(intent);
+//                    }
+//                }
             }
         });
         imageBack.setOnClickListener(new View.OnClickListener() {
@@ -93,15 +93,15 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     public void fakeData() {
-        QuestionDAO questionDAO = new QuestionDAO(LoginActivity.this);
-        questionDAO.createListQuestion();
+//        QuestionDAO questionDAO = new QuestionDAO(LoginActivity.this);
+//        questionDAO.createListQuestion();
 
         ProductDAO productDAO = new ProductDAO(LoginActivity.this);
         productDAO.fakeProductData(LoginActivity.this);
-
-        String username = "buixuanhien";
-        UserDAO userDAO = new UserDAO(LoginActivity.this);
-        userDAO.fakeUser(LoginActivity.this, username);
-        userDAO.fakeQuestionData(LoginActivity.this, username);
+//
+//        String username = "buixuanhien";
+//        UserDAO userDAO = new UserDAO(LoginActivity.this);
+//        userDAO.fakeUser(LoginActivity.this, username);
+//        userDAO.fakeQuestionData(LoginActivity.this, username);
     }
 }

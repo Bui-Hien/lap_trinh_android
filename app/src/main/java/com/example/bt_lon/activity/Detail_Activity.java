@@ -51,23 +51,23 @@ public class Detail_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         // lay du lieu tu home homefragment
-        Intent intent = getIntent();
-        product_id = intent.getIntExtra("product_id", 1);
-
-        ProductDAO productDAO = new ProductDAO(this);
-
-        OnGetProductByIdListener listener = new OnGetProductByIdListener() {
-            @Override
-            public void onSuccess(Product sucessproduct) {
-                product = sucessproduct;
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
-            }
-        };
-        productDAO.getProductById(product_id+"",listener);
+//        Intent intent = getIntent();
+//        product_id = intent.getIntExtra("product_id", 1);
+//
+//        ProductDAO productDAO = new ProductDAO(this);
+//
+//        OnGetProductByIdListener listener = new OnGetProductByIdListener() {
+//            @Override
+//            public void onSuccess(Product sucessproduct) {
+//                product = sucessproduct;
+//            }
+//
+//            @Override
+//            public void onError(String errorMessage) {
+//
+//            }
+//        };
+//        productDAO.getProductById(this,product_id);
 
 
 

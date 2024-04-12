@@ -72,8 +72,8 @@ public class PurchaseOrderAdapter extends RecyclerView.Adapter<PurchaseOrderAdap
         holder.btnRepurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cart cart = new Cart(purchaseOrder.getUser(), purchaseOrder.getProduct());
-                ((PurchaseOrderActivity) mContext).Repurchase(cart);
+//                Cart cart = new Cart(purchaseOrder.getUser(), purchaseOrder.getProduct());
+//                ((PurchaseOrderActivity) mContext).Repurchase(cart);
             }
         });
     }

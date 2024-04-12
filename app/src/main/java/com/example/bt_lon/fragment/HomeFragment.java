@@ -68,14 +68,29 @@ public class HomeFragment extends Fragment {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Product> productList = new ArrayList<>();
 
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 1+"");
-                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
+                List<Product> productList = new ArrayList<>();
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
+                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                mProductAdapter.setData(productList);
-                rcv_product.setAdapter(mProductAdapter);
+
+                OnGetAllProductsListener listener = new OnGetAllProductsListener() {
+                    @Override
+                    public void onSuccess(List<Product> sucessproductList) {
+                        // Cập nhật danh sách sản phẩm và adapter
+                        productList.clear(); // Xóa danh sách cũ trước khi thêm mới
+                       // Thêm danh sách mới vào
+                        mProductAdapter.setData(productList);
+                        rcv_product.setAdapter(mProductAdapter);
+                        mProductAdapter.notifyDataSetChanged(); // Thông báo cho adapter là dữ liệu đã thay đổi
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Xử lý khi gặp lỗi trong quá trình lấy danh sách sản phẩm
+                        Log.e("Product", "Error retrieving products: " + errorMessage);
+                    }
+                };
+                productDAO.getAllProductsByCategoryId (HomeFragment.this.getContext(),1+"",listener);
             }
         });
 
@@ -83,14 +98,29 @@ public class HomeFragment extends Fragment {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Product> productList = new ArrayList<>();
 
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 2+"");
-                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
+                List<Product> productList = new ArrayList<>();
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
+                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                mProductAdapter.setData(productList);
-                rcv_product.setAdapter(mProductAdapter);
+
+                OnGetAllProductsListener listener = new OnGetAllProductsListener() {
+                    @Override
+                    public void onSuccess(List<Product> sucessproductList) {
+                        // Cập nhật danh sách sản phẩm và adapter
+                        productList.clear(); // Xóa danh sách cũ trước khi thêm mới
+                        // Thêm danh sách mới vào
+                        mProductAdapter.setData(productList);
+                        rcv_product.setAdapter(mProductAdapter);
+                        mProductAdapter.notifyDataSetChanged(); // Thông báo cho adapter là dữ liệu đã thay đổi
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Xử lý khi gặp lỗi trong quá trình lấy danh sách sản phẩm
+                        Log.e("Product", "Error retrieving products: " + errorMessage);
+                    }
+                };
+                productDAO.getAllProductsByCategoryId (HomeFragment.this.getContext(),2+"",listener);
             }
         });
 
@@ -98,14 +128,29 @@ public class HomeFragment extends Fragment {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Product> productList = new ArrayList<>();
 
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 3+"");
-                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
+                List<Product> productList = new ArrayList<>();
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
+                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                mProductAdapter.setData(productList);
-                rcv_product.setAdapter(mProductAdapter);
+
+                OnGetAllProductsListener listener = new OnGetAllProductsListener() {
+                    @Override
+                    public void onSuccess(List<Product> sucessproductList) {
+                        // Cập nhật danh sách sản phẩm và adapter
+                        productList.clear(); // Xóa danh sách cũ trước khi thêm mới
+                        // Thêm danh sách mới vào
+                        mProductAdapter.setData(productList);
+                        rcv_product.setAdapter(mProductAdapter);
+                        mProductAdapter.notifyDataSetChanged(); // Thông báo cho adapter là dữ liệu đã thay đổi
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Xử lý khi gặp lỗi trong quá trình lấy danh sách sản phẩm
+                        Log.e("Product", "Error retrieving products: " + errorMessage);
+                    }
+                };
+                productDAO.getAllProductsByCategoryId (HomeFragment.this.getContext(),3+"",listener);
             }
         });
 
@@ -113,14 +158,29 @@ public class HomeFragment extends Fragment {
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Product> productList = new ArrayList<>();
 
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 4+"");
-                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
+                List<Product> productList = new ArrayList<>();
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
+                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                mProductAdapter.setData(productList);
-                rcv_product.setAdapter(mProductAdapter);
+
+                OnGetAllProductsListener listener = new OnGetAllProductsListener() {
+                    @Override
+                    public void onSuccess(List<Product> sucessproductList) {
+                        // Cập nhật danh sách sản phẩm và adapter
+                        productList.clear(); // Xóa danh sách cũ trước khi thêm mới
+                        // Thêm danh sách mới vào
+                        mProductAdapter.setData(productList);
+                        rcv_product.setAdapter(mProductAdapter);
+                        mProductAdapter.notifyDataSetChanged(); // Thông báo cho adapter là dữ liệu đã thay đổi
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Xử lý khi gặp lỗi trong quá trình lấy danh sách sản phẩm
+                        Log.e("Product", "Error retrieving products: " + errorMessage);
+                    }
+                };
+                productDAO.getAllProductsByCategoryId (HomeFragment.this.getContext(),4+"",listener);
             }
         });
 
@@ -128,13 +188,29 @@ public class HomeFragment extends Fragment {
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 List<Product> productList = new ArrayList<>();
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 5+"");
-                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
+                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                mProductAdapter.setData(productList);
-                rcv_product.setAdapter(mProductAdapter);
+
+                OnGetAllProductsListener listener = new OnGetAllProductsListener() {
+                    @Override
+                    public void onSuccess(List<Product> sucessproductList) {
+                        // Cập nhật danh sách sản phẩm và adapter
+                        productList.clear(); // Xóa danh sách cũ trước khi thêm mới
+                        // Thêm danh sách mới vào
+                        mProductAdapter.setData(productList);
+                        rcv_product.setAdapter(mProductAdapter);
+                        mProductAdapter.notifyDataSetChanged(); // Thông báo cho adapter là dữ liệu đã thay đổi
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Xử lý khi gặp lỗi trong quá trình lấy danh sách sản phẩm
+                        Log.e("Product", "Error retrieving products: " + errorMessage);
+                    }
+                };
+                productDAO.getAllProductsByCategoryId (HomeFragment.this.getContext(),5+"",listener);
             }
         });
 
@@ -142,13 +218,29 @@ public class HomeFragment extends Fragment {
         button6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 List<Product> productList = new ArrayList<>();
-                productDAO.getAllProductsByCategoryId(HomeFragment.this.getContext(), 6+"");
-                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 ProductAdapter mProductAdapter = new ProductAdapter(HomeFragment.this, productList);
+                RecyclerView rcv_product = view.findViewById(R.id.recyclerViewItem);
                 rcv_product.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                mProductAdapter.setData(productList);
-                rcv_product.setAdapter(mProductAdapter);
+
+                OnGetAllProductsListener listener = new OnGetAllProductsListener() {
+                    @Override
+                    public void onSuccess(List<Product> sucessproductList) {
+                        // Cập nhật danh sách sản phẩm và adapter
+                        productList.clear(); // Xóa danh sách cũ trước khi thêm mới
+                        // Thêm danh sách mới vào
+                        mProductAdapter.setData(productList);
+                        rcv_product.setAdapter(mProductAdapter);
+                        mProductAdapter.notifyDataSetChanged(); // Thông báo cho adapter là dữ liệu đã thay đổi
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Xử lý khi gặp lỗi trong quá trình lấy danh sách sản phẩm
+                        Log.e("Product", "Error retrieving products: " + errorMessage);
+                    }
+                };
+                productDAO.getAllProductsByCategoryId (HomeFragment.this.getContext(),6+"",listener);
             }
         });
 
@@ -171,8 +263,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(List<Product> sucessproductList) {
                 // Cập nhật danh sách sản phẩm và adapter
-                productList.clear(); // Xóa danh sách cũ trước khi thêm mới
-                productList.addAll(sucessproductList); // Thêm danh sách mới vào
+                mProductAdapter.setData(sucessproductList);
+                rcv_product.setAdapter(mProductAdapter);
                 mProductAdapter.notifyDataSetChanged(); // Thông báo cho adapter là dữ liệu đã thay đổi
             }
             @Override

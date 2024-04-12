@@ -122,16 +122,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
-                cartList.remove(holder.getAdapterPosition());
-                ((CartActivity) mContext).updateText();
-                notifyItemRemoved(holder.getAdapterPosition());
-                notifyDataSetChanged();
-                CartDAO cartDAO = new CartDAO(mContext.getApplicationContext());
-                cartDAO.deleteCartItem(cart.getUser().getUser_id(), cart.getProduct().getProduct_id());
-                if (cartList.isEmpty()) {
-                    ((CartActivity) mContext).updateLayout();
-                }
-                dialog.dismiss();
+//                cartList.remove(holder.getAdapterPosition());
+//                ((CartActivity) mContext).updateText();
+//                notifyItemRemoved(holder.getAdapterPosition());
+//                notifyDataSetChanged();
+//                CartDAO cartDAO = new CartDAO(mContext.getApplicationContext());
+//                cartDAO.deleteCartItem(cart.getUser().getUser_id(), cart.getProduct().getProduct_id());
+//                if (cartList.isEmpty()) {
+//                    ((CartActivity) mContext).updateLayout();
+//                }
+//                dialog.dismiss();
             }
         });
         holder.btnCartMinusProduct.setOnClickListener(new View.OnClickListener() {

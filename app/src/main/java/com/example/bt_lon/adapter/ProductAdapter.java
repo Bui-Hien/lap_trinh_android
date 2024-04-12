@@ -2,7 +2,10 @@ package com.example.bt_lon.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,7 @@ import com.example.bt_lon.sqlite_open_helper.DAO.CartDAO;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -50,6 +54,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView quantityProduct;
 
         CardView cardView;
+
+        public class BitmapUtil {
+
+            // Chuyển đổi Bitmap thành chuỗi Base64
+            public  String bitmapToBase64(Bitmap bitmap) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] byteArray = baos.toByteArray();
+                return Base64.encodeToString(byteArray, Base64.DEFAULT);
+            }
+
+
+            // Chuyển đổi chuỗi Base64 thành Bitmap
+            public  Bitmap base64ToBitmap(String base64String) {
+                byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
+                return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            }
+        }
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,7 +129,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         } else {
             product = productList.get(position);
         }
-        holder.button_buy.setText(String.valueOf(product.getProduct_id()));
+        holder.button_buy.setText("Mua");
         holder.nameProduct.setText(product.getProduct_name());
         holder.descriptionProduct.setText(product.getDescription());
         holder.priceProduct.setText(product.getPrice() + "$");
